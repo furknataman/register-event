@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr/scan.dart';
+import 'package:qr/pages/start_page/start_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: QRViewExample(),
+      home:const StartPage() ,
     );
   }
 }
