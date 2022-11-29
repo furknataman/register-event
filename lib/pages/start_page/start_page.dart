@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr/global/svg.dart';
+import 'package:qr/route_page/route_page.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({super.key});
@@ -52,9 +53,11 @@ class _StartPageState extends State<StartPage> {
                   ]),
                 ),
                 FloatingActionButton.extended(
-              
                   backgroundColor: Colors.white,
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => const RoutePage()));
+                  },
                   label: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -83,7 +86,6 @@ class _StartPageState extends State<StartPage> {
               ],
             ),
           ),
-       
         ]),
       ),
     );

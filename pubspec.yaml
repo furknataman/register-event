@@ -40,6 +40,7 @@ dependencies:
   flutter_bloc: ^8.1.1
   qr_code_scanner: ^1.0.1
   flutter_svg: ^1.1.6
+  heroicons_flutter: ^0.2.3
 
 dev_dependencies:
   flutter_test:
