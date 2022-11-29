@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:qr/pages/scan_page/scan.dart';
-import 'package:qr/pages/start_page/start_page.dart';
-
-import '../pages/settings_page/settings_page.dart';
+import 'package:qr/pages/home/home_page.dart';
+import 'package:qr/pages/scan/scan.dart';
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key});
@@ -36,7 +34,7 @@ class _RoutePageState extends State<RoutePage> {
             setState(() => _currentIndex = index);
           },
           controller: _pageController,
-          children: const <Widget>[StartPage(), ScannerPage(), ScannerPage()]),
+          children: const <Widget>[Homepage(), ScannerPage(), ScannerPage()]),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16),
