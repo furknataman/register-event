@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:qr/pages/start_page/start_page.dart';
-import 'package:qr/route_page/route_page.dart';
 
 void main() {
   runApp(const MyApp());

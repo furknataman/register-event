@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/pages/scan_page/scan.dart';
 import 'package:qr/pages/start_page/start_page.dart';
@@ -38,41 +36,51 @@ class _RoutePageState extends State<RoutePage> {
             setState(() => _currentIndex = index);
           },
           controller: _pageController,
-          children: const <Widget>[Settingspage(), ScannerPage(), ScannerPage()]),
+          children: const <Widget>[StartPage(), ScannerPage(), ScannerPage()]),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(left: 16.0, right: 16),
-        child: ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(30)),
-          child: BottomNavigationBar(
-              onTap: (index) {
-                setState(() => _currentIndex = index);
-                _pageController.jumpToPage(index);
-              },
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              currentIndex: _currentIndex,
-              unselectedItemColor: const Color(0xff485FFF),
-              selectedItemColor: const Color(0xff485FFF),
-              selectedIconTheme: const IconThemeData(color: Color(0xff485FFF)),
-              iconSize: 35,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  activeIcon: Icon(HeroiconsSolid.home),
-                  label: " ",
-                  icon: Icon(HeroiconsOutline.home),
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Icon(HeroiconsMini.qrCode),
-                  label: " ",
-                  icon: Icon(HeroiconsOutline.qrCode),
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Icon(HeroiconsSolid.cog6Tooth),
-                  label: " ",
-                  icon: Icon(HeroiconsOutline.cog6Tooth),
-                )
+        child: Container(
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(30)),
+              boxShadow: [
+                BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.25),
+                    blurRadius: 14,
+                    offset: Offset(0, 4))
               ]),
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(30)),
+            child: BottomNavigationBar(
+                onTap: (index) {
+                  setState(() => _currentIndex = index);
+                  _pageController.jumpToPage(index);
+                },
+                showSelectedLabels: false,
+                showUnselectedLabels: false,
+                currentIndex: _currentIndex,
+                unselectedItemColor: const Color(0xff485FFF),
+                selectedItemColor: const Color(0xff485FFF),
+                selectedIconTheme: const IconThemeData(color: Color(0xff485FFF)),
+                iconSize: 35,
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(HeroiconsSolid.home),
+                    label: " ",
+                    icon: Icon(HeroiconsOutline.home),
+                  ),
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(HeroiconsMini.qrCode),
+                    label: " ",
+                    icon: Icon(HeroiconsOutline.qrCode),
+                  ),
+                  BottomNavigationBarItem(
+                    activeIcon: Icon(HeroiconsSolid.cog6Tooth),
+                    label: " ",
+                    icon: Icon(HeroiconsOutline.cog6Tooth),
+                  )
+                ]),
+          ),
         ),
       ),
     );

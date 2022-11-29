@@ -31,7 +31,7 @@ class _StartPageState extends State<StartPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Container(
+                SizedBox(
                   child: Column(children: [
                     const SizedBox(
                       height: 55,
