@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:qr/global/bottomSheet/alert_dialog.dart';
+
+import '../../global/bottomSheet/filter.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -15,30 +18,54 @@ class _HomepageState extends State<Homepage> {
       body: SafeArea(
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 34, top: 30),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: const [
-              CircleAvatar(
-                  radius: 40,
+            padding: const EdgeInsets.only(left: 20.0, right: 34, top: 3),
+            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              const CircleAvatar(
+                  radius: 30,
                   backgroundImage: NetworkImage('https://picsum.photos/250?image=9')),
-              Icon(
-                HeroiconsOutline.bell,
-                color: Color(0xff333333),
-                size: 45,
+              IconButton(
+                icon: const Icon(
+                  HeroiconsOutline.bell,
+                  color: Color(0xff333333),
+                  size: 30,
+                ),
+                onPressed: () {},
               )
             ]),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 19, top: 34, bottom: 15),
+            padding: const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 34),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   "Upcoming Events",
                   style: Theme.of(context).textTheme.displayLarge,
+                ),
+                IconButton(
+                  onPressed: () {
+                    filterDialog(context, () => Navigator.pop(context), () {
+                      Navigator.pop(context);
+                    }, "Filters", "Seçili listeler silinecek");
+                  },
+                  icon: const Icon(
+                    HeroiconsOutline.funnel,
+                    color: Color(0xff333333),
+                    size: 30,
+                  ),
                 )
               ],
             ),
           ),
-          actionStac(),
+          Expanded(
+            child: ListView.builder(
+              itemBuilder: (context, index) {
+                context;
+                return actionStac();
+              },
+              itemCount: 3,
+            ),
+          ),
         ]),
       ),
     );
@@ -46,13 +73,18 @@ class _HomepageState extends State<Homepage> {
 
   Padding actionStac() {
     return Padding(
-      padding: const EdgeInsets.only(top: 15.0),
+      padding: const EdgeInsets.only(bottom: 18.0),
       child: Stack(
-        alignment: Alignment.centerLeft,
+        alignment: Alignment.center,
+        fit: StackFit.loose,
         children: [
           Container(
-            decoration:
-                const BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(13))),
+            decoration: const BoxDecoration(boxShadow: [
+              BoxShadow(
+                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                  blurRadius: 14,
+                  offset: Offset(0, 4))
+            ], borderRadius: BorderRadius.all(Radius.circular(13))),
             width: MediaQuery.of(context).size.width - 40,
             height: 237,
           ),
@@ -82,7 +114,7 @@ class _HomepageState extends State<Homepage> {
                         bottomRight: Radius.circular(10),
                         bottomLeft: Radius.circular(10))),
                 height: 71,
-                width: 356,
+                width: MediaQuery.of(context).size.width - 40,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -108,7 +140,7 @@ class _HomepageState extends State<Homepage> {
               )),
           Positioned(
               top: 13,
-              left: 13,
+              left: 26,
               child: Container(
                 decoration: const BoxDecoration(
                     color: Color(0xffFFFFFF),
@@ -124,13 +156,21 @@ class _HomepageState extends State<Homepage> {
               )),
           Positioned(
               top: 13,
-              right: 13,
+              right: 26,
               child: Container(
+                alignment: Alignment.center,
                 decoration: const BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                          color: Color.fromRGBO(72, 95, 255, 0.5),
+                          blurRadius: 14,
+                          offset: Offset(0, 4))
+                    ],
                     color: Color(0xffFFFFFF),
                     borderRadius: BorderRadius.all(Radius.circular(10))),
                 height: 26,
                 width: 72,
+                child: Text("Ongoing", style: Theme.of(context).textTheme.labelMedium),
               )),
         ],
       ),

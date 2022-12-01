@@ -40,6 +40,8 @@ dependencies:
   qr_code_scanner: ^1.0.1
   flutter_svg: ^1.1.6
   heroicons_flutter: ^0.2.3
+  flutter_time_picker_spinner: ^2.0.0
+  flutter_switch: ^0.3.2
 
 dev_dependencies:
   flutter_test:

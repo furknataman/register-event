@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.pink,
           fontFamily: "Raleway",
+
           textTheme: const TextTheme(
               displayLarge: TextStyle(
                   fontSize: 24, color: Color(0xff333333), fontWeight: FontWeight.w400),
@@ -24,10 +25,14 @@ class MyApp extends StatelessWidget {
                   fontSize: 16, color: Color(0xff333333), fontWeight: FontWeight.w400),
               displaySmall: TextStyle(
                   fontSize: 16, color: Color(0xff828282), fontWeight: FontWeight.w400),
+              bodyLarge: TextStyle(
+                  fontSize: 18, color: Color(0xff333333), fontWeight: FontWeight.w400),
               labelLarge: TextStyle(
                   fontSize: 22, color: Color(0xff333333), fontWeight: FontWeight.w700),
               labelSmall: TextStyle(
-                  fontSize: 10, color: Color(0xff333333), fontWeight: FontWeight.w400))),
+                  fontSize: 10, color: Color(0xff333333), fontWeight: FontWeight.w400),
+              labelMedium: TextStyle(
+                  fontSize: 14, color: Color(0xff4F4F4F), fontWeight: FontWeight.w400))),
       home: const StartPage(),
     );
   }
