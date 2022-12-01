@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:qr/pages/start/start_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -17,7 +18,6 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           primarySwatch: Colors.pink,
           fontFamily: "Raleway",
-
           textTheme: const TextTheme(
               displayLarge: TextStyle(
                   fontSize: 24, color: Color(0xff333333), fontWeight: FontWeight.w400),

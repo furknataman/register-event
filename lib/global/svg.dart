@@ -15,3 +15,15 @@ const String assetName3 = 'assets/svg/Vector.svg';
 final Widget googleLogo = SvgPicture.asset(
   assetName3,
 );
+
+const String assetName4 = 'assets/svg/home.svg';
+
+final Widget homeIcon = SvgPicture.asset(
+  assetName4,
+);
+
+const String assetName5 = 'assets/svg/homeBold.svg';
+
+final Widget homeIconBold = SvgPicture.asset(
+  assetName5,
+);

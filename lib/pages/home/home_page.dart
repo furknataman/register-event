@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:qr/global/bottomSheet/alert_dialog.dart';
+import '../../global/bottomSheet/filter/filter_provider.dart';
 
-import '../../global/bottomSheet/filter.dart';
-
-class Homepage extends StatefulWidget {
+class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  ConsumerState<Homepage> createState() => _HomepageState();
 }
 
-class _HomepageState extends State<Homepage> {
+class _HomepageState extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
+    final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     return Scaffold(
       body: SafeArea(
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -44,7 +44,7 @@ class _HomepageState extends State<Homepage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    filterDialog(context, () => Navigator.pop(context), () {
+                    filterProvider.filterDialog(context, () => Navigator.pop(context), () {
                       Navigator.pop(context);
                     }, "Filters", "Seçili listeler silinecek");
                   },
@@ -57,6 +57,7 @@ class _HomepageState extends State<Homepage> {
               ],
             ),
           ),
+         
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {

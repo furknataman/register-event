@@ -35,13 +35,27 @@ class _ScannerPageState extends State<ScannerPage> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: _buildQrView(context)),
-          const Positioned(
+          Positioned(
+              child: Container(
+            height: 160,
+            width: MediaQuery.of(context).size.width,
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(255, 255, 255, 1),
+                Color.fromRGBO(255, 255, 255, 0),
+              ],
+            )),
+          )),
+          Positioned(
             child: Padding(
-              padding: EdgeInsets.only(left: 80, right: 59, top: 80, bottom: 40),
+              padding: const EdgeInsets.only(left: 80, right: 59, top: 80, bottom: 40),
               child: Text(
                 textAlign: TextAlign.center,
                 "Scan the QR code of \nyour event.",
-                style: TextStyle(fontSize: 24, color: Colors.white, fontFamily: "Raleway"),
+                style: Theme.of(context).textTheme.displayLarge,
               ),
             ),
           ),

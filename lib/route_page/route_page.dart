@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:qr/global/svg.dart';
 import 'package:qr/pages/home/home_page.dart';
 import 'package:qr/pages/scan/scan.dart';
+import 'package:qr/pages/settings/settings_page.dart';
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key});
@@ -34,7 +36,7 @@ class _RoutePageState extends State<RoutePage> {
               setState(() => _currentIndex = index);
             },
             controller: _pageController,
-            children: const <Widget>[Homepage(), ScannerPage(), ScannerPage()]),
+            children: const <Widget>[Homepage(), ScannerPage(), Settingspage()]),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
           alignment: Alignment.center,
@@ -75,18 +77,18 @@ class _RoutePageState extends State<RoutePage> {
                         selectedItemColor: const Color(0xff485FFF),
                         selectedIconTheme: const IconThemeData(color: Color(0xff485FFF)),
                         iconSize: 30,
-                        items: const <BottomNavigationBarItem>[
+                        items: <BottomNavigationBarItem>[
                           BottomNavigationBarItem(
-                            activeIcon: Icon(HeroiconsSolid.home),
+                            activeIcon: homeIconBold,
                             label: " ",
-                            icon: Icon(HeroiconsOutline.home),
+                            icon: homeIcon,
                           ),
-                          BottomNavigationBarItem(
+                          const BottomNavigationBarItem(
                             activeIcon: Icon(HeroiconsMini.qrCode),
                             label: " ",
                             icon: Icon(HeroiconsOutline.qrCode),
                           ),
-                          BottomNavigationBarItem(
+                          const BottomNavigationBarItem(
                             activeIcon: Icon(HeroiconsSolid.cog6Tooth),
                             label: " ",
                             icon: Icon(HeroiconsOutline.cog6Tooth),
