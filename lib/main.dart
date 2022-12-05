@@ -33,6 +33,8 @@ class MyApp extends StatelessWidget {
                   fontSize: 10, color: Color(0xff333333), fontWeight: FontWeight.w400),
               titleMedium: TextStyle(
                   fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700),
+              titleLarge: TextStyle(
+                  fontSize: 33, color: Color(0xff333333), fontWeight: FontWeight.w400),
               labelMedium: TextStyle(
                   fontSize: 14, color: Color(0xff4F4F4F), fontWeight: FontWeight.w400))),
       home: const StartPage(),

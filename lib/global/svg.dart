@@ -13,8 +13,8 @@ final Widget logo = SvgPicture.asset(
 );
 final Widget logo2 = SvgPicture.asset(
   assetName2,
-  width: 90,
-  height: 90,
+  width: 100,
+  height: 100,
   color: const Color(0xff485FFF),
 );
 
