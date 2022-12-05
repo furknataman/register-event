@@ -20,14 +20,24 @@ class _HomepageState extends ConsumerState<Homepage> {
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 34, top: 3),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage('https://picsum.photos/250?image=9')),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Welcome,",
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  Text(
+                    "Furkan ATAMAN",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  )
+                ],
+              ),
               IconButton(
                 icon: const Icon(
                   HeroiconsOutline.bell,
                   color: Color(0xff333333),
-                  size: 30,
+                  size: 34,
                 ),
                 onPressed: () {},
               )
@@ -57,7 +67,6 @@ class _HomepageState extends ConsumerState<Homepage> {
               ],
             ),
           ),
-         
           Expanded(
             child: ListView.builder(
               itemBuilder: (context, index) {

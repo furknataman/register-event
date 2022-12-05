@@ -10,6 +10,8 @@ class StartPage extends StatefulWidget {
 }
 
 class _StartPageState extends State<StartPage> {
+  TextEditingController? controllerEmail;
+  TextEditingController? controllerPassword;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +54,43 @@ class _StartPageState extends State<StartPage> {
                     )
                   ]),
                 ),
-                FloatingActionButton.extended(
+                Container(
+                  margin: const EdgeInsets.only(left: 90, right: 90),
+                  height: 250,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      loging(
+                          labelText: "E-mail",
+                          icon: Icons.alternate_email,
+                          controller: controllerEmail),
+                      loging(
+                          labelText: "Password",
+                          icon: Icons.lock_outline,
+                          obs: true,
+                          controller: controllerPassword),
+                      FloatingActionButton.extended(
+                        backgroundColor: const Color(0xff485FFF),
+                        label: const Text(
+                          "Login",
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () {
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => const RoutePage()));
+                        },
+                      ),
+                      InkWell(
+                        onTap: () {},
+                        child: const Text(
+                          "I forgot my password",
+                          style: TextStyle(color: Colors.white, fontSize: 16),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+                /*FloatingActionButton.extended(
                   backgroundColor: Colors.white,
                   onPressed: () {
                     Navigator.push(context,
@@ -82,12 +120,42 @@ class _StartPageState extends State<StartPage> {
                     style: TextStyle(
                         color: Colors.white, fontSize: 16, fontFamily: 'Raleway'),
                   ),
-                )
+                )*/
               ],
             ),
           ),
         ]),
       ),
+    );
+  }
+
+  TextField loging(
+      {@required String? labelText,
+      IconData? icon,
+      bool obs = false,
+      @required TextEditingController? controller}) {
+    // ignore: prefer_const_constructors
+    return TextField(
+      controller: controller,
+      keyboardType: TextInputType.visiblePassword,
+      obscureText: obs,
+      style: const TextStyle(color: Colors.white, fontSize: 14),
+      decoration: InputDecoration(
+          suffixIcon: Icon(
+            icon,
+            color: Colors.white,
+          ),
+          labelText: labelText,
+          labelStyle: const TextStyle(color: Colors.white, fontSize: 16),
+          border: const UnderlineInputBorder(
+            borderSide: BorderSide(width: 3, color: Colors.white),
+          ),
+          enabledBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(width: 3, color: Colors.white),
+          ),
+          focusedBorder: const UnderlineInputBorder(
+            borderSide: BorderSide(width: 3, color: Colors.white),
+          )),
     );
   }
 }
