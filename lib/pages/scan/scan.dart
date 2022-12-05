@@ -9,7 +9,7 @@ class ScannerPage extends StatefulWidget {
   @override
   State<StatefulWidget> createState() => _ScannerPageState();
 }
-//toda
+
 class _ScannerPageState extends State<ScannerPage> {
   Barcode? result;
   QRViewController? controller;
