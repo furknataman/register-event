@@ -1,8 +1,12 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:qr/pages/start/start_page.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-void main() {
+import 'authentication/authservice.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -37,7 +41,7 @@ class MyApp extends StatelessWidget {
                   fontSize: 33, color: Color(0xff333333), fontWeight: FontWeight.w400),
               labelMedium: TextStyle(
                   fontSize: 14, color: Color(0xff4F4F4F), fontWeight: FontWeight.w400))),
-      home: const StartPage(),
+      home: AuthService().handleAuthState(),
     );
   }
 }
