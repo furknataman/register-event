@@ -28,8 +28,7 @@ class City {
       country: data?['country'],
       capital: data?['capital'],
       population: data?['population'],
-      regions:
-          data?['regions'] is Iterable ? List.from(data?['regions']) : null,
+      regions: data?['regions'] is Iterable ? List.from(data?['regions']) : null,
     );
   }
 

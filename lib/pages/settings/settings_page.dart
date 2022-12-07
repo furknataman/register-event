@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../authentication/login_serice.dart';
+import '../../db/db_model.dart';
 import '../../global/svg.dart';
 
 class Settingspage extends ConsumerStatefulWidget {
@@ -108,19 +109,53 @@ class _SettingspageState extends ConsumerState<Settingspage> {
       'Aşko:': "Aşko Kuşkoyu seviyor",
       'Kuşko': "Kuşko aşkoyu seviyor mu?",
     };
-    await docSUer.set(json);
+    // await docSUer.set(city);
 
+    /*final city = City(
+      name: "Los Angelesss",
+      state: "CA",
+      country: "USA",
+      capital: false,
+      population: 5000000,
+      regions: ["west_coast", "socal"],
+    );
+    final docRef = FirebaseFirestore.instance
+        .collection("users")
+        .withConverter(
+          fromFirestore: City.fromFirestore,
+          toFirestore: (City city, options) => city.toFirestore(),
+        )
+        .doc("LA");
+    await docRef.set(city);*/
 
-    final docRef =
+    final 
+
+    final ref = FirebaseFirestore.instance.collection("users").doc("LA").withConverter(
+          fromFirestore: City.fromFirestore,
+          toFirestore: (City city, _) => city.toFirestore(),
+        );
+    final docSnap = await ref.get();
+    final city = docSnap.data(); // Convert to City object
+    if (city != null) {
+      print(city);
+    } else {
+      print("No such document.");
+    }
+
+    // final getDoc = FirebaseFirestore.instance.collection("users").doc('LA');
+
+    /*
+   final docRef =
         FirebaseFirestore.instance.collection("users").doc("BbQwRHQvIbmuNA3ISDkE");
     docRef.get().then(
       (DocumentSnapshot doc) {
         final data = doc.data() as Map<String, dynamic>;
-        
+
         print(data);
         // ...
       },
       onError: (e) => print("Error getting document: $e"),
     );
+    */
   }
 }
