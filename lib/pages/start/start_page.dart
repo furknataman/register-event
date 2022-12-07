@@ -1,19 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/svg.dart';
-import 'package:qr/route_page/route_page.dart';
+import '../../authentication/login_serice.dart';
 
-class StartPage extends StatefulWidget {
+class StartPage extends ConsumerWidget {
   const StartPage({super.key});
 
   @override
-  State<StartPage> createState() => _StartPageState();
-}
-
-class _StartPageState extends State<StartPage> {
-  TextEditingController? controllerEmail;
-  TextEditingController? controllerPassword;
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final getGoogle = ref.watch<GoogleProvder>(googleConfig);
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -63,23 +58,28 @@ class _StartPageState extends State<StartPage> {
                       loging(
                           labelText: "E-mail",
                           icon: Icons.alternate_email,
-                          controller: controllerEmail),
+                          controller: getGoogle.controllerEmail),
                       loging(
                           labelText: "Password",
                           icon: Icons.lock_outline,
                           obs: true,
-                          controller: controllerPassword),
-                      FloatingActionButton.extended(
-                        backgroundColor: const Color(0xff485FFF),
-                        label: const Text(
-                          "Login",
-                          style: TextStyle(fontSize: 20),
-                        ),
-                        onPressed: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => const RoutePage()));
-                        },
-                      ),
+                          controller: getGoogle.controllerPassword),
+                      InkWell(
+                          onTap: () {
+                            getGoogle.signIn();
+                          },
+                          child: Container(
+                            alignment: Alignment.center,
+                            width: 120,
+                            height: 46,
+                            decoration: const BoxDecoration(
+                                color: Color(0xff485FFF),
+                                borderRadius: BorderRadius.all(Radius.circular(30))),
+                            child: const Text(
+                              "Login",
+                              style: TextStyle(fontSize: 20, color: Colors.white),
+                            ),
+                          )),
                       InkWell(
                         onTap: () {},
                         child: const Text(
@@ -90,37 +90,6 @@ class _StartPageState extends State<StartPage> {
                     ],
                   ),
                 ),
-                /*FloatingActionButton.extended(
-                  backgroundColor: Colors.white,
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => const RoutePage()));
-                  },
-                  label: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      googleLogo,
-                      const SizedBox(
-                        width: 30,
-                      ),
-                      const Text("Sign-in With Google ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w400,
-                              color: Color(0xff131313),
-                              fontSize: 22,
-                              fontFamily: 'Raleway'))
-                    ],
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(left: 30, right: 30),
-                  child: Text(
-                    textAlign: TextAlign.center,
-                    "Google sign-in is required for viewing and registering attending to the seminars.",
-                    style: TextStyle(
-                        color: Colors.white, fontSize: 16, fontFamily: 'Raleway'),
-                  ),
-                )*/
               ],
             ),
           ),
@@ -134,7 +103,6 @@ class _StartPageState extends State<StartPage> {
       IconData? icon,
       bool obs = false,
       @required TextEditingController? controller}) {
-    // ignore: prefer_const_constructors
     return TextField(
       controller: controller,
       keyboardType: TextInputType.visiblePassword,

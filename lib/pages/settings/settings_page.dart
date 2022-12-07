@@ -1,18 +1,22 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../authentication/login_serice.dart';
+import '../../db/db_model.dart';
 import '../../global/svg.dart';
 
-class Settingspage extends StatefulWidget {
+class Settingspage extends ConsumerStatefulWidget {
   const Settingspage({super.key});
 
   @override
-  State<Settingspage> createState() => _SettingspageState();
+  ConsumerState<Settingspage> createState() => _SettingspageState();
 }
 
-class _SettingspageState extends State<Settingspage> {
+class _SettingspageState extends ConsumerState<Settingspage> {
   @override
   Widget build(BuildContext context) {
+    final getGoogle = ref.watch<GoogleProvder>(googleConfig);
     return Scaffold(
       body: Container(
         padding: EdgeInsets.only(left: 30, right: 30),
@@ -63,17 +67,95 @@ class _SettingspageState extends State<Settingspage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Logout", style: Theme.of(context).textTheme.bodyLarge),
-                        Icon(
-                          Icons.login,
-                          size: 30,
+                        IconButton(
+                          icon: Icon(
+                            Icons.login,
+                            size: 30,
+                          ),
+                          onPressed: () {
+                            getGoogle.signOut();
+                          },
                         )
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("database", style: Theme.of(context).textTheme.bodyLarge),
+                  IconButton(
+                    icon: Icon(
+                      Icons.login,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      creauser(name: "furkan");
+                    },
+                  )
+                ],
+              )
             ]),
       ),
     );
+  }
+
+  Future creauser({required String name}) async {
+    final docSUer =
+        FirebaseFirestore.instance.collection('users').doc('BbQwRHQvIbmuNA3ISDkE');
+
+    final json = {
+      'Aşko:': "Aşko Kuşkoyu seviyor",
+      'Kuşko': "Kuşko aşkoyu seviyor mu?",
+    };
+    // await docSUer.set(city);
+
+    /*final city = City(
+      name: "Los Angelesss",
+      state: "CA",
+      country: "USA",
+      capital: false,
+      population: 5000000,
+      regions: ["west_coast", "socal"],
+    );
+    final docRef = FirebaseFirestore.instance
+        .collection("users")
+        .withConverter(
+          fromFirestore: City.fromFirestore,
+          toFirestore: (City city, options) => city.toFirestore(),
+        )
+        .doc("LA");
+    await docRef.set(city);*/
+
+    final 
+
+    final ref = FirebaseFirestore.instance.collection("users").doc("LA").withConverter(
+          fromFirestore: City.fromFirestore,
+          toFirestore: (City city, _) => city.toFirestore(),
+        );
+    final docSnap = await ref.get();
+    final city = docSnap.data(); // Convert to City object
+    if (city != null) {
+      print(city);
+    } else {
+      print("No such document.");
+    }
+
+    // final getDoc = FirebaseFirestore.instance.collection("users").doc('LA');
+
+    /*
+   final docRef =
+        FirebaseFirestore.instance.collection("users").doc("BbQwRHQvIbmuNA3ISDkE");
+    docRef.get().then(
+      (DocumentSnapshot doc) {
+        final data = doc.data() as Map<String, dynamic>;
+
+        print(data);
+        // ...
+      },
+      onError: (e) => print("Error getting document: $e"),
+    );
+    */
   }
 }
