@@ -1,45 +1,52 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class City {
+class User {
   final String? name;
-  final String? state;
-  final String? country;
+  final String? email;
+  final String? password;
   final bool? capital;
-  final int? population;
-  final List<String>? regions;
+  final int? id;
+  final List<int>? registeredEvents;
+  final List<int>? attendedEvents;
 
-  City({
+  User({
     this.name,
-    this.state,
-    this.country,
+    this.email,
+    this.password,
     this.capital,
-    this.population,
-    this.regions,
+    this.id,
+    this.registeredEvents,
+    this.attendedEvents,
   });
 
-  factory City.fromFirestore(
+  factory User.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
     final data = snapshot.data();
-    return City(
+    return User(
       name: data?['name'],
-      state: data?['state'],
-      country: data?['country'],
+      email: data?['email'],
+      password: data?['password'],
       capital: data?['capital'],
-      population: data?['population'],
-      regions: data?['regions'] is Iterable ? List.from(data?['regions']) : null,
+      id: data?['id'],
+      registeredEvents: data?['registeredEvents'] is Iterable
+          ? List.from(data?['registeredEvents'])
+          : null,
+      attendedEvents:
+          data?['attendedEvents'] is Iterable ? List.from(data?['attendedEvents']) : null,
     );
   }
 
   Map<String, dynamic> toFirestore() {
     return {
       if (name != null) "name": name,
-      if (state != null) "state": state,
-      if (country != null) "country": country,
+      if (email != null) "email": email,
+      if (password != null) "password": password,
       if (capital != null) "capital": capital,
-      if (population != null) "population": population,
-      if (regions != null) "regions": regions,
+      if (id != null) "id": id,
+      if (registeredEvents != null) "registeredEvents": registeredEvents,
+      if (attendedEvents != null) "attendedEvents": attendedEvents,
     };
   }
 }

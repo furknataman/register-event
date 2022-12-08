@@ -91,7 +91,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
-                      creauser(name: "furkan");
+                      creauser();
                     },
                   )
                 ],
@@ -101,61 +101,36 @@ class _SettingspageState extends ConsumerState<Settingspage> {
     );
   }
 
-  Future creauser({required String name}) async {
-    final docSUer =
-        FirebaseFirestore.instance.collection('users').doc('BbQwRHQvIbmuNA3ISDkE');
+  Future<void> creauser() async {
+    final databaseReference = FirebaseFirestore.instance;
+    final user = User(
+        name: "Furkan",
+        email: "furknataman@gmail.com",
+        password: "furkanşifre",
+        capital: false,
+        id: 4,
+        registeredEvents: [4, 2, 3],
+        attendedEvents: [12313, 123131]);
 
-    final json = {
-      'Aşko:': "Aşko Kuşkoyu seviyor",
-      'Kuşko': "Kuşko aşkoyu seviyor mu?",
-    };
-    // await docSUer.set(city);
-
-    /*final city = City(
-      name: "Los Angelesss",
-      state: "CA",
-      country: "USA",
-      capital: false,
-      population: 5000000,
-      regions: ["west_coast", "socal"],
-    );
-    final docRef = FirebaseFirestore.instance
+    final docRef = databaseReference
         .collection("users")
         .withConverter(
-          fromFirestore: City.fromFirestore,
-          toFirestore: (City city, options) => city.toFirestore(),
+          fromFirestore: User.fromFirestore,
+          toFirestore: (User city, options) => city.toFirestore(),
         )
-        .doc("LA");
-    await docRef.set(city);*/
+        .doc(user.email);
+    await docRef.set(user);
 
-    final 
-
-    final ref = FirebaseFirestore.instance.collection("users").doc("LA").withConverter(
-          fromFirestore: City.fromFirestore,
-          toFirestore: (City city, _) => city.toFirestore(),
+    final ref = databaseReference.collection("users").doc(user.email).withConverter(
+          fromFirestore: User.fromFirestore,
+          toFirestore: (User city, _) => city.toFirestore(),
         );
     final docSnap = await ref.get();
-    final city = docSnap.data(); // Convert to City object
-    if (city != null) {
-      print(city);
+    final user2 = docSnap.data(); // Convert to City object
+    if (user2 != null) {
+      print(user2.attendedEvents);
     } else {
       print("No such document.");
     }
-
-    // final getDoc = FirebaseFirestore.instance.collection("users").doc('LA');
-
-    /*
-   final docRef =
-        FirebaseFirestore.instance.collection("users").doc("BbQwRHQvIbmuNA3ISDkE");
-    docRef.get().then(
-      (DocumentSnapshot doc) {
-        final data = doc.data() as Map<String, dynamic>;
-
-        print(data);
-        // ...
-      },
-      onError: (e) => print("Error getting document: $e"),
-    );
-    */
   }
 }
