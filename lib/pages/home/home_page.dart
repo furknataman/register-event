@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:qr/global/global_veriable/user_info.dart';
 import '../../global/bottomSheet/filter/filter_provider.dart';
 
 class Homepage extends ConsumerStatefulWidget {
@@ -12,8 +13,15 @@ class Homepage extends ConsumerStatefulWidget {
 
 class _HomepageState extends ConsumerState<Homepage> {
   @override
+  void initState() {
+    super.initState();
+    ref.read<UserInfo>(userInfoConfig).readUser();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
+    final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
       body: SafeArea(
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -28,7 +36,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                   Text(
-                    "Furkan ATAMAN",
+                    userInfo.user!.name.toString(),
                     style: Theme.of(context).textTheme.titleMedium,
                   )
                 ],

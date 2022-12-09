@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+
 final googleConfig = ChangeNotifierProvider((ref) => GoogleProvder());
 
 class GoogleProvder extends ChangeNotifier {
@@ -17,7 +18,7 @@ class GoogleProvder extends ChangeNotifier {
         email: email!,
         password: password!,
       );
-      print("object");
+
       return null;
     } on FirebaseAuthException catch (e) {
       return e.message;
@@ -26,8 +27,8 @@ class GoogleProvder extends ChangeNotifier {
 
   //SIGN IN METHOD
   Future signIn() async {
-    String userName = "furknataman@flutter.com"; //controllerEmail.text;
-    String password = "1234567"; //controllerPassword.text;
+    String userName = "furknataman@gmail.com"; //controllerEmail.text;
+    String password = "123456"; //controllerPassword.text;
     try {
       await _auth.signInWithEmailAndPassword(email: userName, password: password);
 
@@ -45,4 +46,9 @@ class GoogleProvder extends ChangeNotifier {
     await FirebaseAuth.instance.signOut();
     notifyListeners();
   }
+}
+
+currentUser() async {
+  String mail = FirebaseAuth.instance.currentUser!.email.toString();
+  return mail;
 }
