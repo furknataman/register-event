@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
 
 class EventsInfo extends ChangeNotifier {
+  List<ClassModelEvents> events = [];
   final databaseReference = FirebaseFirestore.instance;
-  ClassModelEvents? events = ClassModelEvents(
+  ClassModelEvents? event = ClassModelEvents(
       name: " ",
       description: "açıklama",
       imageUrl: "wwww",
@@ -13,7 +14,7 @@ class EventsInfo extends ChangeNotifier {
       id: 4,
       capacity: 20,
       speakers: ["123", "123"],
-      dateTime: DateTime.now()) ;
+      timestamp: Timestamp.now());
 
   Future readEvents() async {
     final ref = databaseReference.collection("events").doc("lasdas").withConverter(
@@ -21,9 +22,28 @@ class EventsInfo extends ChangeNotifier {
           toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
         );
     final docSnap = await ref.get();
-    events = docSnap.data(); // Convert to City object
-    print(events!.dateTime);
-    print(Timestamp.fromDate(DateTime.now()));
+    event = docSnap.data(); // Convert to City object
+    print(event!.dateTime!.hour);
+    notifyListeners();
+  }
+
+  Future readEvents2() async {
+    events = [];
+    databaseReference
+        .collection("events")
+        .withConverter(
+          fromFirestore: ClassModelEvents.fromFirestore,
+          toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
+        )
+        .get()
+        .then(
+      (value) {
+        for (var element in value.docs) {
+          events.add(element.data());
+          print(events.first);
+        }
+      },
+    );
     notifyListeners();
   }
 
@@ -36,7 +56,7 @@ class EventsInfo extends ChangeNotifier {
       @required int? capacity,
       @required List<String>? speakers,
       @required List<int>? attendedEvents,
-      @required DateTime? dateTime}) async {
+      @required Timestamp? timestamp}) async {
     final user = ClassModelEvents(
       name: name,
       imageUrl: imageUrl,
@@ -45,7 +65,7 @@ class EventsInfo extends ChangeNotifier {
       id: id,
       capacity: capacity,
       speakers: speakers,
-      dateTime: dateTime,
+      timestamp: timestamp,
     );
 
     final docRef = databaseReference

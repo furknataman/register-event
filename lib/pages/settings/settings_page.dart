@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/global_veriable/events_info.dart';
@@ -94,8 +95,8 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
-                      eventsInfo.readEvents();
-                      eventsInfo.writeEvents(
+                      eventsInfo.readEvents2();
+                      /*eventsInfo.writeEvents(
                           name: "furkan123",
                           description: "description",
                           imageUrl: "imageUrl",
@@ -104,7 +105,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                           capacity: 12,
                           speakers: ["123", "12"],
                           attendedEvents: [1231, 231],
-                          dateTime: DateTime.now());
+                          timestamp: Timestamp.now());*/
                     },
                   )
                 ],

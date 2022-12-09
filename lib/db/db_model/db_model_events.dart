@@ -8,8 +8,8 @@ class ClassModelEvents {
   final int? id;
   final int? capacity;
   final List<String>? speakers;
-
-  final int? dateTime;
+  final Timestamp? timestamp;
+  final DateTime? dateTime;
 
   ClassModelEvents(
       {this.name,
@@ -19,7 +19,8 @@ class ClassModelEvents {
       this.id,
       this.capacity,
       this.speakers,
-      this.dateTime});
+      this.dateTime,
+      this.timestamp});
 
   factory ClassModelEvents.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -32,7 +33,8 @@ class ClassModelEvents {
       imageUrl: data?['imageUrl'],
       active: data?['active'],
       id: data?['id'],
-      dateTime: data?['dateTime'] is Iterable ? (data?['dateTime']).toDate() : null,
+      timestamp: data?['timestamp'],
+      dateTime: data?['timestamp'] is Iterable ? (data?['timestamp'].toDate()) : null,
       capacity: data?['capacity'],
       speakers: data?['speakers'] is Iterable ? List.from(data?['speakers']) : null,
     );
@@ -41,7 +43,7 @@ class ClassModelEvents {
   Map<String, dynamic> toFirestore() {
     return {
       if (name != null) "name": name,
-      if (dateTime != null) "dateTime": dateTime,
+      if (timestamp != null) "timestamp": timestamp,
       if (description != null) "email": description,
       if (imageUrl != null) "imageUrl": imageUrl,
       if (active != null) "active": active,
