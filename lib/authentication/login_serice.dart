@@ -32,7 +32,6 @@ class GoogleProvder extends ChangeNotifier {
     try {
       await _auth.signInWithEmailAndPassword(email: userName, password: password);
 
-      print("object");
       return null;
     } on FirebaseAuthException catch (e) {
       print("Username or password incorrect");
