@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassModelEvents {
+  final String? eventsCollentionName;
   final String? name;
   final String? description;
   final String? imageUrl;
@@ -20,7 +21,8 @@ class ClassModelEvents {
       this.capacity,
       this.speakers,
       this.dateTime,
-      this.timestamp});
+      this.timestamp,
+      this.eventsCollentionName});
 
   factory ClassModelEvents.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -33,6 +35,7 @@ class ClassModelEvents {
       imageUrl: data?['imageUrl'],
       active: data?['active'],
       id: data?['id'],
+      eventsCollentionName: snapshot.id,
       timestamp: data?['timestamp'],
       dateTime: data?['timestamp'] is Iterable ? (data?['timestamp'].toDate()) : null,
       capacity: data?['capacity'],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:qr/events/events.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../global/bottomSheet/filter/filter_provider.dart';
 import '../../global/global_veriable/events_info.dart';
@@ -21,7 +22,7 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List> getAllEvents = ref.watch(GetEvents);
+    AsyncValue<List> getAllEvents = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
@@ -86,6 +87,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                   itemBuilder: (context, index) {
                     context;
                     return actionStac(
+                        eventsNumber: index,
                         eventsName: getAllEvents[index].name,
                         imageUrl: getAllEvents[index].imageUrl);
                   },
@@ -99,111 +101,117 @@ class _HomepageState extends ConsumerState<Homepage> {
     );
   }
 
-  Padding actionStac({
-    @required String? eventsName,
-    @required String? imageUrl,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 18.0),
-      child: Stack(
-        alignment: Alignment.center,
-        fit: StackFit.loose,
-        children: [
-          Container(
-            decoration: const BoxDecoration(boxShadow: [
-              BoxShadow(
-                  color: Color.fromRGBO(0, 0, 0, 0.25),
-                  blurRadius: 14,
-                  offset: Offset(0, 4))
-            ], borderRadius: BorderRadius.all(Radius.circular(13))),
-            width: MediaQuery.of(context).size.width - 40,
-            height: 237,
-          ),
-          Positioned(
-            top: 0,
-            child: Container(
+  InkWell actionStac(
+      {@required String? eventsName,
+      @required String? imageUrl,
+      @required int? eventsNumber}) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Eventspage(eventsNumber)));
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 18.0),
+        child: Stack(
+          alignment: Alignment.center,
+          fit: StackFit.loose,
+          children: [
+            Container(
+              decoration: const BoxDecoration(boxShadow: [
+                BoxShadow(
+                    color: Color.fromRGBO(0, 0, 0, 0.25),
+                    blurRadius: 14,
+                    offset: Offset(0, 4))
+              ], borderRadius: BorderRadius.all(Radius.circular(13))),
               width: MediaQuery.of(context).size.width - 40,
-              height: 166,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(
-                        imageUrl!,
-                      ),
-                      fit: BoxFit.fill),
-                  color: Colors.black,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+              height: 237,
             ),
-          ),
-          Positioned(
-              bottom: 0,
+            Positioned(
+              top: 0,
               child: Container(
-                padding: const EdgeInsets.only(top: 10, left: 13, right: 13, bottom: 13),
-                decoration: const BoxDecoration(
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.only(
-                        bottomRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10))),
-                height: 71,
                 width: MediaQuery.of(context).size.width - 40,
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                height: 166,
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(
+                          imageUrl!,
+                        ),
+                        fit: BoxFit.fill),
+                    color: Colors.black,
+                    borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+              ),
+            ),
+            Positioned(
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.only(top: 10, left: 13, right: 13, bottom: 13),
+                  decoration: const BoxDecoration(
+                      color: Color(0xffFFFFFF),
+                      borderRadius: BorderRadius.only(
+                          bottomRight: Radius.circular(10),
+                          bottomLeft: Radius.circular(10))),
+                  height: 71,
+                  width: MediaQuery.of(context).size.width - 40,
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              eventsName!,
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
+                            Text(
+                              "13:40 - 14:00",
+                              style: Theme.of(context).textTheme.displayMedium,
+                            )
+                          ],
+                        ),
+                        Text(
+                          "Hall E",
+                          style: Theme.of(context).textTheme.displaySmall,
+                        )
+                      ]),
+                )),
+            Positioned(
+                top: 13,
+                left: 26,
+                child: Container(
+                  decoration: const BoxDecoration(
+                      color: Color(0xffFFFFFF),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  height: 38,
+                  width: 38,
+                  child: Column(
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            eventsName!,
-                            style: Theme.of(context).textTheme.displayMedium,
-                          ),
-                          Text(
-                            "13:40 - 14:00",
-                            style: Theme.of(context).textTheme.displayMedium,
-                          )
-                        ],
-                      ),
-                      Text(
-                        "Hall E",
-                        style: Theme.of(context).textTheme.displaySmall,
-                      )
-                    ]),
-              )),
-          Positioned(
-              top: 13,
-              left: 26,
-              child: Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                height: 38,
-                width: 38,
-                child: Column(
-                  children: [
-                    Text("14", style: Theme.of(context).textTheme.labelLarge),
-                    Text("Ara", style: Theme.of(context).textTheme.labelSmall)
-                  ],
-                ),
-              )),
-          Positioned(
-              top: 13,
-              right: 26,
-              child: Container(
-                alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(72, 95, 255, 0.5),
-                          blurRadius: 14,
-                          offset: Offset(0, 4))
+                      Text("14", style: Theme.of(context).textTheme.labelLarge),
+                      Text("Ara", style: Theme.of(context).textTheme.labelSmall)
                     ],
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
-                height: 26,
-                width: 72,
-                child: Text("Ongoing", style: Theme.of(context).textTheme.labelMedium),
-              )),
-        ],
+                  ),
+                )),
+            Positioned(
+                top: 13,
+                right: 26,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: const BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(72, 95, 255, 0.5),
+                            blurRadius: 14,
+                            offset: Offset(0, 4))
+                      ],
+                      color: Color(0xffFFFFFF),
+                      borderRadius: BorderRadius.all(Radius.circular(10))),
+                  height: 26,
+                  width: 72,
+                  child: Text("Ongoing", style: Theme.of(context).textTheme.labelMedium),
+                )),
+          ],
+        ),
       ),
     );
   }

@@ -78,7 +78,7 @@ class EventsInfo extends ChangeNotifier {
   }
 }
 
-final GetEvents = FutureProvider<List>((ref) {
+final getEventsList = FutureProvider<List>((ref) {
   List<ClassModelEvents> events = [];
   final databaseReference = FirebaseFirestore.instance;
 
