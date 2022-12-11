@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../global/bottomSheet/filter/filter_provider.dart';
+import '../../global/global_veriable/events_info.dart';
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -20,6 +21,7 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    AsyncValue<List> getAllEvents = ref.watch(GetEvents);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
@@ -75,21 +77,32 @@ class _HomepageState extends ConsumerState<Homepage> {
               ],
             ),
           ),
-          Expanded(
-            child: ListView.builder(
-              itemBuilder: (context, index) {
-                context;
-                return actionStac();
-              },
-              itemCount: 3,
-            ),
-          ),
+          getAllEvents.when(
+            loading: () => const CircularProgressIndicator(),
+            error: (err, stack) => Text('Error: $err'),
+            data: (getAllEvents) {
+              return Expanded(
+                child: ListView.builder(
+                  itemBuilder: (context, index) {
+                    context;
+                    return actionStac(
+                        eventsName: getAllEvents[index].name,
+                        imageUrl: getAllEvents[index].imageUrl);
+                  },
+                  itemCount: getAllEvents.length,
+                ),
+              );
+            },
+          )
         ]),
       ),
     );
   }
 
-  Padding actionStac() {
+  Padding actionStac({
+    @required String? eventsName,
+    @required String? imageUrl,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 18.0),
       child: Stack(
@@ -111,10 +124,10 @@ class _HomepageState extends ConsumerState<Homepage> {
             child: Container(
               width: MediaQuery.of(context).size.width - 40,
               height: 166,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                   image: DecorationImage(
-                      image: AssetImage(
-                        "assets/images/Rectangle2.png",
+                      image: NetworkImage(
+                        imageUrl!,
                       ),
                       fit: BoxFit.fill),
                   color: Colors.black,
@@ -141,7 +154,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Modern Math",
+                            eventsName!,
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(

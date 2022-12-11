@@ -94,15 +94,14 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
-                      eventsInfo.readEvents2();
-                      /*eventsInfo.writeEvents(
-                          name: "furkan123",
-                          description: "description",
-                          imageUrl: "imageUrl",
-                          active: false,
+                      /* eventsInfo.writeEvents(
+                          name: "Matematik2",
+                          description: "Burada Açıklama yazıyor2",
+                          imageUrl: "assets/images/Rectangle2.png",
+                          active: true,
                           id: 2,
-                          capacity: 12,
-                          speakers: ["123", "12"],
+                          capacity: 20,
+                          speakers: ["Berat2", "Tamer2"],
                           attendedEvents: [1231, 231],
                           timestamp: Timestamp.now());*/
                     },

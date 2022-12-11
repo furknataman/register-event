@@ -27,7 +27,7 @@ class EventsInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future readEvents2() async {
+  /*Future readAllevents() async {
     events = [];
     databaseReference
         .collection("events")
@@ -40,12 +40,11 @@ class EventsInfo extends ChangeNotifier {
       (value) {
         for (var element in value.docs) {
           events.add(element.data());
-          print(events.first);
         }
       },
     );
     notifyListeners();
-  }
+  }*/
 
   Future<void> writeEvents(
       {@required String? name,
@@ -74,9 +73,31 @@ class EventsInfo extends ChangeNotifier {
           fromFirestore: ClassModelEvents.fromFirestore,
           toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
         )
-        .doc("lasdas");
+        .doc("dasdas");
     await docRef.set(user);
   }
 }
+
+final GetEvents = FutureProvider<List>((ref) {
+  List<ClassModelEvents> events = [];
+  final databaseReference = FirebaseFirestore.instance;
+
+  events = [];
+  databaseReference
+      .collection("events")
+      .withConverter(
+        fromFirestore: ClassModelEvents.fromFirestore,
+        toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
+      )
+      .get()
+      .then(
+    (value) {
+      for (var element in value.docs) {
+        events.add(element.data());
+      }
+    },
+  );
+  return events;
+});
 
 final eventsInfoConfig = ChangeNotifierProvider((ref) => EventsInfo());
