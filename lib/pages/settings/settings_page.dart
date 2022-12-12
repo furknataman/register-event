@@ -97,10 +97,13 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                     onPressed: () {
                       eventsInfo.readEvents();
                       eventsInfo.writeEvents(
-                          name: "Matematik2",
-                          description: "Burada Açıklama yazıyor2",
-                          imageUrl: "assets/images/Rectangle2.png",
+                          name: "Matematik3",
+                          description: "Burada Açıklama yazıyor3",
+                          imageUrl:
+                              "https://images.unsplash.com/photo-1624555130581-1d9cca783bc0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2942&q=80",
                           active: true,
+                          eventLocationlUrl: "https://iili.io/HoF2Gz7.png",
+                          eventsLocation: "hall b",
                           id: 2,
                           capacity: 20,
                           speakers: ["Berat2", "Tamer2"],

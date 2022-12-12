@@ -23,33 +23,17 @@ class EventsInfo extends ChangeNotifier {
         );
     final docSnap = await ref.get();
     event = docSnap.data(); // Convert to City object
-    print(event!.dateTime);
+    // print(event!.dateTime);
     notifyListeners();
   }
 
-  /*Future readAllevents() async {
-    events = [];
-    databaseReference
-        .collection("events")
-        .withConverter(
-          fromFirestore: ClassModelEvents.fromFirestore,
-          toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
-        )
-        .get()
-        .then(
-      (value) {
-        for (var element in value.docs) {
-          events.add(element.data());
-        }
-      },
-    );
-    notifyListeners();
-  }*/
 
   Future<void> writeEvents(
       {@required String? name,
       @required String? description,
       @required String? imageUrl,
+      @required String? eventLocationlUrl,
+      @required String? eventsLocation,
       @required bool? active,
       @required int? id,
       @required int? capacity,
@@ -57,6 +41,8 @@ class EventsInfo extends ChangeNotifier {
       @required List<int>? attendedEvents,
       @required Timestamp? timestamp}) async {
     final user = ClassModelEvents(
+      eventLocationlUrl: eventLocationlUrl,
+      eventsLocation: eventsLocation,
       name: name,
       imageUrl: imageUrl,
       description: description,
@@ -73,7 +59,7 @@ class EventsInfo extends ChangeNotifier {
           fromFirestore: ClassModelEvents.fromFirestore,
           toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
         )
-        .doc("dasdas");
+        .doc("dasdas4");
     await docRef.set(user);
   }
 }
@@ -94,7 +80,7 @@ final getEventsList = FutureProvider<List>((ref) {
       for (var element in value.docs) {
         events.add(element.data());
       }
-      print(events.first.dateTime);
+      //print(events.first.dateTime);
     },
   );
   return events;

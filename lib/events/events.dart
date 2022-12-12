@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
+import 'package:qr/global/date_time_converter.dart';
+
+import 'location_widget.dart';
 
 class Eventspage extends ConsumerStatefulWidget {
   final ClassModelEvents? event;
@@ -19,13 +22,13 @@ class _Eventspage extends ConsumerState<Eventspage> {
   @override
   void initState() {
     super.initState();
-    timeData = DateFormat(' MMMM  d HH:mm').format(event!.dateTime!);
   }
 
   @override
   Widget build(
     BuildContext context,
   ) {
+    ClassTime time = classConverter(event!.dateTime!);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
       floatingActionButton: IconButton(
@@ -38,7 +41,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
           Navigator.pop(context);
         },
       ),
-      body: ListView(
+      body: Column(
         children: [
           Container(
             width: MediaQuery.of(context).size.width,
@@ -56,87 +59,75 @@ class _Eventspage extends ConsumerState<Eventspage> {
                     bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
           ),
           Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(top: 23.0, left: 17, right: 17),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        event!.name.toString(),
-                        style: Theme.of(context).textTheme.displayLarge,
+            child: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 23.0, left: 17, right: 17),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          event!.name.toString(),
+                          style: Theme.of(context).textTheme.displayLarge,
+                        ),
+                        const RegisterButton()
+                      ],
+                    ),
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(top: 17, bottom: 17),
+                      child: Text(
+                        "${time.month.toString()} ${time.day.toString()}th ${time.clock.toString()}   ",
+                        style: Theme.of(context).textTheme.displayMedium,
                       ),
-                      ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff485FFF),
-                              padding: const EdgeInsets.only(
-                                  left: 20, right: 20, top: 10, bottom: 10),
-                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              shape: const StadiumBorder()),
-                          onPressed: () {},
-                          child: Row(
-                            children: const [
-                              Text("Register"),
-                            ],
-                          ))
-                    ],
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(top: 17, bottom: 17),
-                    child: Text(
-                      timeData!,
-                      style: Theme.of(context).textTheme.displayMedium,
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      timeData!,
-                      style: Theme.of(context).textTheme.displayMedium,
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(top: 17, bottom: 17),
+                      child: Text(
+                        event!.description!.toString(),
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(top: 17, bottom: 17),
-                    child: Text(
-                      event!.description!.toString(),
-                      style: Theme.of(context).textTheme.displayMedium,
+                    Container(
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(top: 17, bottom: 17),
+                      child: Text(
+                        "Where is ${event!.eventsLocation}?",
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.centerLeft,
-                    padding: const EdgeInsets.only(top: 17, bottom: 17),
-                    child: Text(
-                      "Where is ${event!.eventsLocation}?",
-                      style: Theme.of(context).textTheme.displayMedium,
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      width: 300,
-                      height: 300,
-                      decoration: BoxDecoration(
-                          image: DecorationImage(
-                              colorFilter: ColorFilter.mode(
-                                  Colors.white.withOpacity(0.75), BlendMode.dstATop),
-                              image: NetworkImage(
-                                event!.eventLocationlUrl!,
-                              ),
-                              fit: BoxFit.fitHeight),
-                          color: Colors.black,
-                          borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(15),
-                              bottomRight: Radius.circular(15))),
-                    ),
-                  ),
-                ],
+                    LocationWidget(event: event),
+                  ],
+                ),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class RegisterButton extends StatelessWidget {
+  const RegisterButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            backgroundColor: const Color(0xff485FFF),
+            padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: const StadiumBorder()),
+        onPressed: () {},
+        child: Row(
+          children: const [
+            Text("Register"),
+          ],
+        ));
   }
 }
