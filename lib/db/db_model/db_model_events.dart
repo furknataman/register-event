@@ -11,18 +11,23 @@ class ClassModelEvents {
   final List<String>? speakers;
   final Timestamp? timestamp;
   final DateTime? dateTime;
+  final String? eventsLocation;
+  final String? eventLocationlUrl;
 
-  ClassModelEvents(
-      {this.name,
-      this.description,
-      this.imageUrl,
-      this.active,
-      this.id,
-      this.capacity,
-      this.speakers,
-      this.dateTime,
-      this.timestamp,
-      this.eventsCollentionName});
+  ClassModelEvents({
+    this.name,
+    this.description,
+    this.imageUrl,
+    this.active,
+    this.id,
+    this.capacity,
+    this.speakers,
+    this.dateTime,
+    this.timestamp,
+    this.eventsCollentionName,
+    this.eventLocationlUrl,
+    this.eventsLocation,
+  });
 
   factory ClassModelEvents.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -34,10 +39,12 @@ class ClassModelEvents {
       description: data?['description'],
       imageUrl: data?['imageUrl'],
       active: data?['active'],
+      eventLocationlUrl: data?['eventLocationlUrl'],
+      eventsLocation: data?['eventsLocation'],
       id: data?['id'],
       eventsCollentionName: snapshot.id,
       timestamp: data?['timestamp'],
-      dateTime: data?['timestamp'] is Iterable ? (data?['timestamp'].toDate()) : null,
+      dateTime: data?['timestamp'].toDate(),
       capacity: data?['capacity'],
       speakers: data?['speakers'] is Iterable ? List.from(data?['speakers']) : null,
     );
@@ -45,9 +52,11 @@ class ClassModelEvents {
 
   Map<String, dynamic> toFirestore() {
     return {
+      if (eventLocationlUrl != null) "eventLocationlUrl": eventLocationlUrl,
+      if (eventsLocation != null) "eventsLocation": eventsLocation,
       if (name != null) "name": name,
       if (timestamp != null) "timestamp": timestamp,
-      if (description != null) "email": description,
+      if (description != null) "description": description,
       if (imageUrl != null) "imageUrl": imageUrl,
       if (active != null) "active": active,
       if (id != null) "id": id,

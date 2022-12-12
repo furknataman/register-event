@@ -17,13 +17,13 @@ class EventsInfo extends ChangeNotifier {
       timestamp: Timestamp.now());
 
   Future readEvents() async {
-    final ref = databaseReference.collection("events").doc("lasdas").withConverter(
+    final ref = databaseReference.collection("events").doc("dasdas").withConverter(
           fromFirestore: ClassModelEvents.fromFirestore,
           toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
         );
     final docSnap = await ref.get();
     event = docSnap.data(); // Convert to City object
-    print(event!.dateTime!.hour);
+    print(event!.dateTime);
     notifyListeners();
   }
 
@@ -82,7 +82,6 @@ final getEventsList = FutureProvider<List>((ref) {
   List<ClassModelEvents> events = [];
   final databaseReference = FirebaseFirestore.instance;
 
-  events = [];
   databaseReference
       .collection("events")
       .withConverter(
@@ -95,6 +94,7 @@ final getEventsList = FutureProvider<List>((ref) {
       for (var element in value.docs) {
         events.add(element.data());
       }
+      print(events.first.dateTime);
     },
   );
   return events;

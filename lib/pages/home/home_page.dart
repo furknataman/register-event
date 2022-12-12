@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/events/events.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../global/bottomSheet/filter/filter_provider.dart';
@@ -89,7 +90,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                     return actionStac(
                         eventsNumber: index,
                         eventsName: getAllEvents[index].name,
-                        imageUrl: getAllEvents[index].imageUrl);
+                        imageUrl: getAllEvents[index].imageUrl,
+                        dateTime: getAllEvents[index].dateTime,
+                        eventLocation: getAllEvents[index].eventsLocation,
+                        event: getAllEvents[index]);
                   },
                   itemCount: getAllEvents.length,
                 ),
@@ -101,14 +105,18 @@ class _HomepageState extends ConsumerState<Homepage> {
     );
   }
 
-  InkWell actionStac(
-      {@required String? eventsName,
-      @required String? imageUrl,
-      @required int? eventsNumber}) {
+  InkWell actionStac({
+    @required String? eventsName,
+    @required String? imageUrl,
+    @required DateTime? dateTime,
+    @required int? eventsNumber,
+    @required ClassModelEvents? event,
+    @required String? eventLocation,
+  }) {
     return InkWell(
       onTap: () {
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Eventspage(eventsNumber)));
+            context, MaterialPageRoute(builder: (context) => Eventspage(event!)));
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 18.0),
@@ -171,7 +179,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                           ],
                         ),
                         Text(
-                          "Hall E",
+                          eventLocation!,
                           style: Theme.of(context).textTheme.displaySmall,
                         )
                       ]),
