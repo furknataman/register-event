@@ -1,11 +1,16 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/global_veriable/events_info.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../authentication/login_serice.dart';
 import '../../global/svg.dart';
+import '../../main.dart';
+import 'package:timezone/timezone.dart' as tz;
+
+import '../../notifiation/notification.dart';
 
 class Settingspage extends ConsumerStatefulWidget {
   const Settingspage({super.key});
@@ -15,6 +20,11 @@ class Settingspage extends ConsumerStatefulWidget {
 }
 
 class _SettingspageState extends ConsumerState<Settingspage> {
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final getGoogle = ref.watch<GoogleProvder>(googleConfig);
@@ -95,7 +105,14 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
-                      eventsInfo.readEvents();
+                      LocalNoticeService().addNotification(
+                        'testing',
+                        'Notification Title',
+                        'Body',
+                        DateTime.now().millisecondsSinceEpoch + 1000,
+                      );
+
+                      /*eventsInfo.readEvents();
                       eventsInfo.writeEvents(
                           name: "Matematik3",
                           description: "Burada Açıklama yazıyor3",
@@ -108,7 +125,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                           capacity: 20,
                           speakers: ["Berat2", "Tamer2"],
                           attendedEvents: [1231, 231],
-                          timestamp: Timestamp.now());
+                          timestamp: Timestamp.now());*/
                     },
                   )
                 ],
