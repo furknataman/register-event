@@ -12,7 +12,7 @@ InkWell evenetsCart(
   @required ClassModelEvents? event,
   @required String? eventLocation,
 }) {
-  ClassTime time = classConverter(event!.dateTime!);
+  ClassTime time = classConverter(event!.dateTime!, event.duration!);
   return InkWell(
     onTap: () {
       Navigator.push(context, MaterialPageRoute(builder: (context) => Eventspage(event)));
@@ -72,7 +72,7 @@ InkWell evenetsCart(
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            "13:40 - 14:00",
+                            "${time.clock} : ${time.endTime}",
                             style: Theme.of(context).textTheme.displayMedium,
                           )
                         ],

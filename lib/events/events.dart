@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/global/date_time_converter.dart';
 
@@ -28,7 +27,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
   Widget build(
     BuildContext context,
   ) {
-    ClassTime time = classConverter(event!.dateTime!);
+    ClassTime time = classConverter(event!.dateTime!, event!.duration!);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
       floatingActionButton: IconButton(

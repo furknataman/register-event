@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -59,6 +60,19 @@ class _ScannerPageState extends State<ScannerPage> {
               ),
             ),
           ),
+          Positioned(
+            bottom: 140,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 80, right: 59),
+              child: result != null
+                  ? Text(
+                      '  Data: ${result!.code}',
+                      style: const TextStyle(color: Colors.white, fontSize: 20),
+                    )
+                  : const Text('Scan a code'),
+            ),
+          ),
+
           /* Expanded(
             flex: 1,
             child: FittedBox(

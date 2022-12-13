@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:qr/db/db_model/db_model_events.dart';
-import 'package:qr/events/events.dart';
-import 'package:qr/global/date_time_converter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../global/bottomSheet/filter/filter_provider.dart';
 import '../../global/global_veriable/events_info.dart';

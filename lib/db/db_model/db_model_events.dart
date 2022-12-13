@@ -12,9 +12,11 @@ class ClassModelEvents {
   final Timestamp? timestamp;
   final DateTime? dateTime;
   final String? eventsLocation;
+  final int? duration;
   final String? eventLocationlUrl;
 
   ClassModelEvents({
+    this.duration,
     this.name,
     this.description,
     this.imageUrl,
@@ -36,6 +38,7 @@ class ClassModelEvents {
     final data = snapshot.data();
     return ClassModelEvents(
       name: data?['name'],
+      duration: data?['duration'],
       description: data?['description'],
       imageUrl: data?['imageUrl'],
       active: data?['active'],
@@ -55,6 +58,7 @@ class ClassModelEvents {
       if (eventLocationlUrl != null) "eventLocationlUrl": eventLocationlUrl,
       if (eventsLocation != null) "eventsLocation": eventsLocation,
       if (name != null) "name": name,
+      if (duration != null) "duration": duration,
       if (timestamp != null) "timestamp": timestamp,
       if (description != null) "description": description,
       if (imageUrl != null) "imageUrl": imageUrl,
