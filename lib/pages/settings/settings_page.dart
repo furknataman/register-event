@@ -109,8 +109,9 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                         'testing',
                         'Notification Title',
                         'Body',
-                        DateTime.now().millisecondsSinceEpoch + 1000,
+                        DateTime.now().millisecondsSinceEpoch + 2000,
                       );
+                      
 
                       /*eventsInfo.readEvents();
                       eventsInfo.writeEvents(

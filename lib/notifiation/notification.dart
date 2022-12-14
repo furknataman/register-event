@@ -8,7 +8,7 @@ class LocalNoticeService {
 
   Future<void> setup() async {
     // #1
-    const androidSetting = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const androidSetting = AndroidInitializationSettings('rectangle');
     const iosSetting = DarwinInitializationSettings();
 
     // #2
@@ -22,7 +22,8 @@ class LocalNoticeService {
     });
   }
 
-  Future<void> addNotification(String? channel,String? title,String? body,int? endTime) async {
+  Future<void> addNotification(
+      String? channel, String? title, String? body, int? endTime) async {
     // #1
     tzData.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime!);
@@ -41,7 +42,7 @@ class LocalNoticeService {
     );
 
 // #3
-    final id = 0;
+    final id = 1;
 
 // #4
     await _localNotificationsPlugin.zonedSchedule(

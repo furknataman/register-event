@@ -1,4 +1,4 @@
-package com.example.qr
+package com.eyuboglu.tok
 
 import io.flutter.embedding.android.FlutterActivity
 

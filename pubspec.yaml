@@ -58,6 +58,8 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  change_app_package_name: ^1.1.0
+
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -80,6 +82,16 @@ flutter:
   assets:
     - assets/svg/
     - assets/images/
+    - android/app/src/main/res/mipmap-mdpi/
+    - android/app/src/main/res/mipmap-xhdpi/
+    - android/app/src/main/res/mipmap-xxhdpi/
+    - android/app/src/main/res/mipmap-hdpi/
+    - android/app/src/main/res/mipmap-xxxhdpi/
+    - android/app/src/main/res/values/
+    - android/app/src/main/res/values-night/
+    - android/app/src/main/res/drawable/
+    - android/app/src/main/res/
+    - android/app/src/main/res/drawable-v21/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

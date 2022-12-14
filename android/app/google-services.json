@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "175666151826",
+    "project_id": "tokk-d3a72",
+    "storage_bucket": "tokk-d3a72.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175666151826:android:6323fbb0d2f42c0ee2014b",
+        "android_client_info": {
+          "package_name": "com.eyuboglu.tok"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "175666151826-ds46r8i7k4cgfanu7qvc55v62rpppmh8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBmBuyxS_H-96SIBZJu5e9n7NQn1I5ipMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "175666151826-ds46r8i7k4cgfanu7qvc55v62rpppmh8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "175666151826-h66vn1df7n9mpuuasjp5465fuutjf61h.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.eyuboglu.tok"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

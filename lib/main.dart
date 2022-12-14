@@ -13,11 +13,7 @@ FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsP
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
   await LocalNoticeService().setup();
-
-
-
   await Firebase.initializeApp();
   runApp(const ProviderScope(child: MyApp()));
 }
