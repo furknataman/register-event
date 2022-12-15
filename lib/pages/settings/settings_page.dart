@@ -1,17 +1,13 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/global_veriable/events_info.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../authentication/login_serice.dart';
 import '../../global/svg.dart';
-import '../../main.dart';
-import 'package:timezone/timezone.dart' as tz;
 
-import '../../notifiation/notification.dart';
+
+import '../../notifiation/local_notification/notification.dart';
 
 class Settingspage extends ConsumerStatefulWidget {
   const Settingspage({super.key});

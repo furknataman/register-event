@@ -5,6 +5,8 @@ import 'package:qr/pages/home/home_page.dart';
 import 'package:qr/pages/scan/scan.dart';
 import 'package:qr/pages/settings/settings_page.dart';
 
+import '../notifiation/push_notification/push_notification.dart';
+
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key});
 
@@ -19,6 +21,7 @@ class _RoutePageState extends State<RoutePage> {
   void initState() {
     super.initState();
     _pageController = PageController();
+    setFiraBase();
   }
 
   int _currentIndex = 0;
@@ -27,6 +30,7 @@ class _RoutePageState extends State<RoutePage> {
     _pageController.dispose();
     super.dispose();
   }
+
 
   @override
   Widget build(BuildContext context) {
