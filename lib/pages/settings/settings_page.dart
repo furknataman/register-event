@@ -107,11 +107,10 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                     onPressed: () {
                       LocalNoticeService().addNotification(
                         'testing',
-                        'Notification Title',
-                        'Body',
-                        DateTime.now().millisecondsSinceEpoch + 2000,
+                        'AŞKODAN KUŞKOYA',
+                        'Aşko ve kuşko maceraları androidde de deva mediyor',
+                        DateTime.now().millisecondsSinceEpoch + 4000,
                       );
-                      
 
                       /*eventsInfo.readEvents();
                       eventsInfo.writeEvents(

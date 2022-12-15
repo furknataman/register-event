@@ -4,11 +4,12 @@ import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tzData;
 
 class LocalNoticeService {
+  LocalNoticeService();
   final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
   Future<void> setup() async {
     // #1
-    const androidSetting = AndroidInitializationSettings('rectangle');
+    const androidSetting = AndroidInitializationSettings('@drawable/icstatandroid');
     const iosSetting = DarwinInitializationSettings();
 
     // #2
@@ -31,11 +32,12 @@ class LocalNoticeService {
 // #2
     final androidDetail = AndroidNotificationDetails(
         channel!, // channel Id
-        channel // channel Name
-        );
+        channel, // channel Name
+        priority: Priority.max,
+        importance: Importance.max,
+        styleInformation: DefaultStyleInformation(true, true));
 
     final iosDetail = DarwinNotificationDetails();
-
     final noticeDetail = NotificationDetails(
       iOS: iosDetail,
       android: androidDetail,
@@ -43,6 +45,7 @@ class LocalNoticeService {
 
 // #3
     final id = 1;
+    print("object");
 
 // #4
     await _localNotificationsPlugin.zonedSchedule(
