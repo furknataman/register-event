@@ -106,6 +106,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
+                      
                       LocalNoticeService().addNotification(
                         'testing',
                         'Test Titile',
