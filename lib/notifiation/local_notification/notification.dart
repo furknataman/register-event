@@ -9,7 +9,7 @@ class LocalNoticeService {
 
   Future<void> setup() async {
     // #1
-    const androidSetting = AndroidInitializationSettings('@drawable/icstatandroid');
+    const androidSetting = AndroidInitializationSettings('@mipmap/launcher_icon');
     const iosSetting = DarwinInitializationSettings();
 
     // #2
@@ -35,9 +35,9 @@ class LocalNoticeService {
         channel, // channel Name
         priority: Priority.max,
         importance: Importance.max,
-        styleInformation:const  DefaultStyleInformation(true, true));
+        styleInformation: const DefaultStyleInformation(true, true));
 
-    const iosDetail =DarwinNotificationDetails();
+    const iosDetail = DarwinNotificationDetails();
     final noticeDetail = NotificationDetails(
       iOS: iosDetail,
       android: androidDetail,
@@ -45,7 +45,6 @@ class LocalNoticeService {
 
 // #3
     const id = 1;
-
 
 // #4
     await _localNotificationsPlugin.zonedSchedule(
