@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -107,13 +108,14 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                     onPressed: () {
                       LocalNoticeService().addNotification(
                         'testing',
-                        'AŞKODAN KUŞKOYA',
-                        'Aşko ve kuşko maceraları androidde de deva mediyor',
+                        'Test Titile',
+                        'Test Body',
                         DateTime.now().millisecondsSinceEpoch + 4000,
                       );
 
                       /*eventsInfo.readEvents();
                       eventsInfo.writeEvents(
+                        duration: 40,
                           name: "Matematik3",
                           description: "Burada Açıklama yazıyor3",
                           imageUrl:

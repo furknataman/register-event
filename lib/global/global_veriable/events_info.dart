@@ -27,7 +27,6 @@ class EventsInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> writeEvents(
       {@required String? name,
       @required String? description,
@@ -38,6 +37,7 @@ class EventsInfo extends ChangeNotifier {
       @required int? id,
       @required int? capacity,
       @required List<String>? speakers,
+      @required int? duration,
       @required List<int>? attendedEvents,
       @required Timestamp? timestamp}) async {
     final user = ClassModelEvents(
@@ -51,6 +51,7 @@ class EventsInfo extends ChangeNotifier {
       capacity: capacity,
       speakers: speakers,
       timestamp: timestamp,
+      duration: duration,
     );
 
     final docRef = databaseReference
