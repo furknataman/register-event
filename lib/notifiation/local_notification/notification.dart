@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest.dart' as tzData;
+import 'package:timezone/data/latest.dart' as tzdata;
 
 class LocalNoticeService {
   LocalNoticeService();
@@ -9,7 +9,7 @@ class LocalNoticeService {
 
   Future<void> setup() async {
     // #1
-    const androidSetting = AndroidInitializationSettings('@drawable/icstatandroid');
+    const androidSetting = AndroidInitializationSettings('@mipmap/launcher_icon');
     const iosSetting = DarwinInitializationSettings();
 
     // #2
@@ -26,7 +26,7 @@ class LocalNoticeService {
   Future<void> addNotification(
       String? channel, String? title, String? body, int? endTime) async {
     // #1
-    tzData.initializeTimeZones();
+    tzdata.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime!);
 
 // #2
@@ -35,17 +35,16 @@ class LocalNoticeService {
         channel, // channel Name
         priority: Priority.max,
         importance: Importance.max,
-        styleInformation: DefaultStyleInformation(true, true));
+        styleInformation: const DefaultStyleInformation(true, true));
 
-    final iosDetail = DarwinNotificationDetails();
+    const iosDetail = DarwinNotificationDetails();
     final noticeDetail = NotificationDetails(
       iOS: iosDetail,
       android: androidDetail,
     );
 
 // #3
-    final id = 1;
-    print("object");
+    const id = 1;
 
 // #4
     await _localNotificationsPlugin.zonedSchedule(

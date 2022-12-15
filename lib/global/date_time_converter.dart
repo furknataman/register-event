@@ -1,6 +1,3 @@
-import 'dart:math';
-
-import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 class ClassTime {

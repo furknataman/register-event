@@ -1,18 +1,9 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/global/global_veriable/events_info.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../authentication/login_serice.dart';
 import '../../global/svg.dart';
-import '../../main.dart';
-import 'package:timezone/timezone.dart' as tz;
-
-import '../../notifiation/notification.dart';
-
+import '../../notifiation/local_notification/notification.dart';
 class Settingspage extends ConsumerStatefulWidget {
   const Settingspage({super.key});
 
@@ -30,10 +21,9 @@ class _SettingspageState extends ConsumerState<Settingspage> {
   Widget build(BuildContext context) {
     final getGoogle = ref.watch<GoogleProvder>(googleConfig);
     final userInfo = ref.read<UserInfo>(userInfoConfig);
-    final eventsInfo = ref.read<EventsInfo>(eventsInfoConfig);
     return Scaffold(
       body: Container(
-        padding: EdgeInsets.only(left: 30, right: 30),
+        padding: const EdgeInsets.only(left: 30, right: 30),
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 6 * 4,
@@ -72,7 +62,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       children: [
                         Text("Visit TOK Website",
                             style: Theme.of(context).textTheme.bodyLarge),
-                        Icon(
+                       const Icon(
                           Icons.web,
                           size: 30,
                         )
@@ -83,7 +73,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       children: [
                         Text("Logout", style: Theme.of(context).textTheme.bodyLarge),
                         IconButton(
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.login,
                             size: 30,
                           ),
@@ -101,11 +91,12 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                 children: [
                   Text("database", style: Theme.of(context).textTheme.bodyLarge),
                   IconButton(
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.login,
                       size: 30,
                     ),
                     onPressed: () {
+                      
                       LocalNoticeService().addNotification(
                         'testing',
                         'Test Titile',

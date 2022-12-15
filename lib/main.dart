@@ -1,15 +1,17 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'authentication/authservice.dart';
-import 'notifiation/notification.dart';
-
-
+import 'notifiation/local_notification/notification.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await LocalNoticeService().setup();
+  FlutterLocalNotificationsPlugin()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      ?.requestPermission();
   await Firebase.initializeApp();
+  await LocalNoticeService().setup();
   runApp(const ProviderScope(child: MyApp()));
 }
 

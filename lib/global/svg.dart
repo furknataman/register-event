@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 const String assetName = 'assets/svg/elipseregister.svg';
-final Widget elipse = SvgPicture.asset(assetName, width: 450);
+final Widget elipse = SvgPicture.asset(assetName, width: 350);
 
 const String assetName2 = 'assets/svg/TOK.svg';
 
