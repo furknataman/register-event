@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../db/db_model/db_model_events.dart';
-import '../../../events/events.dart';
+import '../../events/event_page.dart';
 import '../../../global/date_time_converter.dart';
 
 InkWell evenetsCart(

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/global/date_time_converter.dart';
+import 'package:qr/global/global_veriable/user_info.dart';
 
-import 'location_widget.dart';
+import 'widgets/location_widget.dart';
 
 class Eventspage extends ConsumerStatefulWidget {
   final ClassModelEvents? event;
@@ -27,6 +28,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
   Widget build(
     BuildContext context,
   ) {
+    final userInfo = ref.watch<UserInfo>(userInfoConfig);
     ClassTime time = classConverter(event!.dateTime!, event!.duration!);
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
@@ -70,7 +72,21 @@ class _Eventspage extends ConsumerState<Eventspage> {
                           event!.name.toString(),
                           style: Theme.of(context).textTheme.displayLarge,
                         ),
-                        const RegisterButton()
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xff485FFF),
+                                padding: const EdgeInsets.only(
+                                    left: 20, right: 20, top: 10, bottom: 10),
+                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                shape: const StadiumBorder()),
+                            onPressed: () {
+                              userInfo.writeUser(registeredEvents: 121212);
+                            },
+                            child: Row(
+                              children: const [
+                                Text("Register"),
+                              ],
+                            )),
                       ],
                     ),
                     Container(
@@ -106,27 +122,5 @@ class _Eventspage extends ConsumerState<Eventspage> {
         ],
       ),
     );
-  }
-}
-
-class RegisterButton extends StatelessWidget {
-  const RegisterButton({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xff485FFF),
-            padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            shape: const StadiumBorder()),
-        onPressed: () {},
-        child: Row(
-          children: const [
-            Text("Register"),
-          ],
-        ));
   }
 }

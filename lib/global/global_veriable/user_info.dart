@@ -7,17 +7,17 @@ import '../../db/db_model/db_model_user.dart';
 
 class UserInfo extends ChangeNotifier {
   final databaseReference = FirebaseFirestore.instance;
+  String mail = FirebaseAuth.instance.currentUser!.email.toString();
   ClassUserModel? user = ClassUserModel(
-      name: "",
-      email: "",
-      password: "",
+      name: "Furkan",
+      email: "furknataman@gmail.com",
+      password: "1231231",
       active: false,
       id: 23,
       registeredEvents: [31, 1231],
       attendedEvents: [1231, 21321]);
-  Future<void> readUser() async {
-    String mail = FirebaseAuth.instance.currentUser!.email.toString();
 
+  Future<void> readUser() async {
     final ref = databaseReference.collection("users").doc(mail).withConverter(
           fromFirestore: ClassUserModel.fromFirestore,
           toFirestore: (ClassUserModel city, _) => city.toFirestore(),
@@ -29,22 +29,18 @@ class UserInfo extends ChangeNotifier {
   }
 
   Future<void> writeUser({
-    @required String? name,
-    @required String? email,
-    @required String? password,
-    @required bool? active,
-    @required int? id,
-    @required List<int>? registeredEvents,
-    @required List<int>? attendedEvents,
+    @required int? registeredEvents,
   }) async {
-    final user = ClassUserModel(
-        name: name,
-        email: email,
-        password: password,
-        active: active,
-        id: id,
-        registeredEvents: registeredEvents,
-        attendedEvents: attendedEvents);
+    List<int>? addevent = user!.registeredEvents;
+    addevent!.add(registeredEvents!);
+    final ClassUserModel registerEvent = ClassUserModel(
+        name: user!.name,
+        email: user!.email,
+        password: user!.password,
+        active: user!.active,
+        id: user!.id,
+        registeredEvents: addevent,
+        attendedEvents: user!.attendedEvents);
 
     final docRef = databaseReference
         .collection("users")
@@ -52,8 +48,8 @@ class UserInfo extends ChangeNotifier {
           fromFirestore: ClassUserModel.fromFirestore,
           toFirestore: (ClassUserModel city, options) => city.toFirestore(),
         )
-        .doc(user.email);
-    await docRef.set(user);
+        .doc(mail);
+    await docRef.set(registerEvent);
   }
 }
 
