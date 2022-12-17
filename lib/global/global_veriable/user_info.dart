@@ -50,6 +50,7 @@ class UserInfo extends ChangeNotifier {
         )
         .doc(mail);
     await docRef.set(registerEvent);
+    readUser();
   }
 }
 

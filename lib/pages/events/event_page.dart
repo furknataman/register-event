@@ -72,37 +72,21 @@ class _Eventspage extends ConsumerState<Eventspage> {
                           event!.name.toString(),
                           style: Theme.of(context).textTheme.displayLarge,
                         ),
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xff485FFF),
-                                padding: const EdgeInsets.only(
-                                    left: 20, right: 20, top: 10, bottom: 10),
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                                shape: const StadiumBorder()),
-                            onPressed: () {
-                              userInfo.writeUser(registeredEvents: 121212);
-                            },
-                            child: Row(
-                              children: const [
-                                Text("Register"),
-                              ],
-                            )),
+                        RegisterButton(userInfo: userInfo, event: event),
                       ],
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(top: 17, bottom: 17),
-                      child: Text(
+                    textContainer(
+                        "Date of Event", Theme.of(context).textTheme.displayMedium),
+                    textContainer(
                         "${time.month.toString()} ${time.day.toString()}th ${time.clock.toString()}   ",
-                        style: Theme.of(context).textTheme.displayMedium,
-                      ),
-                    ),
+                        Theme.of(context).textTheme.titleSmall,
+                        bottomPadding: 10),
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(top: 17, bottom: 17),
                       child: Text(
                         event!.description!.toString(),
-                        style: Theme.of(context).textTheme.displayMedium,
+                        style: Theme.of(context).textTheme.titleSmall,
                       ),
                     ),
                     Container(
@@ -122,5 +106,60 @@ class _Eventspage extends ConsumerState<Eventspage> {
         ],
       ),
     );
+  }
+
+  Container textContainer(String? text, TextStyle? textStyle, {double bottomPadding = 5}) {
+    return Container(
+      alignment: Alignment.centerLeft,
+      padding: EdgeInsets.only(bottom: bottomPadding),
+      child: Text(
+        text!,
+        style: textStyle,
+      ),
+    );
+  }
+}
+
+class RegisterButton extends StatelessWidget {
+  const RegisterButton({
+    super.key,
+    required this.userInfo,
+    required this.event,
+  });
+
+  final UserInfo userInfo;
+  final ClassModelEvents? event;
+
+  @override
+  Widget build(BuildContext context) {
+    if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff485FFF),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: () {
+            userInfo.writeUser(registeredEvents: event!.id);
+          },
+          child: Row(
+            children: const [
+              Text("Register"),
+            ],
+          ));
+    } else {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff485FFF),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: null,
+          child: Row(
+            children: const [
+              Text("Registered"),
+            ],
+          ));
+    }
   }
 }
