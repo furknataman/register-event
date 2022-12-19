@@ -25,7 +25,11 @@ class StartPage extends ConsumerWidget {
           ],
         )),
         child: Stack(children: [
-          Positioned(bottom: 0, right: 0, child: elipse),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: elipse(MediaQuery.of(context).size.width),
+          ),
           Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,

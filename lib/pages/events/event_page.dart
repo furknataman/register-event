@@ -16,8 +16,6 @@ class Eventspage extends ConsumerStatefulWidget {
 }
 
 class _Eventspage extends ConsumerState<Eventspage> {
-  final List<String> entries = <String>['A', 'B', 'C'];
-  final List<int> colorCodes = <int>[600, 500, 100];
   ClassModelEvents? event;
   _Eventspage({@required this.event});
   String? timeData;
