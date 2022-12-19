@@ -81,14 +81,12 @@ class _Eventspage extends ConsumerState<Eventspage> {
                         "${time.month.toString()} ${time.day.toString()}th ${time.clock.toString()}   ",
                         Theme.of(context).textTheme.titleSmall,
                         bottomPadding: 10),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      padding: const EdgeInsets.only(top: 17, bottom: 17),
-                      child: Text(
-                        event!.description!.toString(),
-                        style: Theme.of(context).textTheme.titleSmall,
-                      ),
-                    ),
+                    textContainer("Speakers", Theme.of(context).textTheme.displayMedium),
+                    textContainer(
+                        "Description", Theme.of(context).textTheme.displayMedium),
+                    textContainer(event!.description!.toString(),
+                        Theme.of(context).textTheme.titleSmall,
+                        bottomPadding: 10),
                     Container(
                       alignment: Alignment.centerLeft,
                       padding: const EdgeInsets.only(top: 17, bottom: 17),
@@ -98,6 +96,15 @@ class _Eventspage extends ConsumerState<Eventspage> {
                       ),
                     ),
                     LocationWidget(event: event),
+                    Expanded(
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          context;
+                          return Text(event!.speakers![index].toString());
+                        },
+                        itemCount: event!.speakers!.length,
+                      ),
+                    ),
                   ],
                 ),
               ),

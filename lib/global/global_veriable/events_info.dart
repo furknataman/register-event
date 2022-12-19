@@ -5,7 +5,7 @@ import 'package:qr/db/db_model/db_model_events.dart';
 
 class EventsInfo extends ChangeNotifier {
   List<ClassModelEvents> events = [];
-  final databaseReference = FirebaseFirestore.instance;
+ final databaseReference = FirebaseFirestore.instance;
   ClassModelEvents? event = ClassModelEvents(
       name: " ",
       description: "açıklama",
@@ -14,7 +14,8 @@ class EventsInfo extends ChangeNotifier {
       id: 4,
       capacity: 20,
       speakers: ["123", "123"],
-      timestamp: Timestamp.now());
+    timestamp: Timestamp.now()
+    );
 
   Future readEvents() async {
     final ref = databaseReference.collection("events").doc("dasdas").withConverter(
@@ -27,7 +28,7 @@ class EventsInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> writeEvents(
+ Future<void> writeEvents(
       {@required String? name,
       @required String? description,
       @required String? imageUrl,
@@ -54,7 +55,7 @@ class EventsInfo extends ChangeNotifier {
       duration: duration,
     );
 
-    final docRef = databaseReference
+final docRef = databaseReference
         .collection("events")
         .withConverter(
           fromFirestore: ClassModelEvents.fromFirestore,

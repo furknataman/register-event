@@ -17,7 +17,7 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   void initState() {
     super.initState();
-    ref.read<UserInfo>(userInfoConfig).readUser();
+   ref.read<UserInfo>(userInfoConfig).readUser();
   }
 
   @override
@@ -78,7 +78,7 @@ class _HomepageState extends ConsumerState<Homepage> {
               ],
             ),
           ),
-          getAllEvents.when(
+         getAllEvents.when(
             loading: () => const CircularProgressIndicator(),
             error: (err, stack) => Text('Error: $err'),
             data: (getAllEvents) {

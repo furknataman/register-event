@@ -1,7 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/notifiation/toast_message/toast_message.dart';
+
+import '../notifiation/toast_message/toast_message.dart';
 
 final googleConfig = ChangeNotifierProvider((ref) => GoogleProvder());
 
@@ -35,7 +36,7 @@ class GoogleProvder extends ChangeNotifier {
       return null;
     } on FirebaseAuthException catch (e) {
       controllerPassword.text = "";
-      toastMessage("Kullanıcı adı ve şifre hatalı");
+     toastMessage("Kullanıcı adı ve şifre hatalı");
 
       return e.message;
     }

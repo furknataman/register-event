@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../db/db_model/db_model_user.dart';
 
 class UserInfo extends ChangeNotifier {
-  final databaseReference = FirebaseFirestore.instance;
+ final databaseReference = FirebaseFirestore.instance;
   String mail = FirebaseAuth.instance.currentUser!.email.toString();
   ClassUserModel? user = ClassUserModel(
       name: "Furkan",
@@ -17,7 +17,7 @@ class UserInfo extends ChangeNotifier {
       registeredEvents: [31, 1231],
       attendedEvents: [1231, 21321]);
 
-  Future<void> readUser() async {
+Future<void> readUser() async {
     final ref = databaseReference.collection("users").doc(mail).withConverter(
           fromFirestore: ClassUserModel.fromFirestore,
           toFirestore: (ClassUserModel city, _) => city.toFirestore(),
@@ -28,7 +28,7 @@ class UserInfo extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> writeUser({
+Future<void> writeUser({
     @required int? registeredEvents,
   }) async {
     List<int>? addevent = user!.registeredEvents;

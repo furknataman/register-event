@@ -25,13 +25,13 @@ class ClassModelEvents {
     this.capacity,
     this.speakers,
     this.dateTime,
-    this.timestamp,
+     this.timestamp,
     this.eventsCollentionName,
     this.eventLocationlUrl,
     this.eventsLocation,
   });
 
-  factory ClassModelEvents.fromFirestore(
+ factory ClassModelEvents.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
