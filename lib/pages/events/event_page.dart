@@ -50,7 +50,10 @@ class _Eventspage extends ConsumerState<Eventspage> {
             pinned: true,
             expandedHeight: 160.0,
             flexibleSpace: FlexibleSpaceBar(
-              //title: Text('SliverAppBar'),
+              title: Text(
+                event!.name.toString(),
+                textAlign: TextAlign.center,
+              ),
               background: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
@@ -75,12 +78,12 @@ class _Eventspage extends ConsumerState<Eventspage> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text(
+                      /*Text(
                         event!.name.toString(),
                         style: Theme.of(context).textTheme.displayLarge,
-                      ),
+                      ),*/
                       RegisterButton(userInfo: userInfo, event: event),
                     ],
                   ),
@@ -107,6 +110,10 @@ class _Eventspage extends ConsumerState<Eventspage> {
                       itemCount: event!.speakers!.length,
                     ),
                   ),
+                  textContainer("Description", Theme.of(context).textTheme.displayMedium),
+                  textContainer(event!.description!.toString(),
+                      Theme.of(context).textTheme.titleSmall,
+                      bottomPadding: 10),
                   textContainer("Description", Theme.of(context).textTheme.displayMedium),
                   textContainer(event!.description!.toString(),
                       Theme.of(context).textTheme.titleSmall,
