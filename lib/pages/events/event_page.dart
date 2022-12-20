@@ -102,7 +102,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
                         context;
                         return Padding(
                           padding: const EdgeInsets.only(right: 12.0),
-                          child: textContainer(" ${event!.speakers![index].toString()}",
+                          child: textContainer("${event!.speakers![index].toString()}",
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 10),
                         );

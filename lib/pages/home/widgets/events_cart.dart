@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import '../../../db/db_model/db_model_events.dart';
 import '../../events/event_page.dart';
 import '../../../global/date_time_converter.dart';
@@ -11,7 +12,10 @@ InkWell evenetsCart(
   @required int? eventsNumber,
   @required ClassModelEvents? event,
   @required String? eventLocation,
+  @required bool? eventCart,
 }) {
+  print(eventCart);
+
   ClassTime time = classConverter(event!.dateTime!, event.duration!);
   return InkWell(
     onTap: () {
@@ -61,7 +65,7 @@ InkWell evenetsCart(
                 height: 71,
                 width: MediaQuery.of(context).size.width - 40,
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
@@ -77,19 +81,33 @@ InkWell evenetsCart(
                           )
                         ],
                       ),
-                      Text(
-                        eventLocation!,
-                        style: Theme.of(context).textTheme.displaySmall,
-                      )
+                      SizedBox(
+                        height: 25,
+                        child: ListView.builder(
+                          reverse: false,
+                          shrinkWrap: false,
+                          scrollDirection: Axis.horizontal,
+                          itemBuilder: (context, index) {
+                            context;
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 12.0),
+                              child: textContainer(event.speakers![index].toString(),
+                                  Theme.of(context).textTheme.titleSmall,
+                                  bottomPadding: 0),
+                            );
+                          },
+                          itemCount: event.speakers!.length,
+                        ),
+                      ),
                     ]),
               )),
           Positioned(
               top: 13,
-              left: 26,
+              left: 30,
               child: Container(
                 decoration: const BoxDecoration(
                     color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 height: 42,
                 width: 42,
                 child: Column(
@@ -105,7 +123,25 @@ InkWell evenetsCart(
               )),
           Positioned(
               top: 13,
-              right: 26,
+              right: 30,
+              child: Container(
+                alignment: Alignment.center,
+                decoration: const BoxDecoration(
+                    color: Color(0xffFFFFFF),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                height: 38,
+                width: 38,
+                child: eventCart!
+                    ? const Icon(
+                        LucideIcons.calendarCheck,
+                        size: 28,
+                        color: Color(0xff485FFF),
+                      )
+                    : const Icon(LucideIcons.calendar, size: 28, color: Color(0xffBDBDBD)),
+              )),
+          Positioned(
+              bottom: 80,
+              left: 30,
               child: Container(
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
@@ -116,13 +152,28 @@ InkWell evenetsCart(
                           offset: Offset(0, 4))
                     ],
                     color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(10))),
+                    borderRadius: BorderRadius.all(Radius.circular(5))),
                 height: 26,
-                width: 72,
-                child: Text("Ongoing", style: Theme.of(context).textTheme.labelMedium),
+                width: 60,
+                child: Text(
+                  eventLocation!,
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
               )),
         ],
       ),
+    ),
+  );
+}
+
+Container textContainer(String? text, TextStyle? textStyle, {double bottomPadding = 5}) {
+  return Container(
+    alignment: Alignment.centerLeft,
+    padding: EdgeInsets.only(bottom: bottomPadding),
+    child: Text(
+      text!,
+      style: textStyle,
+      textAlign: TextAlign.start,
     ),
   );
 }

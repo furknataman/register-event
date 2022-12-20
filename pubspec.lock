@@ -366,6 +366,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.1"
+  lucide_icons:
+    dependency: "direct main"
+    description:
+      name: lucide_icons
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.104.0"
   matcher:
     dependency: transitive
     description:
