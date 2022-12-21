@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/global/date_time_converter.dart';
@@ -102,7 +101,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
                         context;
                         return Padding(
                           padding: const EdgeInsets.only(right: 12.0),
-                          child: textContainer("${event!.speakers![index].toString()}",
+                          child: textContainer(event!.speakers![index].toString(),
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 10),
                         );
