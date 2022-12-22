@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import '../../db/db_model/db_model_user.dart';
 
 class UserInfo extends ChangeNotifier {
@@ -52,6 +51,7 @@ Future<void> writeUser({
     await docRef.set(registerEvent);
     readUser();
   }
+  
 }
 
 final userInfoConfig = ChangeNotifierProvider((ref) => UserInfo());

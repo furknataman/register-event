@@ -5,7 +5,7 @@ import 'package:qr/db/db_model/db_model_events.dart';
 
 class EventsInfo extends ChangeNotifier {
   List<ClassModelEvents> events = [];
- final databaseReference = FirebaseFirestore.instance;
+  final databaseReference = FirebaseFirestore.instance;
   ClassModelEvents? event = ClassModelEvents(
       name: " ",
       description: "açıklama",
@@ -14,8 +14,7 @@ class EventsInfo extends ChangeNotifier {
       id: 4,
       capacity: 20,
       speakers: ["123", "123"],
-    timestamp: Timestamp.now()
-    );
+      timestamp: Timestamp.now());
 
   Future readEvents() async {
     final ref = databaseReference.collection("events").doc("dasdas").withConverter(
@@ -28,40 +27,32 @@ class EventsInfo extends ChangeNotifier {
     notifyListeners();
   }
 
- Future<void> writeEvents(
-      {@required String? name,
-      @required String? description,
-      @required String? imageUrl,
-      @required String? eventLocationlUrl,
-      @required String? eventsLocation,
-      @required bool? active,
-      @required int? id,
-      @required int? capacity,
-      @required List<String>? speakers,
-      @required int? duration,
-      @required List<int>? attendedEvents,
-      @required Timestamp? timestamp}) async {
+  Future<void> writeEvents({
+    @required ClassModelEvents? event,
+  }) async {
+    int? totalParticipantsNumber = event!.participantsNumber! + 1;
     final user = ClassModelEvents(
-      eventLocationlUrl: eventLocationlUrl,
-      eventsLocation: eventsLocation,
-      name: name,
-      imageUrl: imageUrl,
-      description: description,
-      active: active,
-      id: id,
-      capacity: capacity,
-      speakers: speakers,
-      timestamp: timestamp,
-      duration: duration,
+      eventLocationlUrl: event.eventLocationlUrl,
+      eventsLocation: event.eventsLocation,
+      name: event.name,
+      imageUrl: event.imageUrl,
+      description: event.description,
+      active: event.active,
+      id: event.id,
+      participantsNumber: totalParticipantsNumber,
+      capacity: event.capacity,
+      speakers: event.speakers,
+      timestamp: event.timestamp,
+      duration: event.duration,
     );
 
-final docRef = databaseReference
+    final docRef = databaseReference
         .collection("events")
         .withConverter(
           fromFirestore: ClassModelEvents.fromFirestore,
           toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
         )
-        .doc("dasdas4");
+        .doc("dasdas45");
     await docRef.set(user);
   }
 }

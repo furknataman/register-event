@@ -5,6 +5,7 @@ import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/global/date_time_converter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 
+import '../../global/global_veriable/events_info.dart';
 import 'widgets/location_widget.dart';
 
 class Eventspage extends ConsumerStatefulWidget {
@@ -19,10 +20,17 @@ class _Eventspage extends ConsumerState<Eventspage> {
   ClassModelEvents? event;
   _Eventspage({@required this.event});
   String? timeData;
+  ScrollController scrollController = ScrollController();
+  bool _isVisible = false;
 
   @override
   void initState() {
     super.initState();
+    scrollController.addListener(() {
+      setState(() {
+        _isVisible = scrollController.offset > 220;
+      });
+    });
   }
 
   @override
@@ -30,48 +38,29 @@ class _Eventspage extends ConsumerState<Eventspage> {
     BuildContext context,
   ) {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
+
     ClassTime time = classConverter(event!.dateTime!, event!.duration!);
     return Scaffold(
-      /*floatingActionButtonLocation: FloatingActionButtonLocation.miniStartTop,
-      floatingActionButton: IconButton(
-        icon: const Icon(
-          Icons.arrow_circle_left_outlined,
-          color: Colors.white,
-          size: 40,
-        ),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),*/
       body: CustomScrollView(
+        controller: scrollController,
         slivers: <Widget>[
           SliverAppBar(
             backgroundColor: const Color(0xff485FFF),
             pinned: true,
-            expandedHeight: 160.0,
+            snap: false,
+            floating: false,
+            expandedHeight: 220.0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(
-                event!.name.toString(),
-                style: TextStyle(color: Colors.white),
-                textAlign: TextAlign.center,
-              ),
-              background: Container(
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                      colorFilter: ColorFilter.mode(
-                          Colors.white.withOpacity(0.75), BlendMode.dstATop),
-                      image: NetworkImage(
-                        event!.imageUrl!,
-                      ),
-                      fit: BoxFit.fitHeight),
-                  color: Colors.black,
-                  /* borderRadius: const BorderRadius.only(
-                        bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15))*/
+                collapseMode: CollapseMode.pin,
+                title: Visibility(
+                  visible: _isVisible,
+                  child: Text(
+                    event!.name.toString(),
+                    style: const TextStyle(color: Colors.white, fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
                 ),
-              ),
-            ),
+                background: Image.network(event!.imageUrl!, fit: BoxFit.cover)),
           ),
           SliverList(
               delegate: SliverChildListDelegate([
@@ -80,13 +69,17 @@ class _Eventspage extends ConsumerState<Eventspage> {
               child: Column(
                 children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      /*Text(
+                      Text(
                         event!.name.toString(),
                         style: Theme.of(context).textTheme.displayLarge,
-                      ),*/
-                      RegisterButton(userInfo: userInfo, event: event),
+                      ),
+                      RegisterButton(
+                        userInfo: userInfo,
+                        event: event,
+                      ),
                     ],
                   ),
                   textContainer(
@@ -112,8 +105,9 @@ class _Eventspage extends ConsumerState<Eventspage> {
                       itemCount: event!.speakers!.length,
                     ),
                   ),
-                  textContainer("Description", Theme.of(context).textTheme.displayMedium),
-                  textContainer(event!.description!.toString(),
+                  textContainer("Cpacity", Theme.of(context).textTheme.displayMedium),
+                  textContainer(
+                      "${event!.capacity! - event!.participantsNumber!} free seats left from ${event!.capacity}",
                       Theme.of(context).textTheme.titleSmall,
                       bottomPadding: 10),
                   textContainer("Description", Theme.of(context).textTheme.displayMedium),
@@ -145,7 +139,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
   }
 }
 
-class RegisterButton extends StatelessWidget {
+class RegisterButton extends ConsumerWidget {
   const RegisterButton({
     super.key,
     required this.userInfo,
@@ -156,7 +150,8 @@ class RegisterButton extends StatelessWidget {
   final ClassModelEvents? event;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final eventAction = ref.watch<EventsInfo>(eventsInfoConfig);
     if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -166,6 +161,7 @@ class RegisterButton extends StatelessWidget {
               shape: const StadiumBorder()),
           onPressed: () {
             userInfo.writeUser(registeredEvents: event!.id);
+            eventAction.writeEvents(event: event);
           },
           child: Row(
             children: const [

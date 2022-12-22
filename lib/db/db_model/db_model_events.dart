@@ -14,24 +14,25 @@ class ClassModelEvents {
   final String? eventsLocation;
   final int? duration;
   final String? eventLocationlUrl;
+  final int? participantsNumber;
 
-  ClassModelEvents({
-    this.duration,
-    this.name,
-    this.description,
-    this.imageUrl,
-    this.active,
-    this.id,
-    this.capacity,
-    this.speakers,
-    this.dateTime,
-     this.timestamp,
-    this.eventsCollentionName,
-    this.eventLocationlUrl,
-    this.eventsLocation,
-  });
+  ClassModelEvents(
+      {this.duration,
+      this.name,
+      this.description,
+      this.imageUrl,
+      this.active,
+      this.id,
+      this.capacity,
+      this.speakers,
+      this.dateTime,
+      this.timestamp,
+      this.eventsCollentionName,
+      this.eventLocationlUrl,
+      this.eventsLocation,
+      this.participantsNumber});
 
- factory ClassModelEvents.fromFirestore(
+  factory ClassModelEvents.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
     SnapshotOptions? options,
   ) {
@@ -43,6 +44,7 @@ class ClassModelEvents {
       imageUrl: data?['imageUrl'],
       active: data?['active'],
       eventLocationlUrl: data?['eventLocationlUrl'],
+      participantsNumber: data?['participantsNumber'],
       eventsLocation: data?['eventsLocation'],
       id: data?['id'],
       eventsCollentionName: snapshot.id,
@@ -55,6 +57,7 @@ class ClassModelEvents {
 
   Map<String, dynamic> toFirestore() {
     return {
+      if (participantsNumber != null) "participantsNumber": participantsNumber,
       if (eventLocationlUrl != null) "eventLocationlUrl": eventLocationlUrl,
       if (eventsLocation != null) "eventsLocation": eventsLocation,
       if (name != null) "name": name,
