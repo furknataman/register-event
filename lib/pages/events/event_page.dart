@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/global/date_time_converter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
@@ -51,22 +52,24 @@ class _Eventspage extends ConsumerState<Eventspage> {
             flexibleSpace: FlexibleSpaceBar(
               title: Text(
                 event!.name.toString(),
+                style: TextStyle(color: Colors.white),
                 textAlign: TextAlign.center,
               ),
               background: Container(
                 width: MediaQuery.of(context).size.width,
                 decoration: BoxDecoration(
-                    image: DecorationImage(
-                        colorFilter: ColorFilter.mode(
-                            Colors.white.withOpacity(0.75), BlendMode.dstATop),
-                        image: NetworkImage(
-                          event!.imageUrl!,
-                        ),
-                        fit: BoxFit.fitHeight),
-                    color: Colors.black,
-                    borderRadius: const BorderRadius.only(
+                  image: DecorationImage(
+                      colorFilter: ColorFilter.mode(
+                          Colors.white.withOpacity(0.75), BlendMode.dstATop),
+                      image: NetworkImage(
+                        event!.imageUrl!,
+                      ),
+                      fit: BoxFit.fitHeight),
+                  color: Colors.black,
+                  /* borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(15),
-                        bottomRight: Radius.circular(15))),
+                        bottomRight: Radius.circular(15))*/
+                ),
               ),
             ),
           ),
@@ -166,7 +169,33 @@ class RegisterButton extends StatelessWidget {
           },
           child: Row(
             children: const [
-              Text("Register"),
+              Text(
+                "Register",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ],
+          ));
+    } else if (1 == 1) {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff485FFF),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: null,
+          child: Row(
+            children: [
+              Text(
+                "Past",
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Icon(
+                LucideIcons.calendarX,
+                size: 20,
+              )
             ],
           ));
     } else {
@@ -178,8 +207,18 @@ class RegisterButton extends StatelessWidget {
               shape: const StadiumBorder()),
           onPressed: null,
           child: Row(
-            children: const [
-              Text("Registered"),
+            children: [
+              Text(
+                "Registered",
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Icon(
+                LucideIcons.calendarCheck,
+                size: 20,
+              )
             ],
           ));
     }

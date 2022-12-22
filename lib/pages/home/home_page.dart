@@ -4,6 +4,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../global/bottomSheet/filter/filter_provider.dart';
 import '../../global/global_veriable/events_info.dart';
+import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 
 class Homepage extends ConsumerStatefulWidget {
@@ -50,7 +51,12 @@ class _HomepageState extends ConsumerState<Homepage> {
                   color: Color(0xff333333),
                   size: 34,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const NotificationPage()),
+                  );
+                },
               )
             ]),
           ),
