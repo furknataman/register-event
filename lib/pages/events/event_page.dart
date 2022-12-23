@@ -28,7 +28,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
     super.initState();
     scrollController.addListener(() {
       setState(() {
-        _isVisible = scrollController.offset > 220;
+        _isVisible = scrollController.offset > 130;
       });
     });
   }
@@ -45,7 +45,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
         controller: scrollController,
         slivers: <Widget>[
           SliverAppBar(
-            backgroundColor: const Color(0xff485FFF),
+            backgroundColor: Colors.black.withOpacity(0.88),
             pinned: true,
             snap: false,
             floating: false,
@@ -60,7 +60,12 @@ class _Eventspage extends ConsumerState<Eventspage> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                background: Image.network(event!.imageUrl!, fit: BoxFit.cover)),
+                background: Container(
+                  color: Colors.white,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: Image.network(event!.imageUrl!, fit: BoxFit.cover)),
+                )),
           ),
           SliverList(
               delegate: SliverChildListDelegate([
@@ -70,7 +75,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
                 children: [
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
                         event!.name.toString(),
@@ -97,9 +102,25 @@ class _Eventspage extends ConsumerState<Eventspage> {
                         context;
                         return Padding(
                           padding: const EdgeInsets.only(right: 12.0),
-                          child: textContainer(event!.speakers![index].toString(),
-                              Theme.of(context).textTheme.titleSmall,
-                              bottomPadding: 10),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              Container(
+                                margin: const EdgeInsets.only(bottom: 10),
+                                alignment: Alignment.center,
+                                width: 2,
+                                height: 2,
+                                decoration: const BoxDecoration(
+                                    shape: BoxShape.circle, color: Colors.black),
+                              ),
+                              const SizedBox(
+                                width: 5,
+                              ),
+                              textContainer(event!.speakers![index].toString(),
+                                  Theme.of(context).textTheme.titleSmall,
+                                  bottomPadding: 10),
+                            ],
+                          ),
                         );
                       },
                       itemCount: event!.speakers!.length,
@@ -152,7 +173,31 @@ class RegisterButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final eventAction = ref.watch<EventsInfo>(eventsInfoConfig);
-    if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
+
+    if (event!.capacity! - event!.participantsNumber! == 0) {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff485FFF),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: null,
+          child: Row(
+            children: [
+              Text(
+                "Event is Full",
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              const Icon(
+                LucideIcons.calendarX,
+                size: 20,
+              )
+            ],
+          ));
+    } else if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xff485FFF),
@@ -171,49 +216,32 @@ class RegisterButton extends ConsumerWidget {
               ),
             ],
           ));
-    } else if (1 == 1) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff485FFF),
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: null,
-          child: Row(
-            children: [
-              Text(
-                "Past",
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              const Icon(
-                LucideIcons.calendarX,
-                size: 20,
-              )
-            ],
-          ));
     } else {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff485FFF),
+              backgroundColor: const Color(0xffEB5757),
               padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: const StadiumBorder()),
-          onPressed: null,
+          onPressed: () {
+            userInfo.removeEvent(registeredEvents: event!.id);
+            eventAction.removeEventUser(event: event);
+          },
           child: Row(
-            children: [
+            children: const [
               Text(
-                "Registered",
-                style: Theme.of(context).textTheme.displaySmall,
+                "Unregister",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                ),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 10,
               ),
-              const Icon(
+              Icon(
                 LucideIcons.calendarCheck,
-                size: 20,
+                size: 19,
               )
             ],
           ));

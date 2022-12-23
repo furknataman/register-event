@@ -51,6 +51,30 @@ Future<void> writeUser({
     await docRef.set(registerEvent);
     readUser();
   }
+  Future<void> removeEvent({
+    @required int? registeredEvents,
+  }) async {
+    List<int>? addevent = user!.registeredEvents;
+    addevent!.removeWhere((item) => item ==registeredEvents! );
+    final ClassUserModel registerEvent = ClassUserModel(
+        name: user!.name,
+        email: user!.email,
+        password: user!.password,
+        active: user!.active,
+        id: user!.id,
+        registeredEvents: addevent,
+        attendedEvents: user!.attendedEvents);
+
+    final docRef = databaseReference
+        .collection("users")
+        .withConverter(
+          fromFirestore: ClassUserModel.fromFirestore,
+          toFirestore: (ClassUserModel city, options) => city.toFirestore(),
+        )
+        .doc(mail);
+    await docRef.set(registerEvent);
+    readUser();
+  }
   
 }
 

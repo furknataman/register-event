@@ -16,8 +16,8 @@ class EventsInfo extends ChangeNotifier {
       speakers: ["123", "123"],
       timestamp: Timestamp.now());
 
-  Future readEvents() async {
-    final ref = databaseReference.collection("events").doc("dasdas").withConverter(
+  Future readEvents(String eventName) async {
+    final ref = databaseReference.collection("events").doc(eventName).withConverter(
           fromFirestore: ClassModelEvents.fromFirestore,
           toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
         );
@@ -52,7 +52,36 @@ class EventsInfo extends ChangeNotifier {
           fromFirestore: ClassModelEvents.fromFirestore,
           toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
         )
-        .doc("dasdas45");
+        .doc(event.eventsCollentionName);
+    await docRef.set(user);
+  }
+
+  Future<void> removeEventUser({
+    @required ClassModelEvents? event,
+  }) async {
+    event!.participantsNumber! + 1;
+    final user = ClassModelEvents(
+      eventLocationlUrl: event.eventLocationlUrl,
+      eventsLocation: event.eventsLocation,
+      name: event.name,
+      imageUrl: event.imageUrl,
+      description: event.description,
+      active: event.active,
+      id: event.id,
+      participantsNumber: event.participantsNumber,
+      capacity: event.capacity,
+      speakers: event.speakers,
+      timestamp: event.timestamp,
+      duration: event.duration,
+    );
+
+    final docRef = databaseReference
+        .collection("events")
+        .withConverter(
+          fromFirestore: ClassModelEvents.fromFirestore,
+          toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
+        )
+        .doc(event.eventsCollentionName);
     await docRef.set(user);
   }
 }
