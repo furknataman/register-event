@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../db/db_model/db_model_user.dart';
 
 class UserInfo extends ChangeNotifier {
- final databaseReference = FirebaseFirestore.instance;
+  final databaseReference = FirebaseFirestore.instance;
   String mail = FirebaseAuth.instance.currentUser!.email.toString();
   ClassUserModel? user = ClassUserModel(
       name: "Furkan",
@@ -16,7 +16,7 @@ class UserInfo extends ChangeNotifier {
       registeredEvents: [31, 1231],
       attendedEvents: [1231, 21321]);
 
-Future<void> readUser() async {
+  Future<void> readUser() async {
     final ref = databaseReference.collection("users").doc(mail).withConverter(
           fromFirestore: ClassUserModel.fromFirestore,
           toFirestore: (ClassUserModel city, _) => city.toFirestore(),
@@ -27,11 +27,14 @@ Future<void> readUser() async {
     notifyListeners();
   }
 
-Future<void> writeUser({
+  Future<void> writeUser({
     @required int? registeredEvents,
+    @required Timestamp? eventTime,
   }) async {
     List<int>? addevent = user!.registeredEvents;
     addevent!.add(registeredEvents!);
+    List<Timestamp>? addEventTime = user!.dateTimeList;
+    addEventTime!.add(eventTime!);
     final ClassUserModel registerEvent = ClassUserModel(
         name: user!.name,
         email: user!.email,
@@ -39,7 +42,8 @@ Future<void> writeUser({
         active: user!.active,
         id: user!.id,
         registeredEvents: addevent,
-        attendedEvents: user!.attendedEvents);
+        attendedEvents: user!.attendedEvents,
+        dateTimeList: addEventTime);
 
     final docRef = databaseReference
         .collection("users")
@@ -51,11 +55,15 @@ Future<void> writeUser({
     await docRef.set(registerEvent);
     readUser();
   }
+
   Future<void> removeEvent({
     @required int? registeredEvents,
+    @required Timestamp? eventTime,
   }) async {
     List<int>? addevent = user!.registeredEvents;
-    addevent!.removeWhere((item) => item ==registeredEvents! );
+    List<Timestamp>? addEventTime = user!.dateTimeList;
+    addevent!.removeWhere((item) => item == registeredEvents!);
+    addEventTime!.removeWhere((item) => item == eventTime!);
     final ClassUserModel registerEvent = ClassUserModel(
         name: user!.name,
         email: user!.email,
@@ -63,7 +71,8 @@ Future<void> writeUser({
         active: user!.active,
         id: user!.id,
         registeredEvents: addevent,
-        attendedEvents: user!.attendedEvents);
+        attendedEvents: user!.attendedEvents,
+        dateTimeList: addEventTime);
 
     final docRef = databaseReference
         .collection("users")
@@ -75,7 +84,6 @@ Future<void> writeUser({
     await docRef.set(registerEvent);
     readUser();
   }
-  
 }
 
 final userInfoConfig = ChangeNotifierProvider((ref) => UserInfo());

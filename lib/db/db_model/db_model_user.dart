@@ -8,6 +8,7 @@ class ClassUserModel {
   final int? id;
   final List<int>? registeredEvents;
   final List<int>? attendedEvents;
+  final List<Timestamp>? dateTimeList;
 
   ClassUserModel({
     this.name,
@@ -17,6 +18,7 @@ class ClassUserModel {
     this.id,
     this.registeredEvents,
     this.attendedEvents,
+    this.dateTimeList,
   });
 
   factory ClassUserModel.fromFirestore(
@@ -35,6 +37,8 @@ class ClassUserModel {
           : null,
       attendedEvents:
           data?['attendedEvents'] is Iterable ? List.from(data?['attendedEvents']) : null,
+      dateTimeList:
+          data?['dateTimeList'] is Iterable ? List.from(data?['dateTimeList']) : null,
     );
   }
 
@@ -47,6 +51,7 @@ class ClassUserModel {
       if (id != null) "id": id,
       if (registeredEvents != null) "registeredEvents": registeredEvents,
       if (attendedEvents != null) "attendedEvents": attendedEvents,
+      if (dateTimeList != null) "dateTimeList": dateTimeList,
     };
   }
 }

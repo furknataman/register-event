@@ -185,7 +185,7 @@ class RegisterButton extends ConsumerWidget {
           child: Row(
             children: [
               Text(
-                "Event is Full",
+                "No Seat",
                 style: Theme.of(context).textTheme.displaySmall,
               ),
               const SizedBox(
@@ -198,24 +198,42 @@ class RegisterButton extends ConsumerWidget {
             ],
           ));
     } else if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff485FFF),
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: () {
-            userInfo.writeUser(registeredEvents: event!.id);
-            eventAction.writeEvents(event: event);
-          },
-          child: Row(
-            children: const [
-              Text(
-                "Register",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ],
-          ));
+      if (userInfo.user!.dateTimeList!.contains(event!.timestamp) == true) {
+        return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff485FFF),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: const StadiumBorder()),
+            onPressed: null,
+            child: Row(
+              children: const [
+                Text(
+                  "No Seat",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ],
+            ));
+      } else {
+        return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xff485FFF),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: const StadiumBorder()),
+            onPressed: () {
+              userInfo.writeUser(registeredEvents: event!.id, eventTime: event!.timestamp);
+              eventAction.writeEvents(event: event);
+            },
+            child: Row(
+              children: const [
+                Text(
+                  "Register",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ],
+            ));
+      }
     } else {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -224,7 +242,7 @@ class RegisterButton extends ConsumerWidget {
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: const StadiumBorder()),
           onPressed: () {
-            userInfo.removeEvent(registeredEvents: event!.id);
+            userInfo.removeEvent(registeredEvents: event!.id, eventTime: event!.timestamp);
             eventAction.removeEventUser(event: event);
           },
           child: Row(
