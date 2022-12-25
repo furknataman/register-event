@@ -5,7 +5,7 @@ import 'package:qr/pages/home/home_page.dart';
 import 'package:qr/pages/scan/scan.dart';
 import 'package:qr/pages/settings/settings_page.dart';
 
-import '../notifiation/push_notification/push_notification.dart';
+import '../../notifiation/push_notification/push_notification.dart';
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key});

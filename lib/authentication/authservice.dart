@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:qr/pages/start/start_page.dart';
-import 'package:qr/route_page/route_page.dart';
+import 'package:qr/pages/route_page/route_page.dart';
 
 class AuthService {
   //Determine if the user is authenticated.
