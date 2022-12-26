@@ -38,17 +38,15 @@ InkWell evenetsCart(
           Positioned(
             top: 0,
             child: Container(
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10), topRight: Radius.circular(10))),
               width: MediaQuery.of(context).size.width - 40,
               height: 166,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: NetworkImage(
-                        imageUrl!,
-                      ),
-                      fit: BoxFit.fill),
-                  color: Colors.black,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0),
+                  child: Image.network(imageUrl!, fit: BoxFit.cover)),
             ),
           ),
           Positioned(
