@@ -28,9 +28,10 @@ class _HomepageState extends ConsumerState<Homepage> {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 34, top: 3),
+            padding: const EdgeInsets.only(left: 20.0, right: 24),
             child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,7 +50,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                 icon: const Icon(
                   HeroiconsOutline.bell,
                   color: Color(0xff333333),
-                  size: 34,
+                  size: 32,
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -61,7 +62,7 @@ class _HomepageState extends ConsumerState<Homepage> {
             ]),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 34),
+            padding: const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 22),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -109,8 +110,8 @@ class _HomepageState extends ConsumerState<Homepage> {
               );
             },
           ),
-          SizedBox(
-            height: 55,
+          const SizedBox(
+            height: 50,
           )
         ]),
       ),

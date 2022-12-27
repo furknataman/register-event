@@ -28,15 +28,15 @@ class GoogleProvder extends ChangeNotifier {
 
   //SIGN IN METHOD
   Future signIn() async {
-    String userName = "furknataman@gmail.com"; //controllerEmail.text;
-    String password = "123456"; //controllerPassword.text;
+    String userName = controllerEmail.text;
+    String password = controllerPassword.text;
     try {
       await _auth.signInWithEmailAndPassword(email: userName, password: password);
 
       return null;
     } on FirebaseAuthException catch (e) {
       controllerPassword.text = "";
-     toastMessage("Kullanıcı adı ve şifre hatalı");
+      toastMessage("Username or password is incorrect");
 
       return e.message;
     }

@@ -31,7 +31,6 @@ class _RoutePageState extends State<RoutePage> {
     super.dispose();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,14 +48,14 @@ class _RoutePageState extends State<RoutePage> {
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
             colors: [
-              Color.fromRGBO(255, 255, 255, 1),
+              Color.fromRGBO(255, 255, 255, 0.8),
               Color.fromRGBO(255, 255, 255, 0),
             ],
           )),
-          height: 106,
-          width: MediaQuery.of(context).size.width,
+          height: 75,
+          width: MediaQuery.of(context).size.width - 32,
           child: Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16, top: 30),
+              padding: const EdgeInsets.only(top: 15),
               child: Container(
                   height: 60,
                   decoration: const BoxDecoration(
