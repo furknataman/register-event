@@ -108,6 +108,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                 ),
               );
             },
+          ),
+          SizedBox(
+            height: 55,
           )
         ]),
       ),

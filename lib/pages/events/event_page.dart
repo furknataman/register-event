@@ -96,33 +96,26 @@ class _Eventspage extends ConsumerState<Eventspage> {
                       bottomPadding: 10),
                   textContainer("Speakers", Theme.of(context).textTheme.displayMedium),
                   SizedBox(
-                    height: 30,
-                    child: ListView.builder(
+                    height: 25,
+                    child: ListView.separated(
+                      separatorBuilder: (BuildContext context, int index) => Padding(
+                        padding: const EdgeInsets.only(left: 6, right: 6),
+                        child: Container(
+                          alignment: Alignment.center,
+                          width: 2,
+                          height: 2,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: Colors.black),
+                        ),
+                      ),
+                      reverse: false,
+                      shrinkWrap: false,
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         context;
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 12.0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              Container(
-                                margin: const EdgeInsets.only(bottom: 10),
-                                alignment: Alignment.center,
-                                width: 2,
-                                height: 2,
-                                decoration: const BoxDecoration(
-                                    shape: BoxShape.circle, color: Colors.black),
-                              ),
-                              const SizedBox(
-                                width: 5,
-                              ),
-                              textContainer(event!.speakers![index].toString(),
-                                  Theme.of(context).textTheme.titleSmall,
-                                  bottomPadding: 10),
-                            ],
-                          ),
-                        );
+                        return textContainer(event!.speakers![index].toString(),
+                            Theme.of(context).textTheme.titleSmall,
+                            bottomPadding: 0);
                       },
                       itemCount: event!.speakers!.length,
                     ),
@@ -160,5 +153,3 @@ class _Eventspage extends ConsumerState<Eventspage> {
     );
   }
 }
-
-

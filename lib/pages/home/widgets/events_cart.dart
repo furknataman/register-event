@@ -79,18 +79,25 @@ InkWell evenetsCart(
                       ),
                       SizedBox(
                         height: 25,
-                        child: ListView.builder(
+                        child: ListView.separated(
+                          separatorBuilder: (BuildContext context, int index) => Padding(
+                            padding: const EdgeInsets.only(left: 6, right: 6),
+                            child: Container(
+                              alignment: Alignment.center,
+                              width: 2,
+                              height: 2,
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle, color: Colors.black),
+                            ),
+                          ),
                           reverse: false,
                           shrinkWrap: false,
                           scrollDirection: Axis.horizontal,
                           itemBuilder: (context, index) {
                             context;
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 12.0),
-                              child: textContainer(event.speakers![index].toString(),
-                                  Theme.of(context).textTheme.titleSmall,
-                                  bottomPadding: 0),
-                            );
+                            return textContainer(event.speakers![index].toString(),
+                                Theme.of(context).textTheme.titleSmall,
+                                bottomPadding: 0);
                           },
                           itemCount: event.speakers!.length,
                         ),
@@ -141,12 +148,6 @@ InkWell evenetsCart(
               child: Container(
                 alignment: Alignment.center,
                 decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(72, 95, 255, 0.5),
-                          blurRadius: 14,
-                          offset: Offset(0, 4))
-                    ],
                     color: Color(0xffFFFFFF),
                     borderRadius: BorderRadius.all(Radius.circular(5))),
                 height: 26,
