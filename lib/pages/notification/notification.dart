@@ -7,6 +7,7 @@ class NotificationPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton.extended(
         label: const Text(
@@ -17,10 +18,10 @@ class NotificationPage extends ConsumerWidget {
       ),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).backgroundColor,
         iconTheme: const IconThemeData(
-          color: Colors.black, //change your color here
-        ),
+            //change your color here
+            ),
         title: Text(
           "Notifications",
           style: Theme.of(context).textTheme.displayLarge,

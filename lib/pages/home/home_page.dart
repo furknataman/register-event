@@ -27,6 +27,7 @@ class _HomepageState extends ConsumerState<Homepage> {
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
         bottom: false,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -47,9 +48,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                 ],
               ),
               IconButton(
-                icon: const Icon(
+                icon: Icon(
                   HeroiconsOutline.bell,
-                  color: Color(0xff333333),
+                  color: Theme.of(context).secondaryHeaderColor,
                   size: 32,
                 ),
                 onPressed: () {
@@ -76,9 +77,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                       Navigator.pop(context);
                     }, "Filters", "Seçili listeler silinecek");
                   },
-                  icon: const Icon(
+                  icon: Icon(
                     HeroiconsOutline.funnel,
-                    color: Color(0xff333333),
+                    color: Theme.of(context).secondaryHeaderColor,
                     size: 30,
                   ),
                 )

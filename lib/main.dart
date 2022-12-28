@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      darkTheme: _darkTheme,
+      darkTheme: _lightTheme,
       themeMode: ThemeMode.dark,
       theme: ThemeData(
           primarySwatch: Colors.pink,
@@ -57,9 +57,11 @@ class MyApp extends StatelessWidget {
 ThemeData _darkTheme = ThemeData(
     brightness: Brightness.dark,
     primarySwatch: Colors.pink,
+    backgroundColor: const Color(0xff1E1E1E),
     fontFamily: "Raleway",
-  
-    primaryColor: Color.fromARGB(0, 0, 0, 25),
+    primaryColor: const Color(0xdd242424),
+    cardColor: const Color(0xff242424),
+    secondaryHeaderColor: const Color(0xffBDBDBD),
     textTheme: const TextTheme(
         displayLarge:
             TextStyle(fontSize: 24, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
@@ -68,7 +70,7 @@ ThemeData _darkTheme = ThemeData(
         displaySmall:
             TextStyle(fontSize: 16, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         titleSmall:
-            TextStyle(fontSize: 14, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
+            TextStyle(fontSize: 14, color: Color(0xff828282), fontWeight: FontWeight.w400),
         bodyLarge:
             TextStyle(fontSize: 18, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         labelLarge:
@@ -76,14 +78,16 @@ ThemeData _darkTheme = ThemeData(
         labelSmall:
             TextStyle(fontSize: 10, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         titleMedium:
-            TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700),
+            TextStyle(fontSize: 18, color: Color(0xffBDBDBD), fontWeight: FontWeight.w700),
         titleLarge:
             TextStyle(fontSize: 33, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         labelMedium: TextStyle(
             fontSize: 14, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400)));
 
 ThemeData _lightTheme = ThemeData(
-    primarySwatch: Colors.pink,
+    backgroundColor: Colors.white,
+    secondaryHeaderColor: const Color(0xff333333),
+    primaryColor: const Color(0xdd242424),
     fontFamily: "Raleway",
     textTheme: const TextTheme(
         displayLarge:

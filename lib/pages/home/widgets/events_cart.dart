@@ -26,21 +26,29 @@ InkWell evenetsCart(
         fit: StackFit.loose,
         children: [
           Container(
-            decoration: const BoxDecoration(boxShadow: [
+            decoration: BoxDecoration(boxShadow: [
               BoxShadow(
-                  color: Color.fromRGBO(0, 0, 0, 0.25),
+                  color: Theme.of(context).primaryColor,
                   blurRadius: 14,
-                  offset: Offset(0, 4))
-            ], borderRadius: BorderRadius.all(Radius.circular(13))),
+                  offset: const Offset(0, 4))
+            ], borderRadius: const BorderRadius.all(Radius.circular(13))),
             width: MediaQuery.of(context).size.width - 40,
             height: 237,
           ),
           Positioned(
             top: 0,
             child: Container(
-              decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
+              decoration: BoxDecoration(
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color.fromARGB(0, 0, 0, 15),
+                      spreadRadius: 5,
+
+                      offset: Offset(0, 4), // changes position of shadow
+                    ),
+                  ],
+                  color: Theme.of(context).primaryColor,
+                  borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10), topRight: Radius.circular(10))),
               width: MediaQuery.of(context).size.width - 40,
               height: 166,
@@ -53,9 +61,9 @@ InkWell evenetsCart(
               bottom: 0,
               child: Container(
                 padding: const EdgeInsets.only(top: 10, left: 13, right: 13, bottom: 13),
-                decoration: const BoxDecoration(
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.only(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(10),
                         bottomLeft: Radius.circular(10))),
                 height: 71,
@@ -108,9 +116,9 @@ InkWell evenetsCart(
               top: 13,
               left: 30,
               child: Container(
-                decoration: const BoxDecoration(
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 42,
                 width: 42,
                 child: Column(
@@ -129,9 +137,9 @@ InkWell evenetsCart(
               right: 30,
               child: Container(
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 38,
                 width: 38,
                 child: eventCart!
@@ -147,9 +155,9 @@ InkWell evenetsCart(
               left: 30,
               child: Container(
                 alignment: Alignment.center,
-                decoration: const BoxDecoration(
-                    color: Color(0xffFFFFFF),
-                    borderRadius: BorderRadius.all(Radius.circular(5))),
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 26,
                 width: 60,
                 child: Text(

@@ -39,6 +39,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
 
     ClassTime time = classConverter(event!.dateTime!, event!.duration!);
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: CustomScrollView(
         controller: scrollController,
         slivers: <Widget>[
@@ -59,7 +60,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
                   ),
                 ),
                 background: Container(
-                  color: Colors.white,
+                  color: Theme.of(context).backgroundColor,
                   child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(20),
@@ -104,8 +105,9 @@ class _Eventspage extends ConsumerState<Eventspage> {
                           alignment: Alignment.center,
                           width: 2,
                           height: 2,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Colors.black),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Theme.of(context).secondaryHeaderColor),
                         ),
                       ),
                       reverse: false,

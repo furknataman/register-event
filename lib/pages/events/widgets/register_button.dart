@@ -20,30 +20,7 @@ class RegisterButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eventAction = ref.watch<EventsInfo>(eventsInfoConfig);
 
-    if (event!.capacity! - event!.participantsNumber! == 0) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff485FFF),
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: null,
-          child: Row(
-            children: [
-              Text(
-                "No Seat",
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              const Icon(
-                LucideIcons.calendarX,
-                size: 20,
-              )
-            ],
-          ));
-    } else if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
+    if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
       if (userInfo.user!.dateTimeList!.contains(event!.timestamp) == true) {
         return ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -53,10 +30,10 @@ class RegisterButton extends ConsumerWidget {
                 shape: const StadiumBorder()),
             onPressed: null,
             child: Row(
-              children: const [
+              children: [
                 Text(
                   "No Seat",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
+                  style: Theme.of(context).textTheme.displaySmall,
                 ),
               ],
             ));
