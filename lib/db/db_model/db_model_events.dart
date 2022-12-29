@@ -15,6 +15,7 @@ class ClassModelEvents {
   final int? duration;
   final String? eventLocationlUrl;
   final int? participantsNumber;
+  final String? key;
 
   ClassModelEvents(
       {this.duration,
@@ -30,6 +31,7 @@ class ClassModelEvents {
       this.eventsCollentionName,
       this.eventLocationlUrl,
       this.eventsLocation,
+      this.key,
       this.participantsNumber});
 
   factory ClassModelEvents.fromFirestore(
@@ -40,6 +42,7 @@ class ClassModelEvents {
     return ClassModelEvents(
       name: data?['name'],
       duration: data?['duration'],
+      key: data?['key'],
       description: data?['description'],
       imageUrl: data?['imageUrl'],
       active: data?['active'],
@@ -62,6 +65,7 @@ class ClassModelEvents {
       if (eventsLocation != null) "eventsLocation": eventsLocation,
       if (name != null) "name": name,
       if (duration != null) "duration": duration,
+      if (key != null) "key": key,
       if (timestamp != null) "timestamp": timestamp,
       if (description != null) "description": description,
       if (imageUrl != null) "imageUrl": imageUrl,

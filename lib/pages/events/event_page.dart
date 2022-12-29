@@ -36,7 +36,6 @@ class _Eventspage extends ConsumerState<Eventspage> {
     BuildContext context,
   ) {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
-
     ClassTime time = classConverter(event!.dateTime!, event!.duration!);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,

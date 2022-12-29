@@ -14,6 +14,7 @@ InkWell evenetsCart(
   @required String? eventLocation,
   @required bool? eventCart,
 }) {
+  
   ClassTime time = classConverter(event!.dateTime!, event.duration!);
   return InkWell(
     onTap: () {
