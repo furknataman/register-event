@@ -42,62 +42,48 @@ class _RoutePageState extends State<RoutePage> {
             children: const <Widget>[Homepage(), ScannerPage(), Settingspage()]),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
-          alignment: Alignment.center,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.bottomCenter,
-            end: Alignment.topCenter,
-            colors: [
-              Color.fromRGBO(255, 255, 255, 0.8),
-              Color.fromRGBO(255, 255, 255, 0),
-            ],
-          )),
-          height: 75,
-          width: MediaQuery.of(context).size.width - 32,
-          child: Padding(
-              padding: const EdgeInsets.only(top: 15),
-              child: Container(
-                  height: 60,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(30)),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.25),
-                            blurRadius: 14,
-                            offset: Offset(0, 4))
-                      ]),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(30)),
-                    child: BottomNavigationBar(
-                        onTap: (index) {
-                          setState(() => _currentIndex = index);
-                          _pageController.jumpToPage(index);
-                        },
-                        showSelectedLabels: false,
-                        showUnselectedLabels: false,
-                        currentIndex: _currentIndex,
-                        unselectedItemColor: const Color(0xff485FFF),
-                        selectedItemColor: const Color(0xff485FFF),
-                        selectedIconTheme: const IconThemeData(color: Color(0xff485FFF)),
-                        iconSize: 30,
-                        items: <BottomNavigationBarItem>[
-                          BottomNavigationBarItem(
-                            activeIcon: homeIconBold,
-                            label: " ",
-                            icon: homeIcon,
-                          ),
-                          const BottomNavigationBarItem(
-                            activeIcon: Icon(HeroiconsMini.qrCode),
-                            label: " ",
-                            icon: Icon(HeroiconsOutline.qrCode),
-                          ),
-                          const BottomNavigationBarItem(
-                            activeIcon: Icon(HeroiconsSolid.cog6Tooth),
-                            label: " ",
-                            icon: Icon(HeroiconsOutline.cog6Tooth),
-                          )
-                        ]),
-                  ))),
-        ));
+            width: MediaQuery.of(context).size.width - 36,
+            height: 60,
+            decoration: const BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.all(Radius.circular(30)),
+                boxShadow: [
+                  BoxShadow(
+                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                      blurRadius: 14,
+                      offset: Offset(0, 4))
+                ]),
+            child: ClipRRect(
+              borderRadius: const BorderRadius.all(Radius.circular(30)),
+              child: BottomNavigationBar(
+                  onTap: (index) {
+                    setState(() => _currentIndex = index);
+                    _pageController.jumpToPage(index);
+                  },
+                  showSelectedLabels: false,
+                  showUnselectedLabels: false,
+                  currentIndex: _currentIndex,
+                  unselectedItemColor: const Color(0xff485FFF),
+                  selectedItemColor: const Color(0xff485FFF),
+                  selectedIconTheme: const IconThemeData(color: Color(0xff485FFF)),
+                  iconSize: 30,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      activeIcon: homeIconBold,
+                      label: " ",
+                      icon: homeIcon,
+                    ),
+                    const BottomNavigationBarItem(
+                      activeIcon: Icon(HeroiconsMini.qrCode),
+                      label: " ",
+                      icon: Icon(HeroiconsOutline.qrCode),
+                    ),
+                    const BottomNavigationBarItem(
+                      activeIcon: Icon(HeroiconsSolid.cog6Tooth),
+                      label: " ",
+                      icon: Icon(HeroiconsOutline.cog6Tooth),
+                    )
+                  ]),
+            )));
   }
 }

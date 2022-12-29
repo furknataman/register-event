@@ -27,9 +27,9 @@ class _HomepageState extends ConsumerState<Homepage> {
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
+      backgroundColor: Colors.white,
       body: SafeArea(
-        bottom: false,
+        bottom: true,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
           Padding(
             padding: const EdgeInsets.only(left: 20.0, right: 24),
@@ -90,30 +90,31 @@ class _HomepageState extends ConsumerState<Homepage> {
             loading: () => const CircularProgressIndicator(),
             error: (err, stack) => Text('Error: $err'),
             data: (getAllEvents) {
-              return Expanded(
-                child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    context;
-                    return evenetsCart(
-                      context,
-                      eventsNumber: index,
-                      eventCart: userInfo.user!.registeredEvents!
-                          .contains(getAllEvents[index].id),
-                      eventsName: getAllEvents[index].name,
-                      imageUrl: getAllEvents[index].imageUrl,
-                      dateTime: getAllEvents[index].dateTime,
-                      eventLocation: getAllEvents[index].eventsLocation,
-                      event: getAllEvents[index],
-                    );
-                  },
-                  itemCount: getAllEvents.length,
+              return Container(
+                color: Colors.transparent,
+                height: MediaQuery.of(context).size.height - 250,
+                child: Scrollbar(
+                  child: ListView.builder(
+                    itemBuilder: (context, index) {
+                      context;
+                      return evenetsCart(
+                        context,
+                        eventsNumber: index,
+                        eventCart: userInfo.user!.registeredEvents!
+                            .contains(getAllEvents[index].id),
+                        eventsName: getAllEvents[index].name,
+                        imageUrl: getAllEvents[index].imageUrl,
+                        dateTime: getAllEvents[index].dateTime,
+                        eventLocation: getAllEvents[index].eventsLocation,
+                        event: getAllEvents[index],
+                      );
+                    },
+                    itemCount: getAllEvents.length,
+                  ),
                 ),
               );
             },
           ),
-          const SizedBox(
-            height: 50,
-          )
         ]),
       ),
     );
