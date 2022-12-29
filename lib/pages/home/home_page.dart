@@ -27,7 +27,7 @@ class _HomepageState extends ConsumerState<Homepage> {
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: SafeArea(
         bottom: true,
         child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
