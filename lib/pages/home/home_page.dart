@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
+import 'package:qr/global/globalveriable.dart';
 import '../../global/bottomSheet/filter/filter_provider.dart';
 import '../../global/global_veriable/events_info.dart';
 import '../notification/notification.dart';
@@ -97,6 +98,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       context;
+                      eventss.add(getAllEvents[index]);
                       return evenetsCart(
                         context,
                         eventsNumber: index,

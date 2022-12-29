@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-void alertDialog(BuildContext context, Function functionLeft, Function functionRight,
-    String titleText, String bodyText) {
+void alertDialog(BuildContext context,) {
   showModalBottomSheet(
       context: context,
       shape: const RoundedRectangleBorder(
@@ -37,7 +36,7 @@ void alertDialog(BuildContext context, Function functionLeft, Function functionR
                 ),
                 Container(
                   alignment: Alignment.topLeft,
-                  child: Text(titleText,
+                  child: Text("titleText",
                       style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 20,
@@ -45,7 +44,7 @@ void alertDialog(BuildContext context, Function functionLeft, Function functionR
                 ),
                 Container(
                   alignment: Alignment.topLeft,
-                  child: Text(bodyText,
+                  child: Text("bodyText",
                       style: const TextStyle(
                           fontWeight: FontWeight.w700,
                           fontSize: 16,
@@ -57,7 +56,7 @@ void alertDialog(BuildContext context, Function functionLeft, Function functionR
                     FloatingActionButton.extended(
                       backgroundColor: const Color(0xffE0E0E0),
                       onPressed: () {
-                        functionLeft();
+                        
                       },
                       label: const Text(
                         "İptal ",
@@ -71,7 +70,6 @@ void alertDialog(BuildContext context, Function functionLeft, Function functionR
                     FloatingActionButton.extended(
                       backgroundColor: const Color(0xffEB5757),
                       onPressed: () {
-                        functionRight();
                       },
                       label: const Text(
                         "Onayla",

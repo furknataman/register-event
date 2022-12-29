@@ -1,16 +1,22 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/global/globalveriable.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-class ScannerPage extends StatefulWidget {
+import '../../global/global_veriable/user_info.dart';
+
+class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _ScannerPageState();
+  ConsumerState<ScannerPage> createState() => _ScannerPageState();
 }
 
-class _ScannerPageState extends State<ScannerPage> {
+class _ScannerPageState extends ConsumerState<ScannerPage> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -28,6 +34,7 @@ class _ScannerPageState extends State<ScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
       body: Stack(
         children: <Widget>[
@@ -157,13 +164,10 @@ class _ScannerPageState extends State<ScannerPage> {
   }
 
   Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
         ? 250.0
         : 350.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
@@ -182,10 +186,115 @@ class _ScannerPageState extends State<ScannerPage> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
+      result = scanData;
+      controller.pauseCamera();
+      dialogAlert();
     });
+  }
+
+  Future<dynamic> dialogAlert() {
+    String? title;
+    String? body;
+    for (int i = 0; i < eventss.length; i++) {
+      if (eventss[i].key!.contains(result!.code.toString()) == true) {
+        title = "kayıtlı";
+        body = "Kayıtlı body";
+        print("Kayıtlı");
+        break;
+      } else {
+        title = "Unrecognized Code";
+        body =
+            "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
+        print("kayıtsız");
+      }
+    }
+
+    return showModalBottomSheet(
+        context: context,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(25.0),
+          ),
+        ),
+        builder: (context) {
+          return Container(
+            height: 277,
+            decoration: const BoxDecoration(
+                color: Color(0xffF3FBF8),
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 18.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  FractionallySizedBox(
+                    widthFactor: 0.25,
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(
+                        vertical: 12.0,
+                      ),
+                      child: Container(
+                        height: 5.0,
+                        decoration: const BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(2.5)),
+                            color: Color(0xff828282)),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(title!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 20,
+                            color: Color(0xff828282))),
+                  ),
+                  Container(
+                    alignment: Alignment.topLeft,
+                    child: Text(body!,
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16,
+                            color: Color(0xff4F4F4F))),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      FloatingActionButton.extended(
+                        backgroundColor: const Color(0xffE0E0E0),
+                        onPressed: () {
+                          Navigator.pop(context);
+                          result = null;
+                          controller!.resumeCamera();
+                        },
+                        label: const Text(
+                          "İptal ",
+                          style: TextStyle(
+                              fontWeight: FontWeight.w700, color: Color(0xff4F4F4F)),
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      FloatingActionButton.extended(
+                        backgroundColor: const Color(0xffEB5757),
+                        onPressed: () {},
+                        label: const Text(
+                          "Onayla",
+                          style: TextStyle(fontWeight: FontWeight.w700),
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
