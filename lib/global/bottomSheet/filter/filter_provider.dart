@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/global/bottomSheet/filter/picker.dart';
 
 class FilterPage extends ChangeNotifier {
   bool past = true;
@@ -8,14 +10,17 @@ class FilterPage extends ChangeNotifier {
   void filterDialog(BuildContext context, Function functionLeft, Function functionRight,
       String titleText, String bodyText) {
     showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         context: context,
         isScrollControlled: true,
         builder: (BuildContext context) {
           return Container(
             height: 277,
-            decoration: const BoxDecoration(
-                color: Color(0xffF2F2F2),
-                borderRadius: BorderRadius.only(
+            decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
+                borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20), topRight: Radius.circular(20))),
             child: Padding(
               padding: const EdgeInsets.only(left: 18.0, right: 18, bottom: 40),
@@ -62,7 +67,7 @@ class FilterPage extends ChangeNotifier {
                           children: [
                             Text("What to show",
                                 style: Theme.of(context).textTheme.bodyLarge),
-                            DropDownMenu(),
+                            CupertinoPickerExample(),
                           ],
                         )
                       ],
@@ -118,35 +123,3 @@ class FilterPage extends ChangeNotifier {
 }
 
 final alertPageConfig = ChangeNotifierProvider((ref) => FilterPage());
-
-class DropDownMenu extends StatefulWidget {
-  const DropDownMenu({super.key});
-
-  @override
-  State<DropDownMenu> createState() => _DropDownMenuState();
-}
-
-class _DropDownMenuState extends State<DropDownMenu> {
-  List<DropdownMenuItem<String>> get dropdownItems {
-    List<DropdownMenuItem<String>> menuItems = [
-      const DropdownMenuItem(value: "0", child: Text("Past Events")),
-      const DropdownMenuItem(value: "1", child: Text("Ongoing Events")),
-      const DropdownMenuItem(value: "2", child: Text("Registered Events")),
-    ];
-    return menuItems;
-  }
-
-  String selectedValue = "0";
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButton(
-      items: dropdownItems,
-      value: selectedValue,
-      onChanged: (value) {
-        setState(() {
-          selectedValue = value!;
-        });
-      },
-    );
-  }
-}

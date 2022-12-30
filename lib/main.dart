@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
 }
 
 ThemeData _darkTheme = ThemeData(
- 
+  
     brightness: Brightness.dark,
     backgroundColor: const Color(0xff1E1E1E),
     fontFamily: "Raleway",
@@ -42,6 +42,7 @@ ThemeData _darkTheme = ThemeData(
         const FloatingActionButtonThemeData(backgroundColor: Color(0xff5B64A7)),
     secondaryHeaderColor: const Color(0xffBDBDBD),
     textTheme: const TextTheme(
+
         displayLarge:
             TextStyle(fontSize: 24, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         displayMedium:
