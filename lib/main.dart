@@ -35,6 +35,9 @@ extension CustomColorScheme on ColorScheme {
   Color get unregister => brightness == Brightness.light
       ? const Color(0xffEB5757)
       : const Color.fromARGB(255, 144, 65, 65);
+
+  Color get disable =>
+      brightness == Brightness.light ? const Color(0xffE0E0E0) : const Color(0xff333333);
 }
 
 ThemeData _darkTheme = ThemeData(

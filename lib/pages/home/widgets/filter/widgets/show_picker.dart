@@ -17,16 +17,14 @@ class Picker extends StatefulWidget {
 }
 
 class _PickerState extends State<Picker> {
-  int _selectedFruit = 0;
+  int _selectedList = 0;
 
-  // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoPicker.
   void _showDialog(Widget child) {
     showCupertinoModalPopup<void>(
         context: context,
         builder: (BuildContext context) => Container(
               height: 216,
               padding: const EdgeInsets.only(top: 6.0),
-              // The Bottom margin is provided to align the popup above the system navigation bar.
               margin: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
@@ -52,10 +50,9 @@ class _PickerState extends State<Picker> {
           squeeze: 1.2,
           useMagnifier: true,
           itemExtent: 32,
-          // This is called when selected item is changed.
           onSelectedItemChanged: (int selectedItem) {
             setState(() {
-              _selectedFruit = selectedItem;
+              _selectedList = selectedItem;
             });
           },
           children: List<Widget>.generate(showList.length, (int index) {
@@ -67,7 +64,6 @@ class _PickerState extends State<Picker> {
           }),
         ),
       ),
-      // This displays the selected fruit name.
       child: Container(
         padding: const EdgeInsets.only(left: 10, right: 10, top: 4, bottom: 4),
         decoration: BoxDecoration(
@@ -81,7 +77,7 @@ class _PickerState extends State<Picker> {
         ),
         child: Row(
           children: [
-            Text(showList[_selectedFruit], style: Theme.of(context).textTheme.bodySmall),
+            Text(showList[_selectedList], style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(
               width: 6,
             ),
