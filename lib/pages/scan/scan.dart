@@ -4,7 +4,9 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/global/global_veriable/events_info.dart';
 import 'package:qr/global/globalveriable.dart';
+import 'package:qr/main.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import '../../global/global_veriable/user_info.dart';
@@ -193,19 +195,30 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   }
 
   Future<dynamic> dialogAlert() {
+    final userInfo = ref.watch<UserInfo>(userInfoConfig);
     String? title;
     String? body;
+    bool register = false;
     for (int i = 0; i < eventss.length; i++) {
-      if (eventss[i].key!.contains(result!.code.toString()) == true) {
-        title = "kayıtlı";
-        body = "Kayıtlı body";
-        print("Kayıtlı");
-        break;
+      if (events[i].key!.contains(result!.code.toString()) == true) {
+        int id = events[i].id!;
+
+        if (userInfo.user!.registeredEvents!.contains(id)) {
+          register = true;
+          title = "Atending to ${events[i].name} ";
+          body = "You are about to attend to${events[i].name}, are you sure?";
+          break;
+        } else {
+          title = "Non-registered";
+          body =
+              "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page. ";
+          break;
+        }
       } else {
         title = "Unrecognized Code";
         body =
             "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
-        print("kayıtsız");
+        break;
       }
     }
 
@@ -219,8 +232,8 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         builder: (context) {
           return Container(
             height: 277,
-            decoration: const BoxDecoration(
-                color: Color(0xffF3FBF8),
+            decoration: BoxDecoration(
+                color: Theme.of(context).backgroundColor,
                 borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(20), topRight: Radius.circular(20))),
             child: Padding(
@@ -244,44 +257,50 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    child: Text(title!,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 20,
-                            color: Color(0xff828282))),
+                    child: Text(title!, style: Theme.of(context).textTheme.labelLarge),
                   ),
                   Container(
                     alignment: Alignment.topLeft,
-                    child: Text(body!,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 16,
-                            color: Color(0xff4F4F4F))),
+                    child: Text(body!, style: Theme.of(context).textTheme.bodyLarge),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      FloatingActionButton.extended(
-                        backgroundColor: const Color(0xffE0E0E0),
-                        onPressed: () {
-                          Navigator.pop(context);
-                          result = null;
-                          controller!.resumeCamera();
-                        },
-                        label: const Text(
-                          "İptal ",
-                          style: TextStyle(
-                              fontWeight: FontWeight.w700, color: Color(0xff4F4F4F)),
+                      if (register == true)
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Theme.of(context).colorScheme.disable,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 30.0, vertical: 10.0),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30.0)),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                            controller!.resumeCamera();
+                          },
+                          child: Text("Cancel ",
+                              style: Theme.of(context).textTheme.labelLarge),
                         ),
-                      ),
                       const SizedBox(
                         width: 20,
                       ),
-                      FloatingActionButton.extended(
-                        backgroundColor: const Color(0xffEB5757),
-                        onPressed: () {},
-                        label: const Text(
-                          "Onayla",
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor:
+                              Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                          padding:
+                              const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(30.0)),
+                        ),
+                        onPressed: () {
+                          if (register == false) {
+                            Navigator.pop(context);
+                          }
+                        },
+                        child: const Text(
+                          "Okay",
                           style: TextStyle(fontWeight: FontWeight.w700),
                         ),
                       )

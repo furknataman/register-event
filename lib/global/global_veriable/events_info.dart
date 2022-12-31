@@ -39,6 +39,7 @@ class EventsInfo extends ChangeNotifier {
       description: event.description,
       active: event.active,
       id: event.id,
+      key: event.key,
       participantsNumber: totalParticipantsNumber,
       capacity: event.capacity,
       speakers: event.speakers,
@@ -64,6 +65,7 @@ class EventsInfo extends ChangeNotifier {
       eventLocationlUrl: event.eventLocationlUrl,
       eventsLocation: event.eventsLocation,
       name: event.name,
+      key: event.key,
       imageUrl: event.imageUrl,
       description: event.description,
       active: event.active,
@@ -85,10 +87,10 @@ class EventsInfo extends ChangeNotifier {
     await docRef.set(user);
   }
 }
-
-
+List<ClassModelEvents> events = [];
 final getEventsList = FutureProvider<List>((ref) {
-  List<ClassModelEvents> events = [];
+
+ events = [];
   final databaseReference = FirebaseFirestore.instance;
   databaseReference
       .collection("events")
@@ -101,6 +103,7 @@ final getEventsList = FutureProvider<List>((ref) {
     (value) {
       for (var element in value.docs) {
         events.add(element.data());
+        
       }
       //print(events.first.dateTime);
     },

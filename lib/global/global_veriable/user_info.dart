@@ -4,11 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../db/db_model/db_model_user.dart';
 
+
 class UserInfo extends ChangeNotifier {
   final databaseReference = FirebaseFirestore.instance;
   String mail = FirebaseAuth.instance.currentUser!.email.toString();
   ClassUserModel? user = ClassUserModel(
-      name: "Furkan",
+      name: "Fuan",
       email: "furknataman@gmail.com",
       password: "1231231",
       active: false,
