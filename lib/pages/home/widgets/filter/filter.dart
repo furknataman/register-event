@@ -1,13 +1,9 @@
-import 'package:flutter/cupertino.dart';
+
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/global/bottomSheet/filter/picker.dart';
+import 'package:qr/pages/home/widgets/filter/widgets/show_picker.dart';
 
-class FilterPage extends ChangeNotifier {
-  bool past = true;
-  bool ongoing = true;
-
-  void filterDialog(BuildContext context, Function functionLeft, Function functionRight,
+void filterDialog(BuildContext context, Function functionLeft, Function functionRight,
       String titleText, String bodyText) {
     showModalBottomSheet(
         shape: RoundedRectangleBorder(
@@ -67,7 +63,7 @@ class FilterPage extends ChangeNotifier {
                           children: [
                             Text("What to show",
                                 style: Theme.of(context).textTheme.bodyLarge),
-                            CupertinoPickerExample(),
+                            const Picker(),
                           ],
                         )
                       ],
@@ -120,6 +116,3 @@ class FilterPage extends ChangeNotifier {
           );
         });
   }
-}
-
-final alertPageConfig = ChangeNotifierProvider((ref) => FilterPage());

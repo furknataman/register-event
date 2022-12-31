@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:qr/main.dart';
 
 import '../../../db/db_model/db_model_events.dart';
 import '../../../global/global_veriable/events_info.dart';
@@ -40,7 +41,8 @@ class RegisterButton extends ConsumerWidget {
       } else {
         return ElevatedButton(
             style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff485FFF),
+                backgroundColor:
+                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
                 padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 shape: const StadiumBorder()),
@@ -60,7 +62,7 @@ class RegisterButton extends ConsumerWidget {
     } else {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xffEB5757),
+              backgroundColor: Theme.of(context).colorScheme.unregister,
               padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
               shape: const StadiumBorder()),

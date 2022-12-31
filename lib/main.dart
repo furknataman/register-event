@@ -31,18 +31,24 @@ class MyApp extends StatelessWidget {
   }
 }
 
+extension CustomColorScheme on ColorScheme {
+  Color get unregister => brightness == Brightness.light
+      ? const Color(0xffEB5757)
+      : const Color.fromARGB(255, 144, 65, 65);
+}
+
 ThemeData _darkTheme = ThemeData(
-  
     brightness: Brightness.dark,
     backgroundColor: const Color(0xff1E1E1E),
     fontFamily: "Raleway",
     primaryColor: const Color(0xdd242424),
     cardColor: const Color(0xff242424),
-    floatingActionButtonTheme:
-        const FloatingActionButtonThemeData(backgroundColor: Color(0xff5B64A7)),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
+        backgroundColor: Color(
+      0xff5B64A7,
+    )),
     secondaryHeaderColor: const Color(0xffBDBDBD),
     textTheme: const TextTheme(
-
         displayLarge:
             TextStyle(fontSize: 24, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         displayMedium:
@@ -61,6 +67,8 @@ ThemeData _darkTheme = ThemeData(
             TextStyle(fontSize: 18, color: Color(0xffBDBDBD), fontWeight: FontWeight.w700),
         titleLarge:
             TextStyle(fontSize: 33, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
+        bodySmall:
+            TextStyle(fontSize: 16, color: Color(0xffBDBDBD), fontWeight: FontWeight.w700),
         labelMedium: TextStyle(
             fontSize: 14, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400)));
 
@@ -88,6 +96,8 @@ ThemeData _lightTheme = ThemeData(
             TextStyle(fontSize: 10, color: Color(0xff333333), fontWeight: FontWeight.w400),
         titleMedium:
             TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700),
+        bodySmall:
+            TextStyle(fontSize: 16, color: Color(0xff4F4F4F), fontWeight: FontWeight.w700),
         titleLarge:
             TextStyle(fontSize: 33, color: Color(0xff333333), fontWeight: FontWeight.w400),
         labelMedium: TextStyle(

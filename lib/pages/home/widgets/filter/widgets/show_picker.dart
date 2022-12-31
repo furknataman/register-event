@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
 
 const List<String> showList = <String>[
   'All',
@@ -8,14 +9,14 @@ const List<String> showList = <String>[
   'Registered Events',
 ];
 
-class CupertinoPickerExample extends StatefulWidget {
-  const CupertinoPickerExample({super.key});
+class Picker extends StatefulWidget {
+  const Picker({super.key});
 
   @override
-  State<CupertinoPickerExample> createState() => _CupertinoPickerExampleState();
+  State<Picker> createState() => _PickerState();
 }
 
-class _CupertinoPickerExampleState extends State<CupertinoPickerExample> {
+class _PickerState extends State<Picker> {
   int _selectedFruit = 0;
 
   // This shows a CupertinoModalPopup with a reasonable fixed height which hosts CupertinoPicker.
@@ -30,7 +31,7 @@ class _CupertinoPickerExampleState extends State<CupertinoPickerExample> {
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
               // Provide a background color for the popup.
-              color: CupertinoColors.systemBackground.resolveFrom(context),
+              color: Theme.of(context).backgroundColor,
               // Use a SafeArea widget to avoid system overlaps.
               child: SafeArea(
                 top: false,
@@ -67,10 +68,28 @@ class _CupertinoPickerExampleState extends State<CupertinoPickerExample> {
         ),
       ),
       // This displays the selected fruit name.
-      child: Text(
-        showList[_selectedFruit],
-        style: const TextStyle(
-          fontSize: 22.0,
+      child: Container(
+        padding: const EdgeInsets.only(left: 10, right: 10, top: 4, bottom: 4),
+        decoration: BoxDecoration(
+          border: Border.all(
+            width: 1,
+            color: Theme.of(context).secondaryHeaderColor,
+          ),
+          borderRadius: const BorderRadius.all(
+            Radius.circular(14),
+          ),
+        ),
+        child: Row(
+          children: [
+            Text(showList[_selectedFruit], style: Theme.of(context).textTheme.bodySmall),
+            const SizedBox(
+              width: 6,
+            ),
+            Icon(
+              LucideIcons.chevronsUpDown,
+              color: Theme.of(context).secondaryHeaderColor,
+            )
+          ],
         ),
       ),
     );
