@@ -17,7 +17,7 @@ void filterDialog(BuildContext context, Function functionLeft, Function function
           decoration: BoxDecoration(
               color: Theme.of(context).backgroundColor,
               borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(20), topRight: Radius.circular(20))),
+                  topLeft: Radius.circular(10), topRight: Radius.circular(10))),
           child: Padding(
             padding: const EdgeInsets.only(left: 18.0, right: 18, bottom: 40),
             child: Column(

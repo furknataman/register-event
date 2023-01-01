@@ -23,14 +23,15 @@ class _PickerState extends State<Picker> {
     showCupertinoModalPopup<void>(
         context: context,
         builder: (BuildContext context) => Container(
+              decoration: BoxDecoration(
+                  color: Theme.of(context).backgroundColor,
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10), topRight: Radius.circular(10))),
               height: 216,
               padding: const EdgeInsets.only(top: 6.0),
               margin: EdgeInsets.only(
                 bottom: MediaQuery.of(context).viewInsets.bottom,
               ),
-              // Provide a background color for the popup.
-              color: Theme.of(context).backgroundColor,
-              // Use a SafeArea widget to avoid system overlaps.
               child: SafeArea(
                 top: false,
                 child: child,
@@ -45,6 +46,7 @@ class _PickerState extends State<Picker> {
       // Display a CupertinoPicker with list of fruits.
       onPressed: () => _showDialog(
         CupertinoPicker(
+          
           backgroundColor: Theme.of(context).backgroundColor,
           magnification: 1.22,
           squeeze: 1.2,
