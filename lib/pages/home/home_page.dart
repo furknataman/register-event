@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
-import 'package:qr/global/globalveriable.dart';
+
 import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:skeletons/skeletons.dart';
 import '../../global/global_veriable/events_info.dart';

@@ -93,7 +93,7 @@ List<ClassModelEvents> events = [];
 final getEventsList = FutureProvider<List>((ref) async {
   events = [];
   final databaseReference = FirebaseFirestore.instance;
-  await databaseReference
+  databaseReference
       .collection("events")
       .withConverter(
         fromFirestore: ClassModelEvents.fromFirestore,
@@ -109,7 +109,7 @@ final getEventsList = FutureProvider<List>((ref) async {
       //print(events.first.dateTime);
     },
   );
-  return events;
+  return  events;
 });
 
 final getEvent = FutureProvider.family<ClassModelEvents, String>((ref, name) async {
@@ -121,7 +121,6 @@ final getEvent = FutureProvider.family<ClassModelEvents, String>((ref, name) asy
       );
   final docSnap = await ref.get();
   ClassModelEvents? event = docSnap.data(); // Convert to City object
-  // print(event!.dateTime);
   return event!;
 });
 

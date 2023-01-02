@@ -3,10 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/global_veriable/events_info.dart';
-import 'package:qr/global/globalveriable.dart';
 import 'package:qr/main.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-
 import '../../global/global_veriable/user_info.dart';
 
 class ScannerPage extends ConsumerStatefulWidget {
@@ -105,14 +103,24 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     });
   }
 
+  String? title;
+  String? body;
+  bool register = false;
+  int? id;
+  bool attendMessage = false;
+
   Future<dynamic> dialogAlert() {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
-    String? title;
-    String? body;
-    bool register = false;
+
     for (int i = 0; i < events.length; i++) {
-      if (events[i].key!.contains(result!.code.toString()) == true) {
-        int id = events[i].id!;
+      if (attendMessage == true) {
+        register = false;
+        title = "Atending to  ${events[i].name} ";
+        body = "You have successfully attended to ${events[i].name}, seminar";
+        attendMessage = false;
+        break;
+      } else if (events[i].key!.contains(result!.code.toString()) == true) {
+        id = events[i].id!;
 
         if (userInfo.user!.registeredEvents!.contains(id)) {
           register = true;
@@ -208,6 +216,13 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                         onPressed: () {
                           if (register == false) {
                             Navigator.pop(context);
+                            controller!.resumeCamera();
+                          } else {
+                            attendMessage = true;
+
+                            userInfo.writeAttend(registeredEvents: id);
+                            Navigator.pop(context);
+                            dialogAlert();
                           }
                         },
                         child: const Text(
