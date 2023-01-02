@@ -4,6 +4,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import 'package:qr/global/globalveriable.dart';
 import 'package:qr/pages/home/widgets/filter/filter.dart';
+import 'package:skeletons/skeletons.dart';
 import '../../global/global_veriable/events_info.dart';
 import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
@@ -75,9 +76,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    filterDialog(context, () => Navigator.pop(context), () {
-                      Navigator.pop(context);
-                    }, "Filters", "Seçili listeler silinecek");
+                    filterDialog(context);
                   },
                   icon: Icon(
                     HeroiconsOutline.funnel,
@@ -89,7 +88,7 @@ class _HomepageState extends ConsumerState<Homepage> {
             ),
           ),
           getAllEvents.when(
-            loading: () => const CircularProgressIndicator(),
+            loading: () => SkeletonListView(),
             error: (err, stack) => Text('Error: $err'),
             data: (getAllEvents) {
               return Container(
@@ -99,7 +98,6 @@ class _HomepageState extends ConsumerState<Homepage> {
                   child: ListView.builder(
                     itemBuilder: (context, index) {
                       context;
-                      eventss.add(getAllEvents[index]);
                       return evenetsCart(
                         context,
                         eventsNumber: index,

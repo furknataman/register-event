@@ -38,7 +38,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
           SizedBox(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              child: _buildQrView(context)),
+              child: buildQrView(context)),
           Positioned(
               child: Container(
             height: 160,
@@ -76,25 +76,25 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     );
   }
 
-  Widget _buildQrView(BuildContext context) {
+  Widget buildQrView(BuildContext context) {
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
         ? 250.0
         : 350.0;
     return QRView(
       key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
+      onQRViewCreated: onQRViewCreated,
       overlay: QrScannerOverlayShape(
           borderColor: const Color(0xff485FFF),
           borderRadius: 30,
           borderLength: 30,
           borderWidth: 20,
           cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
+      onPermissionSet: (ctrl, p) => onPermissionSet(context, ctrl, p),
     );
   }
 
-  void _onQRViewCreated(QRViewController controller) {
+  void onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
     });
@@ -110,7 +110,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     String? title;
     String? body;
     bool register = false;
-    for (int i = 0; i < eventss.length; i++) {
+    for (int i = 0; i < events.length; i++) {
       if (events[i].key!.contains(result!.code.toString()) == true) {
         int id = events[i].id!;
 
@@ -227,7 +227,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         });
   }
 
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
+  void onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(

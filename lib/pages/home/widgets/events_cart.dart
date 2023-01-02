@@ -14,11 +14,11 @@ InkWell evenetsCart(
   @required String? eventLocation,
   @required bool? eventCart,
 }) {
-  
   ClassTime time = classConverter(event!.dateTime!, event.duration!);
   return InkWell(
     onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Eventspage(event)));
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => Eventspage(event.eventsCollentionName)));
     },
     child: Padding(
       padding: const EdgeInsets.only(bottom: 18.0),

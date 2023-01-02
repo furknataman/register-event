@@ -3,8 +3,7 @@ import 'package:qr/pages/home/widgets/filter/widgets/button.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/show_picker.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/time_picker.dart';
 
-void filterDialog(BuildContext context, Function functionLeft, Function functionRight,
-    String titleText, String bodyText) {
+void filterDialog(BuildContext context) {
   showModalBottomSheet(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -42,7 +41,7 @@ void filterDialog(BuildContext context, Function functionLeft, Function function
                     Container(
                       alignment: Alignment.topLeft,
                       child:
-                          Text(titleText, style: Theme.of(context).textTheme.displayLarge),
+                          Text("Filters", style: Theme.of(context).textTheme.displayLarge),
                     ),
                   ],
                 ),
@@ -77,4 +76,3 @@ void filterDialog(BuildContext context, Function functionLeft, Function function
         );
       });
 }
-
