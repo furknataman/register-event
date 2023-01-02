@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr/main.dart';
+import 'package:qr/pages/home/widgets/filter/widgets/button.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/show_picker.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/time_picker.dart';
 
@@ -56,7 +56,7 @@ void filterDialog(BuildContext context, Function functionLeft, Function function
                         children: [
                           Text("Starting from",
                               style: Theme.of(context).textTheme.bodyLarge),
-                          const DatePickerExample()
+                          const DatePicker()
                         ],
                       ),
                       Row(
@@ -70,47 +70,11 @@ void filterDialog(BuildContext context, Function functionLeft, Function function
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.disable,
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0)),
-                      ),
-                      onPressed: () {
-                        functionLeft();
-                      },
-                      child: Text("Reset ", style: Theme.of(context).textTheme.labelLarge),
-                    ),
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor:
-                            Theme.of(context).floatingActionButtonTheme.backgroundColor,
-                        padding:
-                            const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0)),
-                      ),
-                      onPressed: () {
-                        functionRight();
-                      },
-                      child: const Text(
-                        "Filter",
-                        style: TextStyle(fontWeight: FontWeight.w700),
-                      ),
-                    )
-                  ],
-                ),
+                const FilterBottombar(),
               ],
             ),
           ),
         );
       });
 }
+

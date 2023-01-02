@@ -1,51 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:qr/pages/home/widgets/filter/filter_provider.dart';
 
-class DatePickerExample extends StatefulWidget {
-  const DatePickerExample({super.key});
+class DatePicker extends ConsumerWidget {
+  const DatePicker({super.key});
 
-  @override
-  State<DatePickerExample> createState() => _DatePickerExampleState();
-}
 
-class _DatePickerExampleState extends State<DatePickerExample> {
-  String defaultText = "All";
-  DateTime? time;
-  void _showDialog(Widget child) {
-    showCupertinoModalPopup<void>(
-        context: context,
-        builder: (BuildContext context) => Container(
-              decoration: BoxDecoration(
-                  color: CupertinoColors.systemBackground.resolveFrom(context),
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10), topRight: Radius.circular(10))),
-              height: 216,
-              padding: const EdgeInsets.only(top: 6.0),
-              margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom,
-              ),
-              child: SafeArea(
-                top: false,
-                bottom: false,
-                child: child,
-              ),
-            ));
-  }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     return CupertinoButton(
       padding: EdgeInsets.zero,
       // Display a CupertinoDatePicker in time picker mode.
-      onPressed: () => _showDialog(
+      onPressed: () => filterProvider.showDialog(
+        context,
         CupertinoDatePicker(
-          initialDateTime: time,
+          initialDateTime: filterProvider.time,
           mode: CupertinoDatePickerMode.time,
           use24hFormat: true,
           // This is called when the user changes the time.
           onDateTimeChanged: (DateTime newTime) {
-            setState(() => time = newTime);
+            filterProvider.changeListTime(newTime);
           },
         ),
       ),
@@ -63,7 +41,10 @@ class _DatePickerExampleState extends State<DatePickerExample> {
         ),
         child: Row(
           children: [
-            Text(time == null ? defaultText : '${time!.hour}:${time!.minute}',
+            Text(
+                filterProvider.time == null
+                    ? filterProvider.defaultText
+                    : '${filterProvider.time!.hour}:${filterProvider.time!.minute}',
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(
               width: 6,
