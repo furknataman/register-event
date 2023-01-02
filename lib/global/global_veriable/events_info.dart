@@ -39,6 +39,7 @@ class EventsInfo extends ChangeNotifier {
       description: event.description,
       active: event.active,
       id: event.id,
+      key: event.key,
       participantsNumber: totalParticipantsNumber,
       capacity: event.capacity,
       speakers: event.speakers,
@@ -64,6 +65,7 @@ class EventsInfo extends ChangeNotifier {
       eventLocationlUrl: event.eventLocationlUrl,
       eventsLocation: event.eventsLocation,
       name: event.name,
+      key: event.key,
       imageUrl: event.imageUrl,
       description: event.description,
       active: event.active,
@@ -86,10 +88,11 @@ class EventsInfo extends ChangeNotifier {
   }
 }
 
-final getEventsList = FutureProvider<List>((ref) {
-  List<ClassModelEvents> events = [];
-  final databaseReference = FirebaseFirestore.instance;
+List<ClassModelEvents> events = [];
 
+final getEventsList = FutureProvider<List>((ref) async {
+  events = [];
+  final databaseReference = FirebaseFirestore.instance;
   databaseReference
       .collection("events")
       .withConverter(
@@ -102,10 +105,23 @@ final getEventsList = FutureProvider<List>((ref) {
       for (var element in value.docs) {
         events.add(element.data());
       }
+      events;
       //print(events.first.dateTime);
     },
   );
-  return events;
+  return  events;
+});
+
+final getEvent = FutureProvider.family<ClassModelEvents, String>((ref, name) async {
+  final databaseReference = FirebaseFirestore.instance;
+
+  final ref = databaseReference.collection("events").doc(name).withConverter(
+        fromFirestore: ClassModelEvents.fromFirestore,
+        toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
+      );
+  final docSnap = await ref.get();
+  ClassModelEvents? event = docSnap.data(); // Convert to City object
+  return event!;
 });
 
 final eventsInfoConfig = ChangeNotifierProvider((ref) => EventsInfo());

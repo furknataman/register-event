@@ -8,7 +8,7 @@ class UserInfo extends ChangeNotifier {
   final databaseReference = FirebaseFirestore.instance;
   String mail = FirebaseAuth.instance.currentUser!.email.toString();
   ClassUserModel? user = ClassUserModel(
-      name: "Furkan",
+      name: "Fuan",
       email: "furknataman@gmail.com",
       password: "1231231",
       active: false,
@@ -44,6 +44,33 @@ class UserInfo extends ChangeNotifier {
         registeredEvents: addevent,
         attendedEvents: user!.attendedEvents,
         dateTimeList: addEventTime);
+
+    final docRef = databaseReference
+        .collection("users")
+        .withConverter(
+          fromFirestore: ClassUserModel.fromFirestore,
+          toFirestore: (ClassUserModel city, options) => city.toFirestore(),
+        )
+        .doc(mail);
+    await docRef.set(registerEvent);
+    readUser();
+  }
+
+  Future<void> writeAttend({
+    @required int? registeredEvents,
+  }) async {
+    List<int>? addevent = user!.attendedEvents;
+    addevent!.add(registeredEvents!);
+
+    final ClassUserModel registerEvent = ClassUserModel(
+        name: user!.name,
+        email: user!.email,
+        password: user!.password,
+        active: user!.active,
+        id: user!.id,
+        registeredEvents: user!.registeredEvents,
+        attendedEvents: addevent,
+        dateTimeList: user!.dateTimeList);
 
     final docRef = databaseReference
         .collection("users")

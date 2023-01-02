@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
-import '../../global/bottomSheet/filter/filter_provider.dart';
+
+import 'package:qr/pages/home/widgets/filter/filter.dart';
+import 'package:skeletons/skeletons.dart';
 import '../../global/global_veriable/events_info.dart';
 import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
+import 'widgets/filter/filter_provider.dart';
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -73,9 +76,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                 ),
                 IconButton(
                   onPressed: () {
-                    filterProvider.filterDialog(context, () => Navigator.pop(context), () {
-                      Navigator.pop(context);
-                    }, "Filters", "Seçili listeler silinecek");
+                    filterDialog(context);
                   },
                   icon: Icon(
                     HeroiconsOutline.funnel,
@@ -87,7 +88,7 @@ class _HomepageState extends ConsumerState<Homepage> {
             ),
           ),
           getAllEvents.when(
-            loading: () => const CircularProgressIndicator(),
+            loading: () => SkeletonListView(),
             error: (err, stack) => Text('Error: $err'),
             data: (getAllEvents) {
               return Container(

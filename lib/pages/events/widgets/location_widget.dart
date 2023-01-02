@@ -4,10 +4,10 @@ import '../../../db/db_model/db_model_events.dart';
 class LocationWidget extends StatelessWidget {
   const LocationWidget({
     super.key,
-    required this.event,
+    required this.eventLocationUrl,
   });
 
-  final ClassModelEvents? event;
+  final String? eventLocationUrl;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class LocationWidget extends StatelessWidget {
               colorFilter: ColorFilter.mode(
                   Colors.white.withOpacity(0.75), BlendMode.dstATop),
               image: NetworkImage(
-                event!.eventLocationlUrl!,
+                eventLocationUrl!,
               ),
               fit: BoxFit.fitHeight),
           color: Colors.black,
