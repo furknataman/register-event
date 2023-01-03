@@ -7,14 +7,7 @@ import '../../db/db_model/db_model_user.dart';
 class UserInfo extends ChangeNotifier {
   final databaseReference = FirebaseFirestore.instance;
   String mail = FirebaseAuth.instance.currentUser!.email.toString();
-  ClassUserModel? user = ClassUserModel(
-      name: "Fuan",
-      email: "furknataman@gmail.com",
-      password: "1231231",
-      active: false,
-      id: 23,
-      registeredEvents: [31, 1231],
-      attendedEvents: [1231, 21321]);
+  ClassUserModel? user;
 
   Future<void> readUser() async {
     final ref = databaseReference.collection("users").doc(mail).withConverter(

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../../db/db_model/db_model_events.dart';
 
 class LocationWidget extends StatelessWidget {
   const LocationWidget({

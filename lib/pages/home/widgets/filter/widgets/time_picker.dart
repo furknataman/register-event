@@ -7,10 +7,11 @@ import 'package:qr/pages/home/widgets/filter/filter_provider.dart';
 class DatePicker extends ConsumerWidget {
   const DatePicker({super.key});
 
-
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    DateTime now = DateTime.now();
+    DateTime mindate = DateTime(now.year, now.month, now.day - 2);
+    DateTime maxdate = DateTime(now.year, now.month, now.day);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     return CupertinoButton(
       padding: EdgeInsets.zero,
@@ -18,11 +19,15 @@ class DatePicker extends ConsumerWidget {
       onPressed: () => filterProvider.showDialog(
         context,
         CupertinoDatePicker(
-          initialDateTime: filterProvider.time,
-          mode: CupertinoDatePickerMode.time,
+          initialDateTime: mindate,
+          mode: CupertinoDatePickerMode.dateAndTime,
+          maximumDate: maxdate,
+          minimumDate: mindate,
+
           use24hFormat: true,
           // This is called when the user changes the time.
           onDateTimeChanged: (DateTime newTime) {
+            print(newTime);
             filterProvider.changeListTime(newTime);
           },
         ),

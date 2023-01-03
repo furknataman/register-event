@@ -5,7 +5,9 @@ import 'package:qr/global/date_time_converter.dart';
 import 'package:qr/global/global_veriable/events_info.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import 'package:qr/pages/events/widgets/register_button.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:qr/pages/events/widgets/skeleton.dart';
+import 'package:qr/pages/events/widgets/speakers_info.dart';
+import '../home/widgets/events_cart.dart';
 import 'widgets/location_widget.dart';
 
 class Eventspage extends ConsumerStatefulWidget {
@@ -43,7 +45,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
     return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: getEventInfo.when(
-            loading: () => SkeletonListView(),
+            loading: () => const SkelWidget(),
             error: (err, stack) => Text('Error: $err'),
             data: (getEventInfo) {
               ClassTime time =
@@ -106,34 +108,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
                               bottomPadding: 10),
                           textContainer(
                               "Speakers", Theme.of(context).textTheme.displayMedium),
-                          SizedBox(
-                            height: 25,
-                            child: ListView.separated(
-                              separatorBuilder: (BuildContext context, int index) =>
-                                  Padding(
-                                padding: const EdgeInsets.only(left: 6, right: 6),
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  width: 2,
-                                  height: 2,
-                                  decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Theme.of(context).secondaryHeaderColor),
-                                ),
-                              ),
-                              reverse: false,
-                              shrinkWrap: false,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) {
-                                context;
-                                return textContainer(
-                                    getEventInfo.speakers![index].toString(),
-                                    Theme.of(context).textTheme.titleSmall,
-                                    bottomPadding: 0);
-                              },
-                              itemCount: getEventInfo.speakers!.length,
-                            ),
-                          ),
+                          speakersInfo(getEventInfo),
                           textContainer(
                               "Cpacity", Theme.of(context).textTheme.displayMedium),
                           textContainer(
@@ -158,14 +133,5 @@ class _Eventspage extends ConsumerState<Eventspage> {
             }));
   }
 
-  Container textContainer(String? text, TextStyle? textStyle, {double bottomPadding = 5}) {
-    return Container(
-      alignment: Alignment.centerLeft,
-      padding: EdgeInsets.only(bottom: bottomPadding),
-      child: Text(
-        text!,
-        style: textStyle,
-      ),
-    );
-  }
+
 }

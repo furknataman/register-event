@@ -6,12 +6,10 @@ import '../../../global/date_time_converter.dart';
 
 InkWell evenetsCart(
   BuildContext context, {
-  @required String? eventsName,
-  @required String? imageUrl,
-  @required DateTime? dateTime,
-  @required int? eventsNumber,
+
+
   @required ClassModelEvents? event,
-  @required String? eventLocation,
+
   @required bool? eventCart,
 }) {
   ClassTime time = classConverter(event!.dateTime!, event.duration!);
@@ -50,7 +48,7 @@ InkWell evenetsCart(
               height: 166,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(imageUrl!, fit: BoxFit.cover)),
+                  child: Image.network(event.imageUrl!, fit: BoxFit.cover)),
             ),
           ),
           Positioned(
@@ -72,7 +70,7 @@ InkWell evenetsCart(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            eventsName!,
+                            event.name!,
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
@@ -157,7 +155,7 @@ InkWell evenetsCart(
                 height: 26,
                 width: 60,
                 child: Text(
-                  eventLocation!,
+                  event.eventsLocation!,
                   style: Theme.of(context).textTheme.labelMedium,
                 ),
               )),

@@ -88,12 +88,13 @@ class EventsInfo extends ChangeNotifier {
   }
 }
 
-List<ClassModelEvents> events = [];
+List<ClassModelEvents> eventsinfo = [];
 
 final getEventsList = FutureProvider<List>((ref) async {
-  events = [];
+  List<ClassModelEvents> events = [];
+  eventsinfo = [];
   final databaseReference = FirebaseFirestore.instance;
-  databaseReference
+  await databaseReference
       .collection("events")
       .withConverter(
         fromFirestore: ClassModelEvents.fromFirestore,
@@ -104,12 +105,14 @@ final getEventsList = FutureProvider<List>((ref) async {
     (value) {
       for (var element in value.docs) {
         events.add(element.data());
+        eventsinfo.add(element.data());
       }
       events;
       //print(events.first.dateTime);
     },
   );
-  return  events;
+
+  return events;
 });
 
 final getEvent = FutureProvider.family<ClassModelEvents, String>((ref, name) async {

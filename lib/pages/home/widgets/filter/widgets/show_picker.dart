@@ -21,6 +21,7 @@ class Picker extends ConsumerWidget {
           useMagnifier: true,
           itemExtent: 32,
           onSelectedItemChanged: (int selectedItem) {
+    
             filterProvider.changeListShow(selectedItem);
           },
           children: List<Widget>.generate(filterProvider.showList.length, (int index) {

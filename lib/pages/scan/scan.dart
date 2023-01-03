@@ -112,20 +112,26 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   Future<dynamic> dialogAlert() {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
-    for (int i = 0; i < events.length; i++) {
-      if (attendMessage == true) {
+    for (int i = 0; i < eventsinfo.length; i++) {
+      if (userInfo.user!.attendedEvents!.contains(id)) {
         register = false;
-        title = "Atending to  ${events[i].name} ";
-        body = "You have successfully attended to ${events[i].name}, seminar";
+        title = "Already Attended ${eventsinfo[i].name} ";
+        body = "You have already attended this event";
         attendMessage = false;
         break;
-      } else if (events[i].key!.contains(result!.code.toString()) == true) {
-        id = events[i].id!;
+      } else if (attendMessage == true) {
+        register = false;
+        title = "Atending to  ${eventsinfo[i].name} ";
+        body = "You have successfully attended to ${eventsinfo[i].name}, seminar";
+        attendMessage = false;
+        break;
+      } else if (eventsinfo[i].key!.contains(result!.code.toString()) == true) {
+        id = eventsinfo[i].id!;
 
         if (userInfo.user!.registeredEvents!.contains(id)) {
           register = true;
-          title = "Atending to ${events[i].name} ";
-          body = "You are about to attend to${events[i].name}, are you sure?";
+          title = "Atending to ${eventsinfo[i].name} ";
+          body = "You are about to attend to${eventsinfo[i].name}, are you sure?";
           break;
         } else {
           title = "Non-registered";
