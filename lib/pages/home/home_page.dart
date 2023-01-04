@@ -96,17 +96,37 @@ class _HomepageState extends ConsumerState<Homepage> {
               for (int i = 0; i < getAllEvents.length; i++) {
                 if (filterProvider.selectedList == 3 &&
                     userInfo.user!.registeredEvents!.contains(getAllEvents[i].id)) {
-                  listEvents.add(getAllEvents[i]);
+                  if (filterProvider.time == null) {
+                    listEvents.add(getAllEvents[i]);
+                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
+                      filterProvider.time!.millisecondsSinceEpoch) {
+                    listEvents.add(getAllEvents[i]);
+                  }
                 } else if (filterProvider.selectedList == 1 &&
                     getAllEvents[i].dateTime.millisecondsSinceEpoch <
                         DateTime.now().millisecondsSinceEpoch) {
-                  listEvents.add(getAllEvents[i]);
+                  if (filterProvider.time == null) {
+                    listEvents.add(getAllEvents[i]);
+                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
+                      filterProvider.time!.millisecondsSinceEpoch) {
+                    listEvents.add(getAllEvents[i]);
+                  }
                 } else if (filterProvider.selectedList == 2 &&
                     getAllEvents[i].dateTime.millisecondsSinceEpoch >
                         DateTime.now().millisecondsSinceEpoch) {
-                  listEvents.add(getAllEvents[i]);
+                  if (filterProvider.time == null) {
+                    listEvents.add(getAllEvents[i]);
+                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
+                      filterProvider.time!.millisecondsSinceEpoch) {
+                    listEvents.add(getAllEvents[i]);
+                  }
                 } else if (filterProvider.selectedList == 0) {
-                  listEvents.add(getAllEvents[i]);
+                  if (filterProvider.time == null) {
+                    listEvents.add(getAllEvents[i]);
+                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
+                      filterProvider.time!.millisecondsSinceEpoch) {
+                    listEvents.add(getAllEvents[i]);
+                  }
                 }
               }
 
