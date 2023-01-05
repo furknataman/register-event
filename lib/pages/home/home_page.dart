@@ -4,11 +4,12 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
-import '../../db/db_model/db_model_events.dart';
 import '../../global/global_veriable/events_info.dart';
 import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
+
+enum Which { learned, unlearned, all }
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -26,7 +27,7 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List> getAllEvents = ref.watch(getEventsList);
+    AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
@@ -87,47 +88,35 @@ class _HomepageState extends ConsumerState<Homepage> {
               ],
             ),
           ),
-          getAllEvents.when(
+          allEventsAsync.when(
             loading: () => const SkeletonWidget(),
             error: (err, stack) => Text('Error: $err'),
-            data: (getAllEvents) {
-              List<ClassModelEvents> listEvents = [];
+            data: (allEvents) {
+              var filteredEventList = allEvents;
 
-              for (int i = 0; i < getAllEvents.length; i++) {
-                if (filterProvider.selectedList == 3 &&
-                    userInfo.user!.registeredEvents!.contains(getAllEvents[i].id)) {
-                  if (filterProvider.time == null) {
-                    listEvents.add(getAllEvents[i]);
-                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
-                      filterProvider.time!.millisecondsSinceEpoch) {
-                    listEvents.add(getAllEvents[i]);
-                  }
-                } else if (filterProvider.selectedList == 1 &&
-                    getAllEvents[i].dateTime.millisecondsSinceEpoch <
-                        DateTime.now().millisecondsSinceEpoch) {
-                  if (filterProvider.time == null) {
-                    listEvents.add(getAllEvents[i]);
-                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
-                      filterProvider.time!.millisecondsSinceEpoch) {
-                    listEvents.add(getAllEvents[i]);
-                  }
-                } else if (filterProvider.selectedList == 2 &&
-                    getAllEvents[i].dateTime.millisecondsSinceEpoch >
-                        DateTime.now().millisecondsSinceEpoch) {
-                  if (filterProvider.time == null) {
-                    listEvents.add(getAllEvents[i]);
-                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
-                      filterProvider.time!.millisecondsSinceEpoch) {
-                    listEvents.add(getAllEvents[i]);
-                  }
-                } else if (filterProvider.selectedList == 0) {
-                  if (filterProvider.time == null) {
-                    listEvents.add(getAllEvents[i]);
-                  } else if (getAllEvents[i].dateTime.millisecondsSinceEpoch >
-                      filterProvider.time!.millisecondsSinceEpoch) {
-                    listEvents.add(getAllEvents[i]);
-                  }
-                }
+              if (filterProvider.selectedList == 1) {
+                filteredEventList = allEvents
+                    .where((e) =>
+                        e.dateTime.millisecondsSinceEpoch <
+                        DateTime.now().millisecondsSinceEpoch)
+                    .toList();
+              } else if (filterProvider.selectedList == 2) {
+                filteredEventList = allEvents
+                    .where((e) =>
+                        e.dateTime.millisecondsSinceEpoch >
+                        DateTime.now().millisecondsSinceEpoch)
+                    .toList();
+              } else if (filterProvider.selectedList == 3) {
+                filteredEventList = allEvents
+                    .where((e) => userInfo.user!.registeredEvents!.contains(e.id))
+                    .toList();
+              }
+              if (filterProvider.time != null) {
+                filteredEventList = allEvents
+                    .where((e) =>
+                        e.dateTime.millisecondsSinceEpoch >
+                        filterProvider.time!.millisecondsSinceEpoch)
+                    .toList();
               }
 
               return Expanded(
@@ -137,11 +126,11 @@ class _HomepageState extends ConsumerState<Homepage> {
                     return evenetsCart(
                       context,
                       eventCart: userInfo.user!.registeredEvents!
-                          .contains(getAllEvents[index].id),
-                      event: listEvents[index],
+                          .contains(filteredEventList[index].id),
+                      event: filteredEventList[index],
                     );
                   },
-                  itemCount: listEvents.length,
+                  itemCount: filteredEventList.length,
                 ),
               );
             },
