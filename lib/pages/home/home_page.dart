@@ -118,7 +118,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                         filterProvider.time!.millisecondsSinceEpoch)
                     .toList();
               }
-
+              filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
               return Expanded(
                 child: ListView.builder(
                   itemBuilder: (context, index) {
