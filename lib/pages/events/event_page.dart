@@ -109,8 +109,11 @@ class _Eventspage extends ConsumerState<Eventspage> {
                           textContainer(
                               "Speakers", Theme.of(context).textTheme.displayMedium),
                           speakersInfo(getEventInfo),
+                          const SizedBox(
+                            height: 10,
+                          ),
                           textContainer(
-                              "Cpacity", Theme.of(context).textTheme.displayMedium),
+                              "Capacity", Theme.of(context).textTheme.displayMedium),
                           textContainer(
                               "${getEventInfo.capacity! - getEventInfo.participantsNumber!} free seats left from ${getEventInfo.capacity}",
                               Theme.of(context).textTheme.titleSmall,
@@ -132,6 +135,4 @@ class _Eventspage extends ConsumerState<Eventspage> {
               );
             }));
   }
-
-
 }

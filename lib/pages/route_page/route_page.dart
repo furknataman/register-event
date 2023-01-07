@@ -40,16 +40,16 @@ class _RoutePageState extends State<RoutePage> {
             },
             controller: _pageController,
             children: const <Widget>[Homepage(), ScannerPage(), Settingspage()]),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
-            width: MediaQuery.of(context).size.width - 36,
-            height: 60,
+            width: MediaQuery.of(context).size.width - 70,
+            height: 61,
             decoration: const BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.all(Radius.circular(30)),
                 boxShadow: [
                   BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.25),
+                      color: Color.fromRGBO(0, 0, 0, 0.8),
                       blurRadius: 14,
                       offset: Offset(0, 4))
                 ]),
@@ -63,10 +63,10 @@ class _RoutePageState extends State<RoutePage> {
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   currentIndex: _currentIndex,
-                  unselectedItemColor: const Color(0xff485FFF),
+                  unselectedItemColor: const Color(0xff828282),
                   selectedItemColor: const Color(0xff485FFF),
                   selectedIconTheme: const IconThemeData(color: Color(0xff485FFF)),
-                  iconSize: 30,
+                  iconSize: 31,
                   items: <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
                       activeIcon: homeIconBold,

@@ -99,8 +99,11 @@ ThemeData _lightTheme = ThemeData(
             TextStyle(fontSize: 16, color: Color(0xff333333), fontWeight: FontWeight.w400),
         displaySmall:
             TextStyle(fontSize: 16, color: Color(0xff828282), fontWeight: FontWeight.w400),
-        titleSmall:
-            TextStyle(fontSize: 14, color: Color(0xff828282), fontWeight: FontWeight.w400),
+        titleSmall: TextStyle(
+            height: 1.7,
+            fontSize: 15,
+            color: Color(0xff828282),
+            fontWeight: FontWeight.w400),
         bodyLarge:
             TextStyle(fontSize: 18, color: Color(0xff333333), fontWeight: FontWeight.w400),
         labelLarge:

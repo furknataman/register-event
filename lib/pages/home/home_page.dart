@@ -135,10 +135,6 @@ class _HomepageState extends ConsumerState<Homepage> {
               );
             },
           ),
-          Container(
-            color: Theme.of(context).backgroundColor,
-            height: 80,
-          )
         ]),
       ),
     );
