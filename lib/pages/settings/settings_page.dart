@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/global/global_veriable/events_info.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../authentication/login_serice.dart';
 import '../../global/svg.dart';
@@ -21,6 +22,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
   Widget build(BuildContext context) {
     final getGoogle = ref.watch<GoogleProvder>(googleConfig);
     final userInfo = ref.read<UserInfo>(userInfoConfig);
+
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(left: 30, right: 30),
@@ -96,6 +98,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
+                
                       
                       LocalNoticeService().addNotification(
                         'testing',

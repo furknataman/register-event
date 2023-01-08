@@ -27,6 +27,36 @@ class EventsInfo extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> writeNewEvent({
+    @required ClassModelEvents? event,
+  }) async {
+    int? totalParticipantsNumber = event!.participantsNumber! + 1;
+    final user = ClassModelEvents(
+      eventLocationlUrl: event.eventLocationlUrl,
+      eventsLocation: event.eventsLocation,
+      name: event.name,
+      imageUrl: event.imageUrl,
+      description: event.description,
+      active: event.active,
+      id: event.id,
+      key: event.key,
+      participantsNumber: totalParticipantsNumber,
+      capacity: event.capacity,
+      speakers: event.speakers,
+      timestamp: event.timestamp,
+      duration: event.duration,
+    );
+
+    final docRef = databaseReference
+        .collection("events")
+        .withConverter(
+          fromFirestore: ClassModelEvents.fromFirestore,
+          toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
+        )
+        .doc("eventnew2");
+    await docRef.set(user);
+  }
+
   Future<void> writeEvents({
     @required ClassModelEvents? event,
   }) async {

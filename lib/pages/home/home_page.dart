@@ -121,6 +121,7 @@ class _HomepageState extends ConsumerState<Homepage> {
               filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
               return Expanded(
                 child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 55),
                   itemBuilder: (context, index) {
                     context;
                     return evenetsCart(
