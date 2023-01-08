@@ -57,7 +57,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
               ),
             ),
           ),
-          Positioned(
+          /*Positioned(
             bottom: 140,
             child: Padding(
               padding: const EdgeInsets.only(left: 80, right: 59),
@@ -68,7 +68,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                     )
                   : const Text('Scan a code'),
             ),
-          ),
+          ),*/
         ],
       ),
     );

@@ -75,16 +75,28 @@ class _HomepageState extends ConsumerState<Homepage> {
                   "Upcoming Events",
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
-                IconButton(
-                  onPressed: () {
-                    filterDialog(context);
-                  },
-                  icon: Icon(
-                    HeroiconsOutline.funnel,
-                    color: Theme.of(context).secondaryHeaderColor,
-                    size: 30,
-                  ),
-                )
+                filterProvider.selectedList == 0 && filterProvider.time == null
+                    ? IconButton(
+                        onPressed: () {
+                          filterDialog(context);
+                        },
+                        icon: Icon(
+                          HeroiconsOutline.funnel,
+                          color: Theme.of(context).secondaryHeaderColor,
+                          size: 30,
+                        ),
+                      )
+                    : IconButton(
+                        onPressed: () {
+                          filterDialog(context);
+                        },
+                        icon: Icon(
+                          HeroiconsSolid.funnel,
+                          color:
+                              Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                          size: 30,
+                        ),
+                      )
               ],
             ),
           ),
@@ -121,7 +133,6 @@ class _HomepageState extends ConsumerState<Homepage> {
               filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
               return Expanded(
                 child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 55),
                   itemBuilder: (context, index) {
                     context;
                     return evenetsCart(
