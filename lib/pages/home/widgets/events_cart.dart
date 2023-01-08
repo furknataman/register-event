@@ -6,10 +6,7 @@ import '../../../global/date_time_converter.dart';
 
 InkWell evenetsCart(
   BuildContext context, {
-
-
   @required ClassModelEvents? event,
-
   @required bool? eventCart,
 }) {
   ClassTime time = classConverter(event!.dateTime!, event.duration!);
@@ -88,8 +85,9 @@ InkWell evenetsCart(
                               alignment: Alignment.center,
                               width: 2,
                               height: 2,
-                              decoration: const BoxDecoration(
-                                  shape: BoxShape.circle, color: Colors.black),
+                              decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).secondaryHeaderColor),
                             ),
                           ),
                           reverse: false,

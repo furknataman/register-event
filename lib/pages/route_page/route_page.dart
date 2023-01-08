@@ -40,7 +40,7 @@ class _RoutePageState extends State<RoutePage> {
             },
             controller: _pageController,
             children: const <Widget>[Homepage(), ScannerPage(), Settingspage()]),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         floatingActionButton: Container(
             width: MediaQuery.of(context).size.width - 70,
             height: 61,
