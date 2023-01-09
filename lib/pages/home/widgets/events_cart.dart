@@ -80,7 +80,7 @@ InkWell evenetsCart(
                         height: 25,
                         child: ListView.separated(
                           separatorBuilder: (BuildContext context, int index) => Padding(
-                            padding: const EdgeInsets.only(left: 6, right: 6),
+                            padding: const EdgeInsets.only(left: 6, right: 6, top: 4),
                             child: Container(
                               alignment: Alignment.center,
                               width: 2,
