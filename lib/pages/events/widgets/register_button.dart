@@ -47,7 +47,6 @@ class RegisterButton extends ConsumerWidget {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 shape: const StadiumBorder()),
             onPressed: () {
-              eventAction.writeNewEvent(event: event);
               userInfo.writeUser(registeredEvents: event!.id, eventTime: event!.timestamp);
               eventAction.writeEvents(event: event);
             },
