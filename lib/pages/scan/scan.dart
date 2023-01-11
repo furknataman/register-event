@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/global_veriable/events_info.dart';
-import 'package:qr/main.dart';
+import 'package:qr/theme/theme_extends.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import '../../global/global_veriable/user_info.dart';
 

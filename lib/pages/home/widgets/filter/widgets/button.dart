@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/main.dart';
 import 'package:qr/pages/home/widgets/filter/filter_provider.dart';
+import 'package:qr/theme/theme_extends.dart';
 
 class FilterBottombar extends ConsumerWidget {
   const FilterBottombar({

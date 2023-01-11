@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:qr/main.dart';
-
+import 'package:qr/theme/theme_extends.dart';
 import '../../../db/db_model/db_model_events.dart';
 import '../../../global/global_veriable/events_info.dart';
 import '../../../global/global_veriable/user_info.dart';
