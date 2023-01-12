@@ -16,7 +16,7 @@ InkWell evenetsCart(
           MaterialPageRoute(builder: (context) => Eventspage(event.eventsCollentionName)));
     },
     child: Padding(
-      padding: const EdgeInsets.only(bottom: 18.0),
+      padding: const EdgeInsets.only(top: 15),
       child: Stack(
         alignment: Alignment.center,
         fit: StackFit.loose,
@@ -163,7 +163,7 @@ InkWell evenetsCart(
   );
 }
 
-Container textContainer(String? text, TextStyle? textStyle, {double bottomPadding = 5}) {
+Container textContainer(String? text, TextStyle? textStyle, {double bottomPadding = 1}) {
   return Container(
     alignment: Alignment.centerLeft,
     padding: EdgeInsets.only(bottom: bottomPadding),
