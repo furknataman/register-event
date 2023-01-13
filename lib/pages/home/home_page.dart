@@ -9,7 +9,6 @@ import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
 
-enum Which { learned, unlearned, all }
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
