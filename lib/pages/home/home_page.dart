@@ -4,6 +4,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
+import 'package:qr/theme/theme_extends.dart';
 import '../../global/global_veriable/events_info.dart';
 import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
@@ -33,7 +34,7 @@ class _HomepageState extends ConsumerState<Homepage> {
       backgroundColor: Theme.of(context).backgroundColor,
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Container(
-          color: const Color(0xff232f60),
+          color: Theme.of(context).colorScheme.mainClor,
           child: SafeArea(
               bottom: false,
               child: Column(
