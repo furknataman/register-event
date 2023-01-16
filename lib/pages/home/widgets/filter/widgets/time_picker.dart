@@ -23,11 +23,8 @@ class DatePicker extends ConsumerWidget {
           mode: CupertinoDatePickerMode.dateAndTime,
           maximumDate: maxdate,
           minimumDate: mindate,
-
           use24hFormat: true,
-          // This is called when the user changes the time.
           onDateTimeChanged: (DateTime newTime) {
-            print(newTime);
             filterProvider.changeListTime(newTime);
           },
         ),

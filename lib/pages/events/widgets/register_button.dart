@@ -20,7 +20,23 @@ class RegisterButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final eventAction = ref.watch<EventsInfo>(eventsInfoConfig);
 
-    if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
+    if (event!.dateTime!.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch) {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff485FFF),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: null,
+          child: Row(
+            children: [
+              Text(
+                "Past",
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+            ],
+          ));
+    } else if (userInfo.user!.registeredEvents!.contains(event!.id) == false) {
       if (userInfo.user!.dateTimeList!.contains(event!.timestamp) == true) {
         return ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -37,6 +53,23 @@ class RegisterButton extends ConsumerWidget {
                 ),
               ],
             ));
+      } else if (event!.capacity! - event!.participantsNumber! <= 0) {
+        return ElevatedButton(
+            style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                shape: const StadiumBorder()),
+            onPressed: null,
+            child: Row(
+              children: const [
+                Text(
+                  "Full",
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ],
+            ));
       } else {
         return ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -47,7 +80,7 @@ class RegisterButton extends ConsumerWidget {
                 shape: const StadiumBorder()),
             onPressed: () {
               userInfo.writeUser(registeredEvents: event!.id, eventTime: event!.timestamp);
-              eventAction.writeEvents(event: event);
+              eventAction.writeEvents(eventsCollentionName: event!.eventsCollentionName);
             },
             child: Row(
               children: const [
