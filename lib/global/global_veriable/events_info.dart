@@ -76,7 +76,7 @@ class EventsInfo extends ChangeNotifier {
           .doc("eventnew2");
       await docRef.set(user);
     } else {
-      toastMessage("Event Dolu");
+      toastMessage("Event is Full");
     }
   }
 
