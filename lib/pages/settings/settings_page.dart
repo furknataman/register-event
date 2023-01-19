@@ -4,6 +4,7 @@ import 'package:qr/global/global_veriable/user_info.dart';
 import '../../authentication/login_serice.dart';
 import '../../global/svg.dart';
 import '../../notifiation/local_notification/notification.dart';
+
 class Settingspage extends ConsumerStatefulWidget {
   const Settingspage({super.key});
 
@@ -45,49 +46,64 @@ class _SettingspageState extends ConsumerState<Settingspage> {
               SizedBox(
                 height: 200,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Text(userInfo.user!.name.toString(),
                         style: Theme.of(context).textTheme.titleLarge),
-                    Text("Berlin Technical University",
+                    Text("Eyüboğlu Educational Institutions",
                         style: Theme.of(context).textTheme.displaySmall),
-                    Row(
+                    /* Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text("Enable Notifications",
                             style: Theme.of(context).textTheme.bodyLarge),
                       ],
+                    ),*/
+                    const SizedBox(
+                      height: 30,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
                       children: [
-                        Text("Visit TOK Website",
-                            style: Theme.of(context).textTheme.bodyLarge),
-                       const Icon(
-                          Icons.web,
-                          size: 30,
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Logout", style: Theme.of(context).textTheme.bodyLarge),
-                        IconButton(
-                          icon: const Icon(
-                            Icons.login,
-                            size: 30,
-                          ),
-                          onPressed: () {
-                            getGoogle.signOut();
-                          },
-                        )
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Visit TOK Website",
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            IconButton(
+                              icon: const Icon(
+                                Icons.public,
+                                color: Colors.blue,
+                                size: 30,
+                              ),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Logout", style: Theme.of(context).textTheme.bodyLarge),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: IconButton(
+                                icon: const Icon(
+                                  Icons.login,
+                                  color: Colors.blue,
+                                  size: 30,
+                                ),
+                                onPressed: () {
+                                  getGoogle.signOut();
+                                },
+                              ),
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
-              Row(
+              /*Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("database", style: Theme.of(context).textTheme.bodyLarge),
@@ -124,7 +140,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                     },
                   )
                 ],
-              )
+              )*/
             ]),
       ),
     );
