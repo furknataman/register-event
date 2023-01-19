@@ -3,6 +3,7 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/pages/home/home_page.dart';
 import 'package:qr/pages/scan/scan.dart';
 import 'package:qr/pages/settings/settings_page.dart';
+import 'package:qr/theme/theme_extends.dart';
 
 import '../../notifiation/push_notification/push_notification.dart';
 
@@ -59,7 +60,7 @@ class _RoutePageState extends State<RoutePage> {
                     setState(() => _currentIndex = index);
                     _pageController.jumpToPage(index);
                   },
-                  backgroundColor: const Color(0xff232f60),
+                  backgroundColor: Theme.of(context).colorScheme.mainColor,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   currentIndex: _currentIndex,

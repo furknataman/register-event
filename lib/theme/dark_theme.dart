@@ -5,6 +5,7 @@ ThemeData darkTheme = ThemeData(
     backgroundColor: const Color(0xff1E1E1E),
     fontFamily: "Raleway",
     primaryColor: const Color(0xdd242424),
+    splashColor: Colors.white,
     cardColor: const Color(0xff242424),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: Color(

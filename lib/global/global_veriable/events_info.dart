@@ -73,11 +73,9 @@ class EventsInfo extends ChangeNotifier {
             fromFirestore: ClassModelEvents.fromFirestore,
             toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
           )
-          .doc("eventnew2");
+          .doc(eventsCollentionName);
       await docRef.set(user);
-    } else {
-      toastMessage("Event is Full");
-    }
+    } else {}
   }
 
   Future<void> removeEventUser({

@@ -10,7 +10,6 @@ import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
 
-
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
 
@@ -34,7 +33,7 @@ class _HomepageState extends ConsumerState<Homepage> {
       backgroundColor: Theme.of(context).backgroundColor,
       body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
         Container(
-          color: Theme.of(context).colorScheme.mainClor,
+          color: Theme.of(context).colorScheme.mainColor,
           child: SafeArea(
               bottom: false,
               child: Column(
@@ -56,10 +55,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                           )
                         ],
                       ),
-                      IconButton(
-                        icon: Icon(
+                      /*IconButton(
+                        icon: const Icon(
                           HeroiconsOutline.bell,
-                          color: Theme.of(context).backgroundColor,
+                          color: Colors.white,
                           size: 32,
                         ),
                         onPressed: () {
@@ -69,7 +68,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                                 builder: (context) => const NotificationPage()),
                           );
                         },
-                      )
+                      )*/
                     ]),
                   ),
                   Padding(
@@ -87,9 +86,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                                 onPressed: () {
                                   filterDialog(context);
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   HeroiconsOutline.funnel,
-                                  color: Theme.of(context).backgroundColor,
+                                  color: Colors.white,
                                   size: 30,
                                 ),
                               )
@@ -97,9 +96,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                                 onPressed: () {
                                   filterDialog(context);
                                 },
-                                icon: Icon(
+                                icon: const Icon(
                                   HeroiconsSolid.funnel,
-                                  color: Theme.of(context).backgroundColor,
+                                  color: Colors.white,
                                   size: 30,
                                 ),
                               )
@@ -140,9 +139,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                   .toList();
             }
             filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
+
             return Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 80),
+                padding: const EdgeInsets.only(bottom: 100),
                 itemBuilder: (context, index) {
                   context;
                   return evenetsCart(

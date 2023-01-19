@@ -130,6 +130,9 @@ class _Eventspage extends ConsumerState<Eventspage> {
                       ),
                     ),
                     LocationWidget(eventLocationUrl: getEventInfo.eventLocationlUrl),
+                    const SizedBox(
+                      height: 30,
+                    )
                   ])),
                 ],
               );
