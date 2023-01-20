@@ -103,7 +103,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                   ],
                 ),
               ),
-              /*Row(
+              Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("database", style: Theme.of(context).textTheme.bodyLarge),
@@ -113,12 +113,10 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
-                
-                      
                       LocalNoticeService().addNotification(
                         'testing',
-                        'Test Titile',
-                        'Test Body',
+                        'An event is near.',
+                        'Modern math is starting by 10 minutes in Hall 5, given by John Doe. Don’t forget to scan the qr code.',
                         DateTime.now().millisecondsSinceEpoch + 4000,
                       );
 
@@ -140,7 +138,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                     },
                   )
                 ],
-              )*/
+              )
             ]),
       ),
     );

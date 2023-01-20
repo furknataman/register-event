@@ -55,7 +55,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                           )
                         ],
                       ),
-                      /*IconButton(
+                      IconButton(
                         icon: const Icon(
                           HeroiconsOutline.bell,
                           color: Colors.white,
@@ -68,7 +68,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                                 builder: (context) => const NotificationPage()),
                           );
                         },
-                      )*/
+                      )
                     ]),
                   ),
                   Padding(

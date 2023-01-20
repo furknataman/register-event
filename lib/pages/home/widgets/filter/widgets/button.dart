@@ -36,7 +36,7 @@ class FilterBottombar extends ConsumerWidget {
           ),
           onPressed: () {},
           child: const Text(
-            "Filter",
+            "Ok",
             style: TextStyle(fontWeight: FontWeight.w700),
           ),
         )
