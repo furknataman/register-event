@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
-import 'package:qr/notifiation/toast_message/toast_message.dart';
 
 class EventsInfo extends ChangeNotifier {
   List<ClassModelEvents> events = [];

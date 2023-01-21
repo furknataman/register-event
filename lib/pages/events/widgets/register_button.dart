@@ -5,6 +5,7 @@ import 'package:qr/theme/theme_extends.dart';
 import '../../../db/db_model/db_model_events.dart';
 import '../../../global/global_veriable/events_info.dart';
 import '../../../global/global_veriable/user_info.dart';
+import '../../../notifiation/local_notification/notification.dart';
 
 class RegisterButton extends ConsumerWidget {
   const RegisterButton({
@@ -81,6 +82,13 @@ class RegisterButton extends ConsumerWidget {
             onPressed: () {
               userInfo.writeUser(registeredEvents: event!.id, eventTime: event!.timestamp);
               eventAction.writeEvents(eventsCollentionName: event!.eventsCollentionName);
+
+              LocalNoticeService().addNotification(
+                'testing',
+                'An event is near.',
+                '${event!.name} is starting by 10 minutes in ${event!.eventsLocation}. Don’t forget to scan the qr code.',
+                event!.dateTime!.millisecondsSinceEpoch + 4000,
+              );
             },
             child: Row(
               children: const [

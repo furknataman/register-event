@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import '../../authentication/login_serice.dart';
 import '../../global/svg.dart';
-import '../../notifiation/local_notification/notification.dart';
 
 class Settingspage extends ConsumerStatefulWidget {
   const Settingspage({super.key});
@@ -113,28 +112,9 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       size: 30,
                     ),
                     onPressed: () {
-                      LocalNoticeService().addNotification(
-                        'testing',
-                        'An event is near.',
-                        'Modern math is starting by 10 minutes in Hall 5, given by John Doe. Don’t forget to scan the qr code.',
-                        DateTime.now().millisecondsSinceEpoch + 4000,
-                      );
+                      
 
-                      /*eventsInfo.readEvents();
-                      eventsInfo.writeEvents(
-                        duration: 40,
-                          name: "Matematik3",
-                          description: "Burada Açıklama yazıyor3",
-                          imageUrl:
-                              "https://images.unsplash.com/photo-1624555130581-1d9cca783bc0?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2942&q=80",
-                          active: true,
-                          eventLocationlUrl: "https://iili.io/HoF2Gz7.png",
-                          eventsLocation: "hall b",
-                          id: 2,
-                          capacity: 20,
-                          speakers: ["Berat2", "Tamer2"],
-                          attendedEvents: [1231, 231],
-                          timestamp: Timestamp.now());*/
+            
                     },
                   )
                 ],
