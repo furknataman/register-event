@@ -87,7 +87,7 @@ class RegisterButton extends ConsumerWidget {
                 'testing',
                 'An event is near.',
                 '${event!.name} is starting by 10 minutes in ${event!.eventsLocation}. Don’t forget to scan the qr code.',
-                event!.dateTime!.millisecondsSinceEpoch + 4000,
+                event!.dateTime!.millisecondsSinceEpoch + 600000,
               );
             },
             child: Row(
