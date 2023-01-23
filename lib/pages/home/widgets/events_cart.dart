@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:skeletons/skeletons.dart';
 import '../../../db/db_model/db_model_events.dart';
 import '../../events/event_page.dart';
 import '../../../global/date_time_converter.dart';
@@ -16,7 +17,7 @@ InkWell evenetsCart(
           MaterialPageRoute(builder: (context) => Eventspage(event.eventsCollentionName)));
     },
     child: Padding(
-      padding: const EdgeInsets.only(bottom: 18.0),
+      padding: const EdgeInsets.only(top: 15),
       child: Stack(
         alignment: Alignment.center,
         fit: StackFit.loose,
@@ -38,14 +39,26 @@ InkWell evenetsCart(
             top: 0,
             child: Container(
               decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
+                  color: Theme.of(context).cardColor,
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10), topRight: Radius.circular(10))),
               width: MediaQuery.of(context).size.width - 40,
               height: 166,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(event.imageUrl!, fit: BoxFit.cover)),
+                  child: Image.network(event.imageUrl!, fit: BoxFit.cover,
+                      loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    } else {
+                      return SkeletonItem(
+                        child: SkeletonAvatar(
+                          style: SkeletonAvatarStyle(
+                              width: MediaQuery.of(context).size.width - 20, height: 200),
+                        ),
+                      );
+                    }
+                  })),
             ),
           ),
           Positioned(
@@ -163,7 +176,7 @@ InkWell evenetsCart(
   );
 }
 
-Container textContainer(String? text, TextStyle? textStyle, {double bottomPadding = 5}) {
+Container textContainer(String? text, TextStyle? textStyle, {double bottomPadding = 1}) {
   return Container(
     alignment: Alignment.centerLeft,
     padding: EdgeInsets.only(bottom: bottomPadding),

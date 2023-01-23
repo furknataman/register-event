@@ -4,12 +4,11 @@ import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/global/global_veriable/user_info.dart';
 import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
+import 'package:qr/theme/theme_extends.dart';
 import '../../global/global_veriable/events_info.dart';
 import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
-
-enum Which { learned, unlearned, all }
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -32,124 +31,133 @@ class _HomepageState extends ConsumerState<Homepage> {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      body: SafeArea(
-        bottom: false,
-        child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 20.0, right: 24),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+      body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+        Container(
+          color: Theme.of(context).colorScheme.mainColor,
+          child: SafeArea(
+              bottom: false,
+              child: Column(
                 children: [
-                  Text(
-                    "Welcome,",
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 20.0, right: 24),
+                    child:
+                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Welcome,",
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            userInfo.user != null ? userInfo.user!.name.toString() : " ",
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          )
+                        ],
+                      ),
+                      IconButton(
+                        icon: const Icon(
+                          HeroiconsOutline.bell,
+                          color: Colors.white,
+                          size: 32,
+                        ),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const NotificationPage()),
+                          );
+                        },
+                      )
+                    ]),
                   ),
-                  Text(
-                    userInfo.user != null ? userInfo.user!.name.toString() : " ",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  )
+                  Padding(
+                    padding:
+                        const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 22),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Upcoming Events",
+                          style: Theme.of(context).textTheme.headlineLarge,
+                        ),
+                        filterProvider.selectedList == 0 && filterProvider.time == null
+                            ? IconButton(
+                                onPressed: () {
+                                  filterDialog(context);
+                                },
+                                icon: const Icon(
+                                  HeroiconsOutline.funnel,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              )
+                            : IconButton(
+                                onPressed: () {
+                                  filterDialog(context);
+                                },
+                                icon: const Icon(
+                                  HeroiconsSolid.funnel,
+                                  color: Colors.white,
+                                  size: 30,
+                                ),
+                              )
+                      ],
+                    ),
+                  ),
                 ],
-              ),
-              IconButton(
-                icon: Icon(
-                  HeroiconsOutline.bell,
-                  color: Theme.of(context).secondaryHeaderColor,
-                  size: 32,
-                ),
-                onPressed: () {
-                  Navigator.push(
+              )),
+        ),
+        allEventsAsync.when(
+          loading: () => const SkeletonWidget(),
+          error: (err, stack) => Text('Error: $err'),
+          data: (allEvents) {
+            var filteredEventList = allEvents;
+
+            if (filterProvider.selectedList == 1) {
+              filteredEventList = allEvents
+                  .where((e) =>
+                      e.dateTime.millisecondsSinceEpoch <
+                      DateTime.now().millisecondsSinceEpoch)
+                  .toList();
+            } else if (filterProvider.selectedList == 2) {
+              filteredEventList = allEvents
+                  .where((e) =>
+                      e.dateTime.millisecondsSinceEpoch >
+                      DateTime.now().millisecondsSinceEpoch)
+                  .toList();
+            } else if (filterProvider.selectedList == 3) {
+              filteredEventList = allEvents
+                  .where((e) => userInfo.user!.registeredEvents!.contains(e.id))
+                  .toList();
+            }
+            if (filterProvider.time != null) {
+              filteredEventList = allEvents
+                  .where((e) =>
+                      e.dateTime.millisecondsSinceEpoch >
+                      filterProvider.time!.millisecondsSinceEpoch)
+                  .toList();
+            }
+            filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
+
+            return Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.only(bottom: 100),
+                itemBuilder: (context, index) {
+                  context;
+                  return evenetsCart(
                     context,
-                    MaterialPageRoute(builder: (context) => const NotificationPage()),
+                    eventCart: userInfo.user!.registeredEvents!
+                        .contains(filteredEventList[index].id),
+                    event: filteredEventList[index],
                   );
                 },
-              )
-            ]),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 22),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Upcoming Events",
-                  style: Theme.of(context).textTheme.displayLarge,
-                ),
-                filterProvider.selectedList == 0 && filterProvider.time == null
-                    ? IconButton(
-                        onPressed: () {
-                          filterDialog(context);
-                        },
-                        icon: Icon(
-                          HeroiconsOutline.funnel,
-                          color: Theme.of(context).secondaryHeaderColor,
-                          size: 30,
-                        ),
-                      )
-                    : IconButton(
-                        onPressed: () {
-                          filterDialog(context);
-                        },
-                        icon: Icon(
-                          HeroiconsSolid.funnel,
-                          color:
-                              Theme.of(context).floatingActionButtonTheme.backgroundColor,
-                          size: 30,
-                        ),
-                      )
-              ],
-            ),
-          ),
-          allEventsAsync.when(
-            loading: () => const SkeletonWidget(),
-            error: (err, stack) => Text('Error: $err'),
-            data: (allEvents) {
-              var filteredEventList = allEvents;
-
-              if (filterProvider.selectedList == 1) {
-                filteredEventList = allEvents
-                    .where((e) =>
-                        e.dateTime.millisecondsSinceEpoch <
-                        DateTime.now().millisecondsSinceEpoch)
-                    .toList();
-              } else if (filterProvider.selectedList == 2) {
-                filteredEventList = allEvents
-                    .where((e) =>
-                        e.dateTime.millisecondsSinceEpoch >
-                        DateTime.now().millisecondsSinceEpoch)
-                    .toList();
-              } else if (filterProvider.selectedList == 3) {
-                filteredEventList = allEvents
-                    .where((e) => userInfo.user!.registeredEvents!.contains(e.id))
-                    .toList();
-              }
-              if (filterProvider.time != null) {
-                filteredEventList = allEvents
-                    .where((e) =>
-                        e.dateTime.millisecondsSinceEpoch >
-                        filterProvider.time!.millisecondsSinceEpoch)
-                    .toList();
-              }
-              filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
-              return Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 80),
-                  itemBuilder: (context, index) {
-                    context;
-                    return evenetsCart(
-                      context,
-                      eventCart: userInfo.user!.registeredEvents!
-                          .contains(filteredEventList[index].id),
-                      event: filteredEventList[index],
-                    );
-                  },
-                  itemCount: filteredEventList.length,
-                ),
-              );
-            },
-          ),
-        ]),
-      ),
+                itemCount: filteredEventList.length,
+              ),
+            );
+          },
+        ),
+      ]),
     );
   }
 }

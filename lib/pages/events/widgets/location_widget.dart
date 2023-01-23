@@ -11,20 +11,15 @@ class LocationWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width - 34,
-      height: 300,
-      decoration: BoxDecoration(
-          image: DecorationImage(
-              colorFilter: ColorFilter.mode(
-                  Colors.white.withOpacity(0.75), BlendMode.dstATop),
-              image: NetworkImage(
-                eventLocationUrl!,
-              ),
-              fit: BoxFit.fitHeight),
-          color: Colors.black,
-          borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(15),
-              bottomRight: Radius.circular(15))),
+      padding: const EdgeInsets.only(top: 10.0, left: 17, right: 17),
+      width: MediaQuery.of(context).size.width,
+      color: const Color.fromARGB(255, 226, 224, 224),
+      child: Image(
+        fit: BoxFit.fitHeight,
+        image: NetworkImage(
+          eventLocationUrl!,
+        ),
+      ),
     );
   }
 }

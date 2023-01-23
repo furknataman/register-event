@@ -105,31 +105,34 @@ class _Eventspage extends ConsumerState<Eventspage> {
                           textContainer(
                               "${time.month.toString()} ${time.day.toString()}th ${time.clock.toString()}   ",
                               Theme.of(context).textTheme.titleSmall,
-                              bottomPadding: 10),
+                              bottomPadding: 17),
                           textContainer(
                               "Speakers", Theme.of(context).textTheme.displayMedium),
                           speakersInfo(getEventInfo),
                           const SizedBox(
-                            height: 10,
+                            height: 17,
                           ),
                           textContainer(
                               "Capacity", Theme.of(context).textTheme.displayMedium),
                           textContainer(
                               "${getEventInfo.capacity! - getEventInfo.participantsNumber!} free seats left from ${getEventInfo.capacity}",
                               Theme.of(context).textTheme.titleSmall,
-                              bottomPadding: 10),
+                              bottomPadding: 17),
                           textContainer(
                               "Description", Theme.of(context).textTheme.displayMedium),
                           textContainer(getEventInfo.description!.toString(),
                               Theme.of(context).textTheme.titleSmall,
-                              bottomPadding: 10),
+                              bottomPadding: 17),
                           textContainer("Where is ${getEventInfo.eventsLocation}?",
                               Theme.of(context).textTheme.displayMedium,
                               bottomPadding: 10),
-                          LocationWidget(eventLocationUrl: getEventInfo.eventLocationlUrl),
                         ],
                       ),
                     ),
+                    LocationWidget(eventLocationUrl: getEventInfo.eventLocationlUrl),
+                    const SizedBox(
+                      height: 30,
+                    )
                   ])),
                 ],
               );

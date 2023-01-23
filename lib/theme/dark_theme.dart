@@ -5,6 +5,7 @@ ThemeData darkTheme = ThemeData(
     backgroundColor: const Color(0xff1E1E1E),
     fontFamily: "Raleway",
     primaryColor: const Color(0xdd242424),
+    splashColor: Colors.white,
     cardColor: const Color(0xff242424),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
         backgroundColor: Color(
@@ -23,6 +24,10 @@ ThemeData darkTheme = ThemeData(
             fontSize: 15,
             color: Color(0xff828282),
             fontWeight: FontWeight.w400),
+        headlineLarge:
+            TextStyle(fontSize: 18, color: Colors.white, fontWeight: FontWeight.w500),
+        bodyMedium:
+            TextStyle(fontSize: 16, color: Colors.white, fontWeight: FontWeight.w400),
         bodyLarge:
             TextStyle(fontSize: 18, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         labelLarge:
@@ -37,4 +42,3 @@ ThemeData darkTheme = ThemeData(
             TextStyle(fontSize: 16, color: Color(0xffBDBDBD), fontWeight: FontWeight.w700),
         labelMedium: TextStyle(
             fontSize: 14, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400)));
-

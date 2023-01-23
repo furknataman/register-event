@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:qr/global/svg.dart';
 import 'package:qr/pages/home/home_page.dart';
 import 'package:qr/pages/scan/scan.dart';
 import 'package:qr/pages/settings/settings_page.dart';
+import 'package:qr/theme/theme_extends.dart';
 
 import '../../notifiation/push_notification/push_notification.dart';
 
@@ -45,7 +45,7 @@ class _RoutePageState extends State<RoutePage> {
             width: MediaQuery.of(context).size.width - 70,
             height: 61,
             decoration: const BoxDecoration(
-                color: Colors.transparent,
+                color: Colors.black,
                 borderRadius: BorderRadius.all(Radius.circular(30)),
                 boxShadow: [
                   BoxShadow(
@@ -60,25 +60,26 @@ class _RoutePageState extends State<RoutePage> {
                     setState(() => _currentIndex = index);
                     _pageController.jumpToPage(index);
                   },
+                  backgroundColor: Theme.of(context).colorScheme.mainColor,
                   showSelectedLabels: false,
                   showUnselectedLabels: false,
                   currentIndex: _currentIndex,
-                  unselectedItemColor: const Color(0xff828282),
-                  selectedItemColor: const Color(0xff485FFF),
-                  selectedIconTheme: const IconThemeData(color: Color(0xff485FFF)),
+                  unselectedItemColor: Colors.white,
+                  selectedItemColor: const Color(0xffe43c2f),
+                  selectedIconTheme: const IconThemeData(color: Color(0xffe43c2f)),
                   iconSize: 31,
-                  items: <BottomNavigationBarItem>[
+                  items: const <BottomNavigationBarItem>[
                     BottomNavigationBarItem(
-                      activeIcon: homeIconBold,
+                      activeIcon: Icon(HeroiconsMini.home),
                       label: " ",
-                      icon: homeIcon,
+                      icon: Icon(HeroiconsOutline.home),
                     ),
-                    const BottomNavigationBarItem(
+                    BottomNavigationBarItem(
                       activeIcon: Icon(HeroiconsMini.qrCode),
                       label: " ",
                       icon: Icon(HeroiconsOutline.qrCode),
                     ),
-                    const BottomNavigationBarItem(
+                    BottomNavigationBarItem(
                       activeIcon: Icon(HeroiconsSolid.cog6Tooth),
                       label: " ",
                       icon: Icon(HeroiconsOutline.cog6Tooth),
