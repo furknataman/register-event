@@ -38,16 +38,6 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
               height: MediaQuery.of(context).size.height,
               child: buildQrView(context)),
           Positioned(
-              child: Container(
-            height: 160,
-            width: MediaQuery.of(context).size.width,
-            decoration: BoxDecoration(
-                gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: Theme.of(context).colorScheme.cardColor)),
-          )),
-          Positioned(
             child: Padding(
               padding: const EdgeInsets.only(left: 80, right: 59, top: 80, bottom: 40),
               child: Text(
