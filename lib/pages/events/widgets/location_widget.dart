@@ -9,6 +9,8 @@ class LocationWidget extends StatelessWidget {
 
   final String? eventLocationUrl;
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Container(
