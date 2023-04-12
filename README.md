@@ -15,7 +15,7 @@ This event app, developed with Flutter, allows users to view registered events, 
 Start by cloning the project:
 ```sh
 git clone https://github.com/furknataman/register-event
-cd flutter_event_app 
+cd reigster-event 
 ```
 
 Install the Flutter packages:
