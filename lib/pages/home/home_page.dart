@@ -39,7 +39,7 @@ class _HomepageState extends ConsumerState<Homepage> {
               child: Column(
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(left: 20.0, right: 24),
+                    padding: const EdgeInsets.only(left: 20.0, right: 15),
                     child:
                         Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
                       Column(
@@ -73,7 +73,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                   ),
                   Padding(
                     padding:
-                        const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 22),
+                        const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 15),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -142,7 +142,7 @@ class _HomepageState extends ConsumerState<Homepage> {
 
             return Expanded(
               child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 100),
+                padding: const EdgeInsets.only(bottom: 10),
                 itemBuilder: (context, index) {
                   context;
                   return evenetsCart(

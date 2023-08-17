@@ -40,51 +40,39 @@ class _RoutePageState extends State<RoutePage> {
             },
             controller: _pageController,
             children: const <Widget>[Homepage(), ScannerPage(), Settingspage()]),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Container(
-            width: MediaQuery.of(context).size.width - 70,
-            height: 61,
-            decoration: const BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.all(Radius.circular(30)),
-                boxShadow: [
-                  BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.8),
-                      blurRadius: 14,
-                      offset: Offset(0, 4))
-                ]),
-            child: ClipRRect(
-              borderRadius: const BorderRadius.all(Radius.circular(30)),
-              child: BottomNavigationBar(
-                  onTap: (index) {
-                    setState(() => _currentIndex = index);
-                    _pageController.jumpToPage(index);
-                  },
-                  backgroundColor: Theme.of(context).colorScheme.mainColor,
-                  showSelectedLabels: false,
-                  showUnselectedLabels: false,
-                  currentIndex: _currentIndex,
-                  unselectedItemColor: Colors.white,
-                  selectedItemColor: const Color(0xffe43c2f),
-                  selectedIconTheme: const IconThemeData(color: Color(0xffe43c2f)),
-                  iconSize: 31,
-                  items: const <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      activeIcon: Icon(HeroiconsMini.home),
-                      label: " ",
-                      icon: Icon(HeroiconsOutline.home),
-                    ),
-                    BottomNavigationBarItem(
-                      activeIcon: Icon(HeroiconsMini.qrCode),
-                      label: " ",
-                      icon: Icon(HeroiconsOutline.qrCode),
-                    ),
-                    BottomNavigationBarItem(
-                      activeIcon: Icon(HeroiconsSolid.cog6Tooth),
-                      label: " ",
-                      icon: Icon(HeroiconsOutline.cog6Tooth),
-                    )
-                  ]),
-            )));
+        bottomNavigationBar: ClipRRect(
+          borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          child: BottomNavigationBar(
+              onTap: (index) {
+                setState(() => _currentIndex = index);
+                _pageController.jumpToPage(index);
+              },
+              backgroundColor: Theme.of(context).colorScheme.mainColor,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              currentIndex: _currentIndex,
+              unselectedItemColor: Colors.white,
+              selectedItemColor: const Color(0xffe43c2f),
+              selectedIconTheme: const IconThemeData(color: Color(0xffe43c2f)),
+              iconSize: 31,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  activeIcon: Icon(HeroiconsMini.home),
+                  label: " ",
+                  icon: Icon(HeroiconsOutline.home),
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(HeroiconsMini.qrCode),
+                  label: " ",
+                  icon: Icon(HeroiconsOutline.qrCode),
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(HeroiconsSolid.cog6Tooth),
+                  label: " ",
+                  icon: Icon(HeroiconsOutline.cog6Tooth),
+                )
+              ]),
+        ));
   }
 }
