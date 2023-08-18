@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../authentication/login_serice.dart';
+import '../../../authentication/login_service.dart';
+
 
 class LoginForm extends StatelessWidget {
   const LoginForm({
@@ -8,7 +9,7 @@ class LoginForm extends StatelessWidget {
     required this.getGoogle,
   });
 
-  final GoogleProvder getGoogle;
+  final GoogleProvider getGoogle;
 
   @override
   Widget build(BuildContext context) {

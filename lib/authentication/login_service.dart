@@ -2,11 +2,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../notifiation/toast_message/toast_message.dart';
+import '../notification/toast_message/toast_message.dart';
 
-final googleConfig = ChangeNotifierProvider((ref) => GoogleProvder());
+final googleConfig = ChangeNotifierProvider((ref) => GoogleProvider());
 
-class GoogleProvder extends ChangeNotifier {
+class GoogleProvider extends ChangeNotifier {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;

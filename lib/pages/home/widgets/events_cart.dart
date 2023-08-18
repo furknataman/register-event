@@ -5,7 +5,7 @@ import '../../../db/db_model/db_model_events.dart';
 import '../../events/event_page.dart';
 import '../../../global/date_time_converter.dart';
 
-InkWell evenetsCart(
+InkWell eventsCart(
   BuildContext context, {
   @required ClassModelEvents? event,
   @required bool? eventCart,
@@ -14,7 +14,7 @@ InkWell evenetsCart(
   return InkWell(
     onTap: () {
       Navigator.push(context,
-          MaterialPageRoute(builder: (context) => Eventspage(event.eventsCollentionName)));
+          MaterialPageRoute(builder: (context) => EventsPage(event.eventsCollectionName)));
     },
     child: Padding(
       padding: const EdgeInsets.only(top: 15),

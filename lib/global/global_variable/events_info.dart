@@ -39,10 +39,10 @@ class EventsInfo extends ChangeNotifier {
   }
 
   Future<void> writeEvents({
-    @required String? eventsCollentionName,
+    @required String? eventsCollectionName,
   }) async {
     final ref =
-        databaseReference.collection("events").doc(eventsCollentionName).withConverter(
+        databaseReference.collection("events").doc(eventsCollectionName).withConverter(
               fromFirestore: ClassModelEvents.fromFirestore,
               toFirestore: (ClassModelEvents city, _) => city.toFirestore(),
             );
@@ -72,7 +72,7 @@ class EventsInfo extends ChangeNotifier {
             fromFirestore: ClassModelEvents.fromFirestore,
             toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
           )
-          .doc(eventsCollentionName);
+          .doc(eventsCollectionName);
       await docRef.set(user);
     } else {}
   }
@@ -103,7 +103,7 @@ class EventsInfo extends ChangeNotifier {
           fromFirestore: ClassModelEvents.fromFirestore,
           toFirestore: (ClassModelEvents city, options) => city.toFirestore(),
         )
-        .doc(event.eventsCollentionName);
+        .doc(event.eventsCollectionName);
     await docRef.set(user);
   }
 }

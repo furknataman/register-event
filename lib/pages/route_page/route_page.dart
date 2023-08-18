@@ -5,7 +5,7 @@ import 'package:qr/pages/scan/scan.dart';
 import 'package:qr/pages/settings/settings_page.dart';
 import 'package:qr/theme/theme_extends.dart';
 
-import '../../notifiation/push_notification/push_notification.dart';
+import '../../notification/push_notification/push_notification.dart';
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key});
@@ -39,7 +39,7 @@ class _RoutePageState extends State<RoutePage> {
               setState(() => _currentIndex = index);
             },
             controller: _pageController,
-            children: const <Widget>[Homepage(), ScannerPage(), Settingspage()]),
+            children: const <Widget>[Homepage(), ScannerPage(), SettingsPage()]),
         bottomNavigationBar: ClipRRect(
           borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(30), topRight: Radius.circular(30)),

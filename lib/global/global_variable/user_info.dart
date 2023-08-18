@@ -24,8 +24,8 @@ class UserInfo extends ChangeNotifier {
     @required int? registeredEvents,
     @required Timestamp? eventTime,
   }) async {
-    List<int>? addevent = user!.registeredEvents;
-    addevent!.add(registeredEvents!);
+    List<int>? addEvent = user!.registeredEvents;
+    addEvent!.add(registeredEvents!);
     List<Timestamp>? addEventTime = user!.dateTimeList;
     addEventTime!.add(eventTime!);
     final ClassUserModel registerEvent = ClassUserModel(
@@ -34,7 +34,7 @@ class UserInfo extends ChangeNotifier {
         password: user!.password,
         active: user!.active,
         id: user!.id,
-        registeredEvents: addevent,
+        registeredEvents: addEvent,
         attendedEvents: user!.attendedEvents,
         dateTimeList: addEventTime);
 
@@ -52,8 +52,8 @@ class UserInfo extends ChangeNotifier {
   Future<void> writeAttend({
     @required int? registeredEvents,
   }) async {
-    List<int>? addevent = user!.attendedEvents;
-    addevent!.add(registeredEvents!);
+    List<int>? addEvent = user!.attendedEvents;
+    addEvent!.add(registeredEvents!);
 
     final ClassUserModel registerEvent = ClassUserModel(
         name: user!.name,
@@ -62,7 +62,7 @@ class UserInfo extends ChangeNotifier {
         active: user!.active,
         id: user!.id,
         registeredEvents: user!.registeredEvents,
-        attendedEvents: addevent,
+        attendedEvents: addEvent,
         dateTimeList: user!.dateTimeList);
 
     final docRef = databaseReference
@@ -80,9 +80,9 @@ class UserInfo extends ChangeNotifier {
     @required int? registeredEvents,
     @required Timestamp? eventTime,
   }) async {
-    List<int>? addevent = user!.registeredEvents;
+    List<int>? addEvent = user!.registeredEvents;
     List<Timestamp>? addEventTime = user!.dateTimeList;
-    addevent!.removeWhere((item) => item == registeredEvents!);
+    addEvent!.removeWhere((item) => item == registeredEvents!);
     addEventTime!.removeWhere((item) => item == eventTime!);
     final ClassUserModel registerEvent = ClassUserModel(
         name: user!.name,
@@ -90,7 +90,7 @@ class UserInfo extends ChangeNotifier {
         password: user!.password,
         active: user!.active,
         id: user!.id,
-        registeredEvents: addevent,
+        registeredEvents: addEvent,
         attendedEvents: user!.attendedEvents,
         dateTimeList: addEventTime);
 

@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/global/date_time_converter.dart';
-import 'package:qr/global/global_veriable/events_info.dart';
-import 'package:qr/global/global_veriable/user_info.dart';
 import 'package:qr/pages/events/widgets/register_button.dart';
 import 'package:qr/pages/events/widgets/skeleton.dart';
 import 'package:qr/pages/events/widgets/speakers_info.dart';
+import '../../global/global_variable/events_info.dart';
+import '../../global/global_variable/user_info.dart';
 import '../home/widgets/events_cart.dart';
 import 'widgets/location_widget.dart';
 
-class Eventspage extends ConsumerStatefulWidget {
-  final String? eventname;
-  const Eventspage(this.eventname, {Key? key}) : super(key: key);
+class EventsPage extends ConsumerStatefulWidget {
+  final String? eventName;
+  const EventsPage(this.eventName, {Key? key}) : super(key: key);
 
   @override
-  ConsumerState<Eventspage> createState() => _Eventspage(eventname: eventname);
+  ConsumerState<EventsPage> createState() => _EventsPage(eventName: eventName);
 }
 
-class _Eventspage extends ConsumerState<Eventspage> {
-  String? eventname;
-  _Eventspage({@required this.eventname});
+class _EventsPage extends ConsumerState<EventsPage> {
+  String? eventName;
+  _EventsPage({@required this.eventName});
   String? timeData;
   ScrollController scrollController = ScrollController();
   bool _isVisible = false;
@@ -39,7 +39,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
   Widget build(
     BuildContext context,
   ) {
-    AsyncValue<ClassModelEvents> getEventInfo = ref.watch(getEvent(eventname.toString()));
+    AsyncValue<ClassModelEvents> getEventInfo = ref.watch(getEvent(eventName.toString()));
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
     return Scaffold(
@@ -129,7 +129,7 @@ class _Eventspage extends ConsumerState<Eventspage> {
                         ],
                       ),
                     ),
-                    LocationWidget(eventLocationUrl: getEventInfo.eventLocationlUrl),
+                    LocationWidget(eventLocationlUrl: getEventInfo.eventLocationlUrl),
                     const SizedBox(
                       height: 30,
                     )

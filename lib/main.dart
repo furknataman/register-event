@@ -4,7 +4,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/theme/light_theme.dart';
 import 'authentication/authservice.dart';
-import 'notifiation/local_notification/notification.dart';
+import 'notification/local_notification/notification.dart';
 import 'theme/dark_theme.dart';
 
 void main() async {

@@ -2,10 +2,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/global/global_veriable/events_info.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import '../../global/global_veriable/user_info.dart';
+
+import '../../global/global_variable/events_info.dart';
+import '../../global/global_variable/user_info.dart';
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({Key? key}) : super(key: key);
@@ -99,7 +100,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         break;
       } else if (attendMessage == true) {
         register = false;
-        title = "Atending to  ${eventsinfo[i].name} ";
+        title = "Attending to  ${eventsinfo[i].name} ";
         body = "You have successfully attended to ${eventsinfo[i].name}, seminar";
         attendMessage = false;
         break;
@@ -108,7 +109,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
 
         if (userInfo.user!.registeredEvents!.contains(id)) {
           register = true;
-          title = "Atending to ${eventsinfo[i].name} ";
+          title = "Attending to ${eventsinfo[i].name} ";
           body = "You are about to attend to${eventsinfo[i].name}, are you sure?";
           break;
         } else {

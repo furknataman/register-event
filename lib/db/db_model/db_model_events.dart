@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ClassModelEvents {
-  final String? eventsCollentionName;
+  final String? eventsCollectionName;
   final String? name;
   final String? description;
   final String? imageUrl;
@@ -28,7 +28,7 @@ class ClassModelEvents {
       this.speakers,
       this.dateTime,
       this.timestamp,
-      this.eventsCollentionName,
+      this.eventsCollectionName,
       this.eventLocationlUrl,
       this.eventsLocation,
       this.key,
@@ -50,7 +50,7 @@ class ClassModelEvents {
       participantsNumber: data?['participantsNumber'],
       eventsLocation: data?['eventsLocation'],
       id: data?['id'],
-      eventsCollentionName: snapshot.id,
+      eventsCollectionName: snapshot.id,
       timestamp: data?['timestamp'],
       dateTime: data?['timestamp'].toDate(),
       capacity: data?['capacity'],

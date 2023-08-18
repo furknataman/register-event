@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/global/global_veriable/user_info.dart';
-import '../../authentication/login_serice.dart';
+import '../../authentication/login_service.dart';
+import '../../global/global_variable/user_info.dart';
 import '../../global/svg.dart';
 
-class Settingspage extends ConsumerStatefulWidget {
-  const Settingspage({super.key});
+class SettingsPage extends ConsumerStatefulWidget {
+  const SettingsPage({super.key});
 
   @override
-  ConsumerState<Settingspage> createState() => _SettingspageState();
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingspageState extends ConsumerState<Settingspage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> {
   @override
   void initState() {
     super.initState();
@@ -19,7 +19,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
 
   @override
   Widget build(BuildContext context) {
-    final getGoogle = ref.watch<GoogleProvder>(googleConfig);
+    final getGoogle = ref.watch<GoogleProvider>(googleConfig);
     final userInfo = ref.read<UserInfo>(userInfoConfig);
 
     return Scaffold(
@@ -111,11 +111,7 @@ class _SettingspageState extends ConsumerState<Settingspage> {
                       Icons.login,
                       size: 30,
                     ),
-                    onPressed: () {
-                      
-
-            
-                    },
+                    onPressed: () {},
                   )
                 ],
               )

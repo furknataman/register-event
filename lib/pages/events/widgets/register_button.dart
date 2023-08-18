@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/theme/theme_extends.dart';
 import '../../../db/db_model/db_model_events.dart';
-import '../../../global/global_veriable/events_info.dart';
-import '../../../global/global_veriable/user_info.dart';
-import '../../../notifiation/local_notification/notification.dart';
+
+import '../../../global/global_variable/events_info.dart';
+import '../../../global/global_variable/user_info.dart';
+import '../../../notification/local_notification/notification.dart';
+
 
 class RegisterButton extends ConsumerWidget {
   const RegisterButton({
@@ -63,8 +65,8 @@ class RegisterButton extends ConsumerWidget {
                 tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 shape: const StadiumBorder()),
             onPressed: null,
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Text(
                   "Full",
                   style: TextStyle(color: Colors.white, fontSize: 16),
@@ -81,7 +83,7 @@ class RegisterButton extends ConsumerWidget {
                 shape: const StadiumBorder()),
             onPressed: () {
               userInfo.writeUser(registeredEvents: event!.id, eventTime: event!.timestamp);
-              eventAction.writeEvents(eventsCollentionName: event!.eventsCollentionName);
+              eventAction.writeEvents(eventsCollectionName: event!.eventsCollectionName);
 
               LocalNoticeService().addNotification(
                 'testing',
@@ -90,8 +92,8 @@ class RegisterButton extends ConsumerWidget {
                 event!.dateTime!.millisecondsSinceEpoch + 600000,
               );
             },
-            child: Row(
-              children: const [
+            child: const Row(
+              children: [
                 Text(
                   "Register",
                   style: TextStyle(color: Colors.white, fontSize: 16),
@@ -110,8 +112,8 @@ class RegisterButton extends ConsumerWidget {
             userInfo.removeEvent(registeredEvents: event!.id, eventTime: event!.timestamp);
             eventAction.removeEventUser(event: event);
           },
-          child: Row(
-            children: const [
+          child: const Row(
+            children: [
               Text(
                 "Unregister",
                 style: TextStyle(
