@@ -8,7 +8,6 @@ import '../../../global/global_variable/events_info.dart';
 import '../../../global/global_variable/user_info.dart';
 import '../../../notification/local_notification/notification.dart';
 
-
 class RegisterButton extends ConsumerWidget {
   const RegisterButton({
     super.key,
@@ -89,7 +88,7 @@ class RegisterButton extends ConsumerWidget {
                 'testing',
                 'An event is near.',
                 '${event!.name} is starting by 10 minutes in ${event!.eventsLocation}. Don’t forget to scan the qr code.',
-                event!.dateTime!.millisecondsSinceEpoch + 600000,
+                event!.dateTime!.millisecondsSinceEpoch + 60000,
               );
             },
             child: const Row(

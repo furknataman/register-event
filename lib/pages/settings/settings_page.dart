@@ -34,9 +34,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             children: [
               Column(
                 children: [
-                  logo2,
+                  Image.asset(
+                    "assets/images/atc_icon.png",
+                    width: 160,
+                    height: 120,
+                  ),
                   const Text(
-                    "Theory of Knowledge",
+                    "Autumn Teachers Conference",
                     style: TextStyle(
                         color: Color(0xff485FFF), fontSize: 18, fontFamily: 'Raleway'),
                   ),
