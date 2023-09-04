@@ -55,7 +55,11 @@ class LocalNoticeService {
       noticeDetail,
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
-      androidAllowWhileIdle: true,
+      //androidAllowWhileIdle: true,
     );
+  }
+
+  Future<void> cancelNotification(int id) async {
+    await _localNotificationsPlugin.cancel(id);
   }
 }

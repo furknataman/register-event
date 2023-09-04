@@ -85,11 +85,12 @@ class RegisterButton extends ConsumerWidget {
               eventAction.writeEvents(eventsCollectionName: event!.eventsCollectionName);
 
               LocalNoticeService().addNotification(
-                'testing',
-                'An event is near.',
-                '${event!.name} is starting by 10 minutes in ${event!.eventsLocation}. Don’t forget to scan the qr code.',
-                event!.dateTime!.millisecondsSinceEpoch + 60000,
-              );
+                  'testing',
+                  'An event is near.',
+                  '${event!.name} is starting by 10 minutes in ${event!.eventsLocation}. Don’t forget to scan the qr code.',
+                  DateTime.now().millisecondsSinceEpoch +
+                      10000 //event!.dateTime!.millisecondsSinceEpoch + 60000,
+                  );
             },
             child: const Row(
               children: [
@@ -110,6 +111,7 @@ class RegisterButton extends ConsumerWidget {
           onPressed: () {
             userInfo.removeEvent(registeredEvents: event!.id, eventTime: event!.timestamp);
             eventAction.removeEventUser(event: event);
+            LocalNoticeService().cancelNotification(1);
           },
           child: const Row(
             children: [
