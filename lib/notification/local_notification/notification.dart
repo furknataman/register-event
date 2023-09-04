@@ -57,9 +57,21 @@ class LocalNoticeService {
           UILocalNotificationDateInterpretation.absoluteTime,
       //androidAllowWhileIdle: true,
     );
+    
   }
 
   Future<void> cancelNotification(int id) async {
     await _localNotificationsPlugin.cancel(id);
+  }
+  Future showNotification(
+      {int id = 0, String? title, String? body, String? payLoad}) async {
+    return _localNotificationsPlugin.show(
+        id, title, body, await notificationDetails());
+  }
+   notificationDetails() {
+    return const NotificationDetails(
+        android: AndroidNotificationDetails('channelId', 'channelName',
+            importance: Importance.max),
+        iOS: DarwinNotificationDetails());
   }
 }
