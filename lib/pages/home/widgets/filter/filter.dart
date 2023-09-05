@@ -14,7 +14,7 @@ void filterDialog(BuildContext context) {
         return Container(
           height: 277,
           decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10))),
           child: Padding(

@@ -41,8 +41,8 @@ class _RoutePageState extends State<RoutePage> {
             controller: _pageController,
             children: const <Widget>[Homepage(), ScannerPage(), SettingsPage()]),
         bottomNavigationBar: ClipRRect(
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          /*borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),*/
           child: BottomNavigationBar(
               onTap: (index) {
                 setState(() => _currentIndex = index);

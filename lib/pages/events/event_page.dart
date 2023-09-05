@@ -43,7 +43,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
     return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: getEventInfo.when(
             loading: () => const SkelWidget(),
             error: (err, stack) => Text('Error: $err'),
@@ -70,7 +70,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           ),
                         ),
                         background: Container(
-                          color: Theme.of(context).backgroundColor,
+                          color: Theme.of(context).scaffoldBackgroundColor,
                           child: ClipRRect(
                               borderRadius: const BorderRadius.only(
                                 bottomLeft: Radius.circular(20),

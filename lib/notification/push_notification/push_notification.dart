@@ -6,10 +6,9 @@ import 'package:qr/notification/local_notification/notification.dart';
 void setFiraBase() async {
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
-  final token = await FirebaseMessaging.instance.getToken();
+  await FirebaseMessaging.instance.getToken();
   await FirebaseMessaging.instance.setAutoInitEnabled(true);
 
-  print("Token " + token!);
   await messaging.requestPermission(
       alert: true,
       announcement: false,

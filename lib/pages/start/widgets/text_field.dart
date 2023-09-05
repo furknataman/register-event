@@ -44,7 +44,7 @@ class LoginForm extends StatelessWidget {
         InkWell(
           onTap: () {},
           child: const Text(
-            "I forgot my password", // TODO add forgot password
+            "I forgot my password", // TODO add forget password
             style: TextStyle(color: Colors.white, fontSize: 16),
           ),
         )

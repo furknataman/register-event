@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../authentication/login_service.dart';
 import '../../global/global_variable/user_info.dart';
-import '../../global/svg.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -106,7 +105,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ],
                 ),
               ),
-              Row(
+              /* Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("database", style: Theme.of(context).textTheme.bodyLarge),
@@ -118,7 +117,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     onPressed: () {},
                   )
                 ],
-              )
+              )*/
             ]),
       ),
     );

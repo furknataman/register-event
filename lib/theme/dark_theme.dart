@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    backgroundColor: const Color(0xff1E1E1E),
+    scaffoldBackgroundColor:const Color(0xff1E1E1E) ,
     fontFamily: "Raleway",
     primaryColor: const Color(0xdd242424),
     splashColor: Colors.white,

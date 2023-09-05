@@ -91,7 +91,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   Future<dynamic> dialogAlert() {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
-    for (int i = 0; i < eventsinfo.length; i++) {
+    for (int i = 0; i < eventsinfo.length; ) {
       if (userInfo.user!.attendedEvents!.contains(id)) {
         register = false;
         title = "Already Attended ${eventsinfo[i].name} ";
@@ -137,7 +137,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
           return Container(
             height: 277,
             decoration: BoxDecoration(
-                color: Theme.of(context).backgroundColor,
+                color: Theme.of(context).scaffoldBackgroundColor,
                 borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(20), topRight: Radius.circular(20))),
             child: Padding(

@@ -15,13 +15,12 @@ class Picker extends ConsumerWidget {
       onPressed: () => filterProvider.showDialog(
         context,
         CupertinoPicker(
-          backgroundColor: Theme.of(context).backgroundColor,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           magnification: 1.22,
           squeeze: 1.2,
           useMagnifier: true,
           itemExtent: 32,
           onSelectedItemChanged: (int selectedItem) {
-    
             filterProvider.changeListShow(selectedItem);
           },
           children: List<Widget>.generate(filterProvider.showList.length, (int index) {
