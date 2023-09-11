@@ -148,11 +148,8 @@ InkWell eventsCart(
                 height: 38,
                 width: 38,
                 child: eventCart!
-                    ? const Icon(
-                        LucideIcons.calendarCheck,
-                        size: 28,
-                        color: Color(0xff485FFF),
-                      )
+                    ? const Icon(LucideIcons.calendarCheck,
+                        size: 28, color: Color(0xffe43c2f))
                     : const Icon(LucideIcons.calendar, size: 28, color: Color(0xffBDBDBD)),
               )),
           Positioned(

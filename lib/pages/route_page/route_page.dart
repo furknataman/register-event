@@ -53,8 +53,8 @@ class _RoutePageState extends State<RoutePage> {
               showUnselectedLabels: false,
               currentIndex: _currentIndex,
               unselectedItemColor: Colors.white,
-              selectedItemColor: const Color(0xffe43c2f),
-              selectedIconTheme: const IconThemeData(color: Color(0xffe43c2f)),
+              selectedItemColor: Theme.of(context).colorScheme.appColor,
+              selectedIconTheme: const IconThemeData(color: Color(0xff232f60)),
               iconSize: 31,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(

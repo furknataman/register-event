@@ -62,7 +62,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
       key: qrKey,
       onQRViewCreated: onQRViewCreated,
       overlay: QrScannerOverlayShape(
-          borderColor: const Color(0xff232f60),
+          borderColor: const Color(0xffe43c2f),
           borderRadius: 30,
           borderLength: 30,
           borderWidth: 20,
@@ -91,7 +91,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   Future<dynamic> dialogAlert() {
     final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
-    for (int i = 0; i < eventsinfo.length; ) {
+    for (int i = 0; i < eventsinfo.length;) {
       if (userInfo.user!.attendedEvents!.contains(id)) {
         register = false;
         title = "Already Attended ${eventsinfo[i].name} ";

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/theme/theme_extends.dart';
 import '../../authentication/login_service.dart';
 import '../../global/global_variable/user_info.dart';
 
@@ -38,10 +39,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     width: 160,
                     height: 120,
                   ),
-                  const Text(
+                  Text(
                     "Autumn Teachers Conference",
                     style: TextStyle(
-                        color: Color(0xff485FFF), fontSize: 18, fontFamily: 'Raleway'),
+                        color: Theme.of(context).colorScheme.appColor,
+                        fontSize: 18,
+                        fontFamily: 'Raleway'),
                   ),
                 ],
               ),
