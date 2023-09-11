@@ -24,7 +24,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.only(left: 30, right: 30),
+        padding: const EdgeInsets.only(left: 15, right: 15),
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 6 * 4,
@@ -49,7 +49,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ],
               ),
               SizedBox(
-                height: 200,
+                height: 230,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -65,7 +65,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ],
                     ),*/
                     const SizedBox(
-                      height: 30,
+                      height: 40,
                     ),
                     Column(
                       children: [
@@ -75,9 +75,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             Text("Visit TOK Website",
                                 style: Theme.of(context).textTheme.bodyLarge),
                             IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.public,
-                                color: Colors.blue,
+                                color: Theme.of(context).colorScheme.appColor,
                                 size: 30,
                               ),
                               onPressed: () {},
@@ -91,9 +91,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             Padding(
                               padding: const EdgeInsets.only(right: 4.0),
                               child: IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.login,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).colorScheme.appColor,
                                   size: 30,
                                 ),
                                 onPressed: () {
