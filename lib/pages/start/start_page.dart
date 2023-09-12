@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/global/global_variable/global.dart';
 import 'package:qr/global/svg.dart';
 import 'package:qr/pages/start/widgets/startlogo.dart';
 import 'package:qr/pages/start/widgets/text_field.dart';
+import 'package:qr/services/service.dart';
 import '../../authentication/login_service.dart';
+
 class StartPage extends ConsumerWidget {
   const StartPage({super.key});
 
@@ -24,6 +27,18 @@ class StartPage extends ConsumerWidget {
           ],
         )),
         child: Stack(children: [
+          Positioned(
+              top: 50,
+              left: 50,
+              child: ElevatedButton(
+                onPressed: () async {
+                  final webService = WebService(
+                      'http://atc.eyuboglu.com/api/api/AtcYonetim/MobilTokenUret');
+
+                  webService.getToken("volkan.ucel@eyuboglu.com", "12345");
+                },
+                child: Text(""),
+              )),
           Positioned(
             bottom: 0,
             right: 0,
