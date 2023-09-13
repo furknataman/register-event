@@ -28,18 +28,6 @@ class StartPage extends ConsumerWidget {
         )),
         child: Stack(children: [
           Positioned(
-              top: 50,
-              left: 50,
-              child: ElevatedButton(
-                onPressed: () async {
-                  final webService = WebService(
-                      'http://atc.eyuboglu.com/api/api/AtcYonetim/MobilTokenUret');
-
-                  webService.login("volkan.ucel@eyuboglu.com", "12345");
-                },
-                child: Text(""),
-              )),
-          Positioned(
             bottom: 0,
             right: 0,
             child: elipse(MediaQuery.of(context).size.width),

@@ -29,9 +29,8 @@ class WebService {
 
     if (response.statusCode == 200) {
       {
-        TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
-        print(tokenResponse.token);
-        if (tokenResponse.isSuccess) {
+        if (response.data["basarili"]) {
+          TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
           await setToken(tokenResponse.token);
           return tokenResponse.token;
         }

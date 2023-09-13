@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
+import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/theme/theme_extends.dart';
-import '../../authentication/login_service.dart';
-import '../../global/global_variable/user_info.dart';
-
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
@@ -97,8 +95,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   color: Theme.of(context).colorScheme.appColor,
                                   size: 30,
                                 ),
-                                onPressed: () {
-                                  logout();
+                                onPressed: () async {
+                                  await logout();
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const StartPage()));
                                 },
                               ),
                             )
