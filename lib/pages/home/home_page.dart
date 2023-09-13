@@ -21,94 +21,95 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   void initState() {
     super.initState();
-    ref.read<UserInfo>(userInfoConfig).readUser();
+    //ref.read<UserInfo>(userInfoConfig).readUser();
   }
 
   @override
   Widget build(BuildContext context) {
-    AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
+    //AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
-    final userInfo = ref.watch<UserInfo>(userInfoConfig);
+    //final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
-      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        Container(
-          color: Theme.of(context).colorScheme.mainColor,
-          child: SafeArea(
-              bottom: false,
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(left: 20.0, right: 15),
-                    child:
-                        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Welcome,",
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                          Text(
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            color: Theme.of(context).colorScheme.mainColor,
+            child: SafeArea(
+                bottom: false,
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(left: 20.0, right: 15),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Welcome,",
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                /* Text(
                             userInfo.user != null ? userInfo.user!.name.toString() : " ",
                             style: Theme.of(context).textTheme.headlineLarge,
-                          )
+                          )*/
+                              ],
+                            ),
+                            IconButton(
+                              icon: const Icon(
+                                HeroiconsOutline.bell,
+                                color: Colors.white,
+                                size: 32,
+                              ),
+                              onPressed: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => const NotificationPage()),
+                                );
+                              },
+                            )
+                          ]),
+                    ),
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 15),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Upcoming Events",
+                            style: Theme.of(context).textTheme.headlineLarge,
+                          ),
+                          filterProvider.selectedList == 0 && filterProvider.time == null
+                              ? IconButton(
+                                  onPressed: () {
+                                    filterDialog(context);
+                                  },
+                                  icon: const Icon(
+                                    HeroiconsOutline.funnel,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
+                              : IconButton(
+                                  onPressed: () {
+                                    filterDialog(context);
+                                  },
+                                  icon: const Icon(
+                                    HeroiconsSolid.funnel,
+                                    color: Colors.white,
+                                    size: 30,
+                                  ),
+                                )
                         ],
                       ),
-                      IconButton(
-                        icon: const Icon(
-                          HeroiconsOutline.bell,
-                          color: Colors.white,
-                          size: 32,
-                        ),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const NotificationPage()),
-                          );
-                        },
-                      )
-                    ]),
-                  ),
-                  Padding(
-                    padding:
-                        const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "Upcoming Events",
-                          style: Theme.of(context).textTheme.headlineLarge,
-                        ),
-                        filterProvider.selectedList == 0 && filterProvider.time == null
-                            ? IconButton(
-                                onPressed: () {
-                                  filterDialog(context);
-                                },
-                                icon: const Icon(
-                                  HeroiconsOutline.funnel,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              )
-                            : IconButton(
-                                onPressed: () {
-                                  filterDialog(context);
-                                },
-                                icon: const Icon(
-                                  HeroiconsSolid.funnel,
-                                  color: Colors.white,
-                                  size: 30,
-                                ),
-                              )
-                      ],
                     ),
-                  ),
-                ],
-              )),
-        ),
-        allEventsAsync.when(
+                  ],
+                )),
+          ),
+          /* allEventsAsync.when(
           loading: () => const SkeletonWidget(),
           error: (err, stack) => Text('Error: $err'),
           data: (allEvents) {
@@ -156,8 +157,7 @@ class _HomepageState extends ConsumerState<Homepage> {
               ),
             );
           },
-        ),
-      ]),
-    );
+        ),*/
+        ]));
   }
 }

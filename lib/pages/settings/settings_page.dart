@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/theme/theme_extends.dart';
 import '../../authentication/login_service.dart';
 import '../../global/global_variable/user_info.dart';
@@ -19,8 +20,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final getGoogle = ref.watch<GoogleProvider>(googleConfig);
-    final userInfo = ref.read<UserInfo>(userInfoConfig);
+    //final getGoogle = ref.watch<GoogleProvider>(googleConfig);
+    //final userInfo = ref.read<UserInfo>(userInfoConfig);
 
     return Scaffold(
       body: Container(
@@ -53,8 +54,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(userInfo.user!.name.toString(),
-                        style: Theme.of(context).textTheme.titleLarge),
+                    /*Text(userInfo.user!.name.toString(),
+                        style: Theme.of(context).textTheme.titleLarge),*/
                     Text("Eyüboğlu Educational Institutions",
                         style: Theme.of(context).textTheme.displaySmall),
                     /* Row(
@@ -97,7 +98,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   size: 30,
                                 ),
                                 onPressed: () {
-                                  getGoogle.signOut();
+                                  logout();
                                 },
                               ),
                             )

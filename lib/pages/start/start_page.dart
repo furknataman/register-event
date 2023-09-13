@@ -35,7 +35,7 @@ class StartPage extends ConsumerWidget {
                   final webService = WebService(
                       'http://atc.eyuboglu.com/api/api/AtcYonetim/MobilTokenUret');
 
-                  webService.getToken("volkan.ucel@eyuboglu.com", "12345");
+                  webService.login("volkan.ucel@eyuboglu.com", "12345");
                 },
                 child: Text(""),
               )),

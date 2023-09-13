@@ -1,13 +1,16 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class TokenStorage {
-  static Future<void> saveToken(String token) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setString('userToken', token);
-  }
-
-  static Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('userToken');
-  }
+Future<void> setToken(String token) async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setString('token', token);
 }
+
+Future<String?> getToken() async {
+  final prefs = await SharedPreferences.getInstance();
+  return prefs.getString('token');
+}
+Future<void> logout() async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.remove('token');
+}
+

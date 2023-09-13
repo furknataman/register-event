@@ -23,12 +23,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Teory Of Knowlage',
+      title: 'Autumn Teachers Conference',
       debugShowCheckedModeBanner: false,
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       theme: lightTheme,
-      home: AuthService().handleAuthState(),
+      home: AuthService().loginwithApi(),
     );
   }
 }

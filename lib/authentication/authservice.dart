@@ -1,10 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:qr/db/db_model/token_response_model.dart';
-import 'package:qr/global/global_variable/global.dart';
+import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/pages/route_page/route_page.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:qr/services/service.dart';
 
 class AuthService {
   //Determine if the user is authenticated.
@@ -22,5 +21,25 @@ class AuthService {
             return const StartPage();
           }
         });
+  }
+
+  loginwithApi() {
+    return FutureBuilder<String?>(
+      future: getToken(), // getToken fonksiyonunu çağır
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        // Eğer veri yükleniyorsa bir yükleme animasyonu göster
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+        // Eğer token varsa ana ekrana yönlendir
+        else if (snapshot.data != null) {
+          return const RoutePage();
+        }
+        // Eğer token yoksa giriş ekranına yönlendir
+        else {
+          return const StartPage();
+        }
+      },
+    );
   }
 }
