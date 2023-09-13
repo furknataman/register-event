@@ -1,12 +1,12 @@
 class TokenResponse {
-  final bool basarili;
+  final bool isSuccess;
   final String token;
 
-  TokenResponse({required this.basarili, required this.token});
+  TokenResponse({required this.isSuccess, required this.token});
 
   factory TokenResponse.fromJson(Map<String, dynamic> json) {
     return TokenResponse(
-      basarili: json['basarili'],
+      isSuccess: json['basarili'],
       token: json['token'],
     );
   }

@@ -31,7 +31,7 @@ class WebService {
       {
         TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
         print(tokenResponse.token);
-        if (tokenResponse.basarili) {
+        if (tokenResponse.isSuccess) {
           await setToken(tokenResponse.token);
           return tokenResponse.token;
         }

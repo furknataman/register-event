@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/pages/route_page/route_page.dart';
-import 'package:qr/services/service.dart';
 
 class AuthService {
   //Determine if the user is authenticated.
@@ -29,7 +28,7 @@ class AuthService {
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         // Eğer veri yükleniyorsa bir yükleme animasyonu göster
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
         // Eğer token varsa ana ekrana yönlendir
         else if (snapshot.data != null) {
