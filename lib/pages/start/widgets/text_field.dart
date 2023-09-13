@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:qr/notification/toast_message/toast_message.dart';
 import 'package:qr/pages/route_page/route_page.dart';
 import 'package:qr/services/service.dart';
+import 'package:qr/theme/theme_extends.dart';
 
 import '../../../authentication/login_service.dart';
 
@@ -64,29 +65,32 @@ class LoginForm extends StatelessWidget {
                 style: TextStyle(fontSize: 20, color: Colors.white),
               ),
             )),*/
-        ValueListenableBuilder<bool>(
-          valueListenable: _isLoading,
-          builder: (context, isLoading, child) {
-            return isLoading
-                ? const CircularProgressIndicator()
-                : InkWell(
-                    onTap: () {
-                      _handleLogin(context);
-                      //  getGoogle.signIn();
-                    },
-                    child: Container(
-                      alignment: Alignment.center,
-                      width: 120,
-                      height: 46,
-                      decoration: const BoxDecoration(
-                          color: Color(0xff485FFF),
-                          borderRadius: BorderRadius.all(Radius.circular(30))),
-                      child: const Text(
-                        "Login",
-                        style: TextStyle(fontSize: 20, color: Colors.white),
-                      ),
-                    ));
-          },
+        SizedBox(
+          height: 40,
+          child: ValueListenableBuilder<bool>(
+            valueListenable: _isLoading,
+            builder: (context, isLoading, child) {
+              return isLoading
+                  ? const CircularProgressIndicator()
+                  : InkWell(
+                      onTap: () {
+                        _handleLogin(context);
+                        //  getGoogle.signIn();
+                      },
+                      child: Container(
+                        alignment: Alignment.center,
+                        width: 120,
+                        height: 46,
+                        decoration: const BoxDecoration(
+                            color: Color.fromARGB(255, 190, 51, 41),
+                            borderRadius: BorderRadius.all(Radius.circular(30))),
+                        child: const Text(
+                          "Login",
+                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        ),
+                      ));
+            },
+          ),
         ),
         /* SizedBox(
           height: 50,
