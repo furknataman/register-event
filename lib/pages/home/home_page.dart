@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
+import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import '../../global/global_variable/events_info.dart';
 import '../../global/global_variable/user_info.dart';
@@ -26,9 +27,12 @@ class _HomepageState extends ConsumerState<Homepage> {
 
   @override
   Widget build(BuildContext context) {
+    final userData = ref.watch(userDataProvider);
+
     //AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     //final userInfo = ref.watch<UserInfo>(userInfoConfig);
+
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -50,6 +54,13 @@ class _HomepageState extends ConsumerState<Homepage> {
                                   "Welcome,",
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
+                                userData.when(
+                                  loading: () => const Text(""),
+                                  data: ((data) {
+                                    return Text("${data!.name} ${data.surname}");
+                                  }),
+                                  error: (err, stack) => Text('Error: $err'),
+                                )
                                 /* Text(
                             userInfo.user != null ? userInfo.user!.name.toString() : " ",
                             style: Theme.of(context).textTheme.headlineLarge,

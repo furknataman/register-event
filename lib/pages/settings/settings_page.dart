@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/pages/start/start_page.dart';
+import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
+
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
 
@@ -20,6 +22,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   Widget build(BuildContext context) {
     //final getGoogle = ref.watch<GoogleProvider>(googleConfig);
     //final userInfo = ref.read<UserInfo>(userInfoConfig);
+    final userData = ref.watch(userDataProvider);
 
     return Scaffold(
       body: Container(
@@ -52,10 +55,31 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
+                    userData.when(
+                      loading: () => const Text(""),
+                      data: ((data) {
+                        return Column(
+                          children: [
+                            Text("${data!.name} ${data.surname}",
+                                style: Theme.of(context).textTheme.titleLarge),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(data.job,
+                                style: Theme.of(context).textTheme.displaySmall),
+                            const SizedBox(
+                              height: 2,
+                            ),
+                            Text(data.school,
+                                style: Theme.of(context).textTheme.displaySmall),
+                          ],
+                        );
+                      }),
+                      error: (err, stack) => Text('Error: $err'),
+                    ),
                     /*Text(userInfo.user!.name.toString(),
                         style: Theme.of(context).textTheme.titleLarge),*/
-                    Text("Eyüboğlu Educational Institutions",
-                        style: Theme.of(context).textTheme.displaySmall),
+
                     /* Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

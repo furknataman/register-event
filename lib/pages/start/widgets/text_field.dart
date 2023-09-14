@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:qr/notification/toast_message/toast_message.dart';
 import 'package:qr/pages/route_page/route_page.dart';
 import 'package:qr/services/service.dart';
-import 'package:qr/theme/theme_extends.dart';
-
 import '../../../authentication/login_service.dart';
 
 class LoginForm extends StatelessWidget {
@@ -20,9 +18,9 @@ class LoginForm extends StatelessWidget {
     _isLoading.value = true;
     _errorMessage.value = null;
 
-    final token =
-        await WebService("http://atc.eyuboglu.com/api/api/AtcYonetim/MobilTokenUret")
-            .login("volkan.ucel@eyuboglu.com", "12345");
+    final token = await WebService("AtcYonetim/MobilTokenUret")
+        .login("volkan.ucel@eyuboglu.k12.tr", "54321");
+
     //.login(getGoogle.controllerEmail.text, getGoogle.controllerPassword.text);
 
     _isLoading.value = false;
