@@ -1,20 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
+import 'package:qr/db/db_model/Presentation.model.dart';
 import 'package:skeletons/skeletons.dart';
 import '../../../db/db_model/db_model_events.dart';
 import '../../events/event_page.dart';
 import '../../../global/date_time_converter.dart';
 
+String truncateString(String str, int cutoff) {
+  return (str.length <= cutoff) ? str : '${str.substring(0, cutoff)}...';
+}
+
 InkWell eventsCart(
   BuildContext context, {
-  @required ClassModelEvents? event,
+  @required Presentation? event,
   @required bool? eventCart,
 }) {
-  ClassTime time = classConverter(event!.dateTime!, event.duration!);
+  //ClassTime time = classConverter(event!.presentationTime, event.duration!);
+
+  String combinedTime = dateConvert(event!.presentationTime, event.duration);
+
   return InkWell(
     onTap: () {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => EventsPage(event.eventsCollectionName)));
+      /*  Navigator.push(context,
+          MaterialPageRoute(builder: (context) => EventsPage(event.eventsCollectionName)));*/
     },
     child: Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -43,10 +51,12 @@ InkWell eventsCart(
                   borderRadius: const BorderRadius.only(
                       topLeft: Radius.circular(10), topRight: Radius.circular(10))),
               width: MediaQuery.of(context).size.width - 40,
-              height: 166,
+              height: 180,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(event.imageUrl!, fit: BoxFit.cover,
+                  child: Image.network(
+                      "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
+                      fit: BoxFit.cover,
                       loadingBuilder: (context, child, loadingProgress) {
                     if (loadingProgress == null) {
                       return child;
@@ -80,16 +90,48 @@ InkWell eventsCart(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            event.name!,
+                            truncateString(event.title, 35),
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            "${time.clock} : ${time.endTime}",
+                            combinedTime,
                             style: Theme.of(context).textTheme.displayMedium,
                           )
                         ],
                       ),
-                      SizedBox(
+                      FittedBox(
+                        child: SizedBox(
+                            child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              event.presenter1Name,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            ),
+                            event.presenter2Name != null
+                                ? Row(
+                                    children: [
+                                      Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 6, right: 6, top: 8),
+                                        alignment: Alignment.center,
+                                        width: 2,
+                                        height: 2,
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Theme.of(context).secondaryHeaderColor),
+                                      ),
+                                      Text(
+                                        event.presenter2Name.toString(),
+                                        style: Theme.of(context).textTheme.titleSmall,
+                                      )
+                                    ],
+                                  )
+                                : Container(),
+                          ],
+                        )),
+                      )
+                      /*  SizedBox(
                         height: 25,
                         child: ListView.separated(
                           separatorBuilder: (BuildContext context, int index) => Padding(
@@ -114,10 +156,10 @@ InkWell eventsCart(
                           },
                           itemCount: event.speakers!.length,
                         ),
-                      ),
+                      ),*/
                     ]),
               )),
-          Positioned(
+          /* Positioned(
               top: 13,
               left: 30,
               child: Container(
@@ -125,18 +167,9 @@ InkWell eventsCart(
                     color: Theme.of(context).cardColor,
                     borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 42,
-                width: 42,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(time.day.toString(),
-                        style: Theme.of(context).textTheme.labelLarge),
-                    Text(time.shortMonth.toString(),
-                        style: Theme.of(context).textTheme.labelSmall)
-                  ],
-                ),
-              )),
+                width: 62,
+                child: Text(event.branch, style: Theme.of(context).textTheme.labelSmall),
+              )),*/
           Positioned(
               top: 13,
               right: 30,
@@ -162,10 +195,10 @@ InkWell eventsCart(
                     borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 26,
                 width: 60,
-                child: Text(
+                /* child: Text(
                   event.eventsLocation!,
                   style: Theme.of(context).textTheme.labelMedium,
-                ),
+                ),*/
               )),
         ],
       ),

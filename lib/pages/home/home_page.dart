@@ -5,8 +5,6 @@ import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
-import '../../global/global_variable/events_info.dart';
-import '../../global/global_variable/user_info.dart';
 import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
@@ -28,6 +26,7 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   Widget build(BuildContext context) {
     final userData = ref.watch(userDataProvider);
+    final eventData = ref.watch(presentationDataProvider);
 
     //AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
@@ -57,7 +56,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                                 userData.when(
                                   loading: () => const Text(""),
                                   data: ((data) {
-                                    return Text("${data!.name} ${data.surname}");
+                                    return Text("${data.name} ${data.surname}");
                                   }),
                                   error: (err, stack) => Text('Error: $err'),
                                 )
@@ -120,6 +119,27 @@ class _HomepageState extends ConsumerState<Homepage> {
                   ],
                 )),
           ),
+          eventData.when(
+            error: (err, stack) => Text('Error: $err'),
+            loading: () => const SkeletonWidget(),
+            data: (allEvents) {
+              return Expanded(
+                child: ListView.builder(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  itemBuilder: (context, index) {
+                    context;
+
+                    return eventsCart(
+                      context,
+                      eventCart: true,
+                      event: allEvents[index],
+                    );
+                  },
+                  itemCount: allEvents.length,
+                ),
+              );
+            },
+          )
           /* allEventsAsync.when(
           loading: () => const SkeletonWidget(),
           error: (err, stack) => Text('Error: $err'),
