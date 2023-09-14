@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/db/db_model/Presentation.model.dart';
 import 'package:skeletons/skeletons.dart';
-import '../../../db/db_model/db_model_events.dart';
-import '../../events/event_page.dart';
+
 import '../../../global/date_time_converter.dart';
 
 String truncateString(String str, int cutoff) {
@@ -90,7 +89,7 @@ InkWell eventsCart(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            truncateString(event.title, 35),
+                            truncateString(event!.title, 28),
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(

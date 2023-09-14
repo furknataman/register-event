@@ -30,11 +30,13 @@ String dateConvert(String firstTime, String duration) {
   TimeOfDay oldTime =
       TimeOfDay(hour: int.parse(timeParts[0]), minute: int.parse(timeParts[1]));
 
-  TimeOfDay newTime = oldTime.replacing(minute: oldTime.minute + int.parse(duration));
+  int minutesToAdd = int.parse(duration);
+  int totalMinutes = oldTime.hour * 60 + oldTime.minute + minutesToAdd;
 
-  if (newTime.minute >= 60) {
-    newTime = newTime.replacing(hour: newTime.hour + 1, minute: newTime.minute - 60);
-  }
+  int newHour = (totalMinutes ~/ 60) % 24;
+  int newMinute = totalMinutes % 60;
+
+  TimeOfDay newTime = TimeOfDay(hour: newHour, minute: newMinute);
 
   String formattedOldTime =
       "${oldTime.hour.toString().padLeft(2, '0')}:${oldTime.minute.toString().padLeft(2, '0')}";

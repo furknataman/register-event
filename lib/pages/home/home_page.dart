@@ -60,10 +60,6 @@ class _HomepageState extends ConsumerState<Homepage> {
                                   }),
                                   error: (err, stack) => Text('Error: $err'),
                                 )
-                                /* Text(
-                            userInfo.user != null ? userInfo.user!.name.toString() : " ",
-                            style: Theme.of(context).textTheme.headlineLarge,
-                          )*/
                               ],
                             ),
                             IconButton(
@@ -123,21 +119,26 @@ class _HomepageState extends ConsumerState<Homepage> {
             error: (err, stack) => Text('Error: $err'),
             loading: () => const SkeletonWidget(),
             data: (allEvents) {
-              return Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  itemBuilder: (context, index) {
-                    context;
-
-                    return eventsCart(
-                      context,
-                      eventCart: true,
-                      event: allEvents[index],
+              return userData.when(
+                  data: ((data) {
+                    return Expanded(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        itemBuilder: (context, index) {
+                          context;
+                          return eventsCart(
+                            context,
+                            eventCart:
+                                data.kayitOlduguSunumId.contains(allEvents[index].id),
+                            event: allEvents[index],
+                          );
+                        },
+                        itemCount: allEvents.length,
+                      ),
                     );
-                  },
-                  itemCount: allEvents.length,
-                ),
-              );
+                  }),
+                  error: (err, stack) => Text('Error: $err'),
+                  loading: () => const Text(""));
             },
           )
           /* allEventsAsync.when(
