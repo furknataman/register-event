@@ -1,5 +1,5 @@
 class Presentation {
-  final int id;
+  final int? id;
   final String title;
   final String description;
   final String presenter1Name;
@@ -17,7 +17,7 @@ class Presentation {
   //final String presentationQuota;
 
   Presentation({
-    required this.id,
+    this.id,
     required this.title,
     required this.description,
     required this.presenter1Name,

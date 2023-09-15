@@ -70,8 +70,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             const SizedBox(
                               height: 2,
                             ),
-                            Text(data.school,
-                                style: Theme.of(context).textTheme.displaySmall),
+                            FittedBox(
+                              child: Text(data.school,
+                                  style: Theme.of(context).textTheme.displaySmall),
+                            ),
                           ],
                         );
                       }),

@@ -34,7 +34,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
   Widget build(
     BuildContext context,
   ) {
-    final getEventInfo = ref.watch(eventDetailsProvider(3));
+    final getEventInfo = ref.watch(eventDetailsProvider(eventId!));
     //final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
     return Scaffold(
@@ -43,7 +43,8 @@ class _EventsPage extends ConsumerState<EventsPage> {
             loading: () => const SkelWidget(),
             error: (err, stack) => Text('Error: $err'),
             data: (getEventInfo) {
-              String time = dateConvert(getEventInfo!.presentationTime!, getEventInfo.duration);
+              String time =
+                  dateConvert(getEventInfo!.presentationTime!, getEventInfo.duration);
               return CustomScrollView(
                 controller: scrollController,
                 slivers: <Widget>[
@@ -70,7 +71,8 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                 bottomLeft: Radius.circular(20),
                                 bottomRight: Radius.circular(20),
                               ),
-                              child: Image.network( "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
+                              child: Image.network(
+                                  "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
                                   fit: BoxFit.cover)),
                         )),
                   ),
@@ -84,21 +86,26 @@ class _EventsPage extends ConsumerState<EventsPage> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                getEventInfo.title.toString(),
-                                style: Theme.of(context).textTheme.displayLarge,
+                              Flexible(
+                                child: Text(
+                                    textAlign: TextAlign.start,
+                                    getEventInfo.title.toString(),
+                                    style: Theme.of(context).textTheme.displayMedium,
+                                    overflow: TextOverflow.visible),
                               ),
+                              Container()
                               /* RegisterButton(
                                 userInfo: userInfo,
                                 event: getEventInfo,
                               ),*/
                             ],
                           ),
+                          SizedBox(
+                            height: 20,
+                          ),
                           textContainer(
                               "Date of Event", Theme.of(context).textTheme.displayMedium),
-                          textContainer(
-                              time,
-                              Theme.of(context).textTheme.titleSmall,
+                          textContainer(time, Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
                           textContainer(
                               "Speakers", Theme.of(context).textTheme.displayMedium),
@@ -108,8 +115,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           ),
                           textContainer(
                               "Capacity", Theme.of(context).textTheme.displayMedium),
-                          textContainer(
-                              "${getEventInfo.id} free seats left from ",
+                          textContainer("${getEventInfo.id} free seats left from ",
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
                           textContainer(

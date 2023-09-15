@@ -19,7 +19,7 @@ class LoginForm extends StatelessWidget {
     _isLoading.value = true;
     _errorMessage.value = null;
 
-    await WebService().login("volkan.ucel@eyuboglu.k12.tr", "54321");
+    await WebService().login("furkan.ataman@eyuboglu.k12.tr", "12345");
 
     //.login(getGoogle.controllerEmail.text, getGoogle.controllerPassword.text);
     String? localToken = await getToken();

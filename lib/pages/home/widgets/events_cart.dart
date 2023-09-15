@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/db/db_model/Presentation.model.dart';
+import 'package:qr/pages/events/event_page.dart';
 import 'package:skeletons/skeletons.dart';
 
 import '../../../global/date_time_converter.dart';
@@ -22,8 +23,9 @@ InkWell eventsCart(
 
   return InkWell(
     onTap: () {
-      /*  Navigator.push(context,
-          MaterialPageRoute(builder: (context) => EventsPage(event.eventsCollectionName)));*/
+      print(event.id);
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => EventsPage(event.id)));
     },
     child: Padding(
       padding: const EdgeInsets.only(top: 15),

@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/Presentation.model.dart';
-import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/db/db_model/token_response_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
@@ -32,6 +30,22 @@ class WebService {
     }
 
     return Options(headers: headers);
+  }
+
+  Future<Presentation?> fetchEventDetails(int id) async {
+    print(id);
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/MobilSunumDetay",
+        data: {
+          'sunumId': id,
+        },
+        token: myToken);
+
+    if (response.statusCode == 200) {
+      Presentation presentationDetails = Presentation.fromJson(response.data);
+      return presentationDetails;
+    }
+    return null;
   }
 
   Future<String?> login(String email, String password) async {
@@ -69,18 +83,6 @@ class WebService {
     } else {
       throw Exception('Failed to load presentations');
     }
-  }
-
-  Future<Presentation?> fetchEventDetails(int id) async {
-    final response = await _makeRequest("AtcYonetim/MobilTokenUret", data: {
-      'id': id,
-    });
-
-    if (response.statusCode == 200) {
-      Presentation presentationDetails = response.data;
-      return presentationDetails;
-    }
-    return null;
   }
 }
 
