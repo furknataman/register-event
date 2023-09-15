@@ -14,7 +14,7 @@ void filterDialog(BuildContext context) {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
-          height: 400,
+          height: 350,
           decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: const BorderRadius.only(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/notification/toast_message/toast_message.dart';
 import 'package:qr/pages/route_page/route_page.dart';
 import 'package:qr/services/service.dart';
@@ -18,13 +19,13 @@ class LoginForm extends StatelessWidget {
     _isLoading.value = true;
     _errorMessage.value = null;
 
-    final token = await WebService().login("volkan.ucel@eyuboglu.k12.tr", "54321");
+    await WebService().login("volkan.ucel@eyuboglu.k12.tr", "54321");
 
     //.login(getGoogle.controllerEmail.text, getGoogle.controllerPassword.text);
-
+    String? localToken = await getToken();
     _isLoading.value = false;
 
-    if (token != null) {
+    if (localToken != null) {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const RoutePage()));
     } else {

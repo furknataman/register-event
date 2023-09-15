@@ -27,6 +27,7 @@ class Target extends ConsumerWidget {
             return Center(
               child: Text(
                 filterProvider.targetList[index],
+                style: const TextStyle(fontSize: 16),
               ),
             );
           }),

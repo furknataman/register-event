@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/Presentation.model.dart';
+import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/db/db_model/token_response_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
@@ -68,6 +70,18 @@ class WebService {
       throw Exception('Failed to load presentations');
     }
   }
+
+  Future<Presentation?> fetchEventDetails(int id) async {
+    final response = await _makeRequest("AtcYonetim/MobilTokenUret", data: {
+      'id': id,
+    });
+
+    if (response.statusCode == 200) {
+      Presentation presentationDetails = response.data;
+      return presentationDetails;
+    }
+    return null;
+  }
 }
 
 final webServiceProvider = Provider<WebService>((ref) => WebService());
@@ -78,4 +92,8 @@ final userDataProvider = FutureProvider<InfoUser>((ref) async {
 
 final presentationDataProvider = FutureProvider<List<Presentation>>((ref) async {
   return ref.watch(webServiceProvider).fetchAllEvents();
+});
+
+final eventDetailsProvider = FutureProvider.family<Presentation?, int>((ref, id) async {
+  return ref.watch(webServiceProvider).fetchEventDetails(id);
 });

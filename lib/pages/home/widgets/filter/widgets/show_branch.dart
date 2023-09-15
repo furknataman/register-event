@@ -27,6 +27,7 @@ class Branch extends ConsumerWidget {
             return Center(
               child: Text(
                 filterProvider.branchList[index],
+                style: const TextStyle(fontSize: 16),
               ),
             );
           }),

@@ -27,6 +27,7 @@ class Picker extends ConsumerWidget {
             return Center(
               child: Text(
                 filterProvider.showList[index],
+                style: const TextStyle(fontSize: 16),
               ),
             );
           }),
