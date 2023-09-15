@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:qr/global/svg.dart';
 
 class StartPageWidgets extends StatelessWidget {
   const StartPageWidgets({
@@ -10,9 +9,6 @@ class StartPageWidgets extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       child: Column(children: [
-        const SizedBox(
-          height: 55,
-        ),
         const Text(
           "Welcome To",
           style: TextStyle(
@@ -21,9 +17,16 @@ class StartPageWidgets extends StatelessWidget {
               fontSize: 45,
               fontFamily: 'Raleway'),
         ),
-        logo,
+        const SizedBox(
+          height: 10,
+        ),
+        Image.asset(
+          "assets/images/atc_icon.png",
+          height: 90,
+          color: Colors.white,
+        ),
         const Text(
-          "Theory of Knowledge",
+          "Autumn Teachers Conference",
           style: TextStyle(color: Colors.white, fontSize: 24, fontFamily: 'Raleway'),
         )
       ]),

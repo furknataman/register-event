@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 ThemeData lightTheme = ThemeData(
-    backgroundColor: Colors.white,
+    scaffoldBackgroundColor: Colors.white,
     secondaryHeaderColor: const Color(0xff333333),
     primaryColor: const Color(0xdd242424),
     floatingActionButtonTheme:
@@ -11,12 +11,12 @@ ThemeData lightTheme = ThemeData(
         displayLarge:
             TextStyle(fontSize: 24, color: Color(0xff333333), fontWeight: FontWeight.w400),
         displayMedium:
-            TextStyle(fontSize: 16, color: Color(0xff333333), fontWeight: FontWeight.w500),
+            TextStyle(fontSize: 14, color: Color(0xff333333), fontWeight: FontWeight.w500),
         displaySmall:
             TextStyle(fontSize: 16, color: Color(0xff828282), fontWeight: FontWeight.w400),
         titleSmall: TextStyle(
             height: 1.7,
-            fontSize: 16,
+            fontSize: 14,
             color: Color(0xff828282),
             fontWeight: FontWeight.w400),
         headlineLarge:
@@ -32,7 +32,7 @@ ThemeData lightTheme = ThemeData(
         titleMedium:
             TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.w700),
         bodySmall:
-            TextStyle(fontSize: 16, color: Color(0xff4F4F4F), fontWeight: FontWeight.w700),
+            TextStyle(fontSize: 12, color: Color(0xff4F4F4F), fontWeight: FontWeight.w700),
         titleLarge:
             TextStyle(fontSize: 33, color: Color(0xff333333), fontWeight: FontWeight.w400),
         labelMedium: TextStyle(

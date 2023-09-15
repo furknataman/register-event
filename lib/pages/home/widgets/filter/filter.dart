@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/button.dart';
+import 'package:qr/pages/home/widgets/filter/widgets/show_branch.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/show_picker.dart';
+import 'package:qr/pages/home/widgets/filter/widgets/show_target.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/time_picker.dart';
 
 void filterDialog(BuildContext context) {
@@ -12,9 +14,9 @@ void filterDialog(BuildContext context) {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
-          height: 277,
+          height: 350,
           decoration: BoxDecoration(
-              color: Theme.of(context).backgroundColor,
+              color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(10), topRight: Radius.circular(10))),
           child: Padding(
@@ -46,7 +48,7 @@ void filterDialog(BuildContext context) {
                   ],
                 ),
                 SizedBox(
-                  height: 90,
+                  height: 190,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -64,6 +66,21 @@ void filterDialog(BuildContext context) {
                           Text("What to show",
                               style: Theme.of(context).textTheme.bodyLarge),
                           const Picker(),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Target group",
+                              style: Theme.of(context).textTheme.bodyLarge),
+                          const Target(),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Branch", style: Theme.of(context).textTheme.bodyLarge),
+                          const Branch(),
                         ],
                       )
                     ],

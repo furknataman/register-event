@@ -41,8 +41,8 @@ class _RoutePageState extends State<RoutePage> {
             controller: _pageController,
             children: const <Widget>[Homepage(), ScannerPage(), SettingsPage()]),
         bottomNavigationBar: ClipRRect(
-          borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),
+          /*borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(30), topRight: Radius.circular(30)),*/
           child: BottomNavigationBar(
               onTap: (index) {
                 setState(() => _currentIndex = index);
@@ -53,8 +53,8 @@ class _RoutePageState extends State<RoutePage> {
               showUnselectedLabels: false,
               currentIndex: _currentIndex,
               unselectedItemColor: Colors.white,
-              selectedItemColor: const Color(0xffe43c2f),
-              selectedIconTheme: const IconThemeData(color: Color(0xffe43c2f)),
+              selectedItemColor: Theme.of(context).colorScheme.appColor,
+              selectedIconTheme: const IconThemeData(color: Color(0xff232f60)),
               iconSize: 31,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(

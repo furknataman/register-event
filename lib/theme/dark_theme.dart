@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
-    backgroundColor: const Color(0xff1E1E1E),
+    scaffoldBackgroundColor: const Color(0xff1E1E1E),
     fontFamily: "Raleway",
     primaryColor: const Color(0xdd242424),
     splashColor: Colors.white,
@@ -16,7 +16,7 @@ ThemeData darkTheme = ThemeData(
         displayLarge:
             TextStyle(fontSize: 24, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         displayMedium:
-            TextStyle(fontSize: 16, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
+            TextStyle(fontSize: 14, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         displaySmall:
             TextStyle(fontSize: 16, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         titleSmall: TextStyle(
@@ -39,6 +39,6 @@ ThemeData darkTheme = ThemeData(
         titleLarge:
             TextStyle(fontSize: 33, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400),
         bodySmall:
-            TextStyle(fontSize: 16, color: Color(0xffBDBDBD), fontWeight: FontWeight.w700),
+            TextStyle(fontSize: 12, color: Color(0xffBDBDBD), fontWeight: FontWeight.w700),
         labelMedium: TextStyle(
             fontSize: 14, color: Color(0xffBDBDBD), fontWeight: FontWeight.w400)));

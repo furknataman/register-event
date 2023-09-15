@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/theme/theme_extends.dart';
@@ -8,15 +8,14 @@ import '../../../global/global_variable/events_info.dart';
 import '../../../global/global_variable/user_info.dart';
 import '../../../notification/local_notification/notification.dart';
 
-
 class RegisterButton extends ConsumerWidget {
   const RegisterButton({
     super.key,
-    required this.userInfo,
+    //required this.userInfo,
     required this.event,
   });
 
-  final UserInfo userInfo;
+  //final UserInfo userInfo;
   final ClassModelEvents? event;
 
   @override
@@ -86,11 +85,12 @@ class RegisterButton extends ConsumerWidget {
               eventAction.writeEvents(eventsCollectionName: event!.eventsCollectionName);
 
               LocalNoticeService().addNotification(
-                'testing',
-                'An event is near.',
-                '${event!.name} is starting by 10 minutes in ${event!.eventsLocation}. Don’t forget to scan the qr code.',
-                event!.dateTime!.millisecondsSinceEpoch + 600000,
-              );
+                  'testing',
+                  'An event is near.',
+                  '${event!.name} is starting by 10 minutes in ${event!.eventsLocation}. Don’t forget to scan the qr code.',
+                  DateTime.now().millisecondsSinceEpoch +
+                      10000 //event!.dateTime!.millisecondsSinceEpoch + 60000,
+                  );
             },
             child: const Row(
               children: [
@@ -111,6 +111,7 @@ class RegisterButton extends ConsumerWidget {
           onPressed: () {
             userInfo.removeEvent(registeredEvents: event!.id, eventTime: event!.timestamp);
             eventAction.removeEventUser(event: event);
+            LocalNoticeService().cancelNotification(1);
           },
           child: const Row(
             children: [
@@ -132,4 +133,4 @@ class RegisterButton extends ConsumerWidget {
           ));
     }
   }
-}
+}*/

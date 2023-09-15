@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/pages/home/widgets/filter/filter_provider.dart';
 
-class Picker extends ConsumerWidget {
-  const Picker({super.key});
+class Target extends ConsumerWidget {
+  const Target({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -21,12 +21,12 @@ class Picker extends ConsumerWidget {
           useMagnifier: true,
           itemExtent: 32,
           onSelectedItemChanged: (int selectedItem) {
-            filterProvider.changeListShow(selectedItem);
+            filterProvider.changeListTarget(selectedItem);
           },
           children: List<Widget>.generate(filterProvider.showList.length, (int index) {
             return Center(
               child: Text(
-                filterProvider.showList[index],
+                filterProvider.targetList[index],
                 style: const TextStyle(fontSize: 16),
               ),
             );
@@ -46,7 +46,7 @@ class Picker extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            Text(filterProvider.showList[filterProvider.selectedList],
+            Text(filterProvider.targetList[filterProvider.selectedTarget],
                 style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(
               width: 6,

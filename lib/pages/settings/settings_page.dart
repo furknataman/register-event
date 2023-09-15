@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../authentication/login_service.dart';
-import '../../global/global_variable/user_info.dart';
-import '../../global/svg.dart';
+import 'package:qr/db/sharedPreferences/token_stroge.dart';
+import 'package:qr/pages/start/start_page.dart';
+import 'package:qr/services/service.dart';
+import 'package:qr/theme/theme_extends.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -19,12 +20,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final getGoogle = ref.watch<GoogleProvider>(googleConfig);
-    final userInfo = ref.read<UserInfo>(userInfoConfig);
+    //final getGoogle = ref.watch<GoogleProvider>(googleConfig);
+    //final userInfo = ref.read<UserInfo>(userInfoConfig);
+    final userData = ref.watch(userDataProvider);
 
     return Scaffold(
       body: Container(
-        padding: const EdgeInsets.only(left: 30, right: 30),
+        padding: const EdgeInsets.only(left: 15, right: 15),
         alignment: Alignment.center,
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height / 6 * 4,
@@ -34,23 +36,50 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             children: [
               Column(
                 children: [
-                  logo2,
-                  const Text(
-                    "Theory of Knowledge",
+                  Image.asset(
+                    "assets/images/atc_icon.png",
+                    width: 160,
+                    height: 120,
+                  ),
+                  Text(
+                    "Autumn Teachers Conference",
                     style: TextStyle(
-                        color: Color(0xff485FFF), fontSize: 18, fontFamily: 'Raleway'),
+                        color: Theme.of(context).colorScheme.appColor,
+                        fontSize: 18,
+                        fontFamily: 'Raleway'),
                   ),
                 ],
               ),
               SizedBox(
-                height: 200,
+                height: 230,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Text(userInfo.user!.name.toString(),
-                        style: Theme.of(context).textTheme.titleLarge),
-                    Text("Eyüboğlu Educational Institutions",
-                        style: Theme.of(context).textTheme.displaySmall),
+                    userData.when(
+                      loading: () => const Text(""),
+                      data: ((data) {
+                        return Column(
+                          children: [
+                            Text("${data.name} ${data.surname}",
+                                style: Theme.of(context).textTheme.titleLarge),
+                            const SizedBox(
+                              height: 5,
+                            ),
+                            Text(data.job,
+                                style: Theme.of(context).textTheme.displaySmall),
+                            const SizedBox(
+                              height: 2,
+                            ),
+                            Text(data.school,
+                                style: Theme.of(context).textTheme.displaySmall),
+                          ],
+                        );
+                      }),
+                      error: (err, stack) => Text('Error: $err'),
+                    ),
+                    /*Text(userInfo.user!.name.toString(),
+                        style: Theme.of(context).textTheme.titleLarge),*/
+
                     /* Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -59,7 +88,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       ],
                     ),*/
                     const SizedBox(
-                      height: 30,
+                      height: 40,
                     ),
                     Column(
                       children: [
@@ -69,9 +98,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             Text("Visit TOK Website",
                                 style: Theme.of(context).textTheme.bodyLarge),
                             IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.public,
-                                color: Colors.blue,
+                                color: Theme.of(context).colorScheme.appColor,
                                 size: 30,
                               ),
                               onPressed: () {},
@@ -85,13 +114,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             Padding(
                               padding: const EdgeInsets.only(right: 4.0),
                               child: IconButton(
-                                icon: const Icon(
+                                icon: Icon(
                                   Icons.login,
-                                  color: Colors.blue,
+                                  color: Theme.of(context).colorScheme.appColor,
                                   size: 30,
                                 ),
-                                onPressed: () {
-                                  getGoogle.signOut();
+                                onPressed: () async {
+                                  logout().then((value) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const StartPage()));
+                                  });
                                 },
                               ),
                             )
@@ -102,7 +136,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ],
                 ),
               ),
-              Row(
+              /* Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text("database", style: Theme.of(context).textTheme.bodyLarge),
@@ -114,7 +148,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     onPressed: () {},
                   )
                 ],
-              )
+              )*/
             ]),
       ),
     );

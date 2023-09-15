@@ -4,6 +4,7 @@ import 'package:qr/global/svg.dart';
 import 'package:qr/pages/start/widgets/startlogo.dart';
 import 'package:qr/pages/start/widgets/text_field.dart';
 import '../../authentication/login_service.dart';
+
 class StartPage extends ConsumerWidget {
   const StartPage({super.key});
 
@@ -19,7 +20,7 @@ class StartPage extends ConsumerWidget {
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
           colors: [
-            Color(0xff485FFF),
+            Color.fromARGB(255, 255, 72, 72),
             Color(0xff0D175F),
           ],
         )),

@@ -1,19 +1,17 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../notification/toast_message/toast_message.dart';
 
 final googleConfig = ChangeNotifierProvider((ref) => GoogleProvider());
 
 class GoogleProvider extends ChangeNotifier {
   final TextEditingController controllerEmail = TextEditingController();
   final TextEditingController controllerPassword = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  get user => _auth.currentUser;
+ // final FirebaseAuth _auth = FirebaseAuth.instance;
+//  get user => _auth.currentUser;
 
   //SIGN UP METHOD
-  Future signUp({String? email, String? password}) async {
+  /*Future signUp({String? email, String? password}) async {
     try {
       await _auth.createUserWithEmailAndPassword(
         email: email!,
@@ -46,10 +44,10 @@ class GoogleProvider extends ChangeNotifier {
   Future signOut() async {
     await FirebaseAuth.instance.signOut();
     notifyListeners();
-  }
+  }*/
 }
 
-currentUser() async {
+/*currentUser() async {
   String mail = FirebaseAuth.instance.currentUser!.email.toString();
   return mail;
-}
+}*/
