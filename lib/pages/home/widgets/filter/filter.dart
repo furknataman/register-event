@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/button.dart';
+import 'package:qr/pages/home/widgets/filter/widgets/show_branch.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/show_picker.dart';
+import 'package:qr/pages/home/widgets/filter/widgets/show_target.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/time_picker.dart';
 
 void filterDialog(BuildContext context) {
@@ -69,17 +71,16 @@ void filterDialog(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("What to show",
+                          Text("Target group",
                               style: Theme.of(context).textTheme.bodyLarge),
-                          const Picker(),
+                          const Target(),
                         ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("What to show",
-                              style: Theme.of(context).textTheme.bodyLarge),
-                          const Picker(),
+                          Text("Branch", style: Theme.of(context).textTheme.bodyLarge),
+                          const Branch(),
                         ],
                       )
                     ],

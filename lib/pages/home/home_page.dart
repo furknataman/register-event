@@ -123,6 +123,26 @@ class _HomepageState extends ConsumerState<Homepage> {
             data: (allEvents) {
               return userData.when(
                   data: ((data) {
+                    var filteredEventList = allEvents;
+
+                    if (filterProvider.selectedList == 3) {
+                      filteredEventList = filteredEventList
+                          .where((e) => data.kayitOlduguSunumId.contains(e.id))
+                          .toList();
+                    }
+                    if (filterProvider.selectedBranch != 0) {
+                      filteredEventList = filteredEventList
+                          .where((element) => element.branch.contains(
+                              filterProvider.branchList[filterProvider.selectedBranch]))
+                          .toList();
+                    }
+                    if (filterProvider.selectedTarget != 0) {
+                      filteredEventList = filteredEventList
+                          .where((element) => element.audience.contains(
+                              filterProvider.targetList[filterProvider.selectedTarget]))
+                          .toList();
+                    }
+
                     return Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.only(bottom: 10),
@@ -130,12 +150,12 @@ class _HomepageState extends ConsumerState<Homepage> {
                           context;
                           return eventsCart(
                             context,
-                            eventCart:
-                                data.kayitOlduguSunumId.contains(allEvents[index].id),
-                            event: allEvents[index],
+                            eventCart: data.kayitOlduguSunumId
+                                .contains(filteredEventList[index].id),
+                            event: filteredEventList[index],
                           );
                         },
-                        itemCount: allEvents.length,
+                        itemCount: filteredEventList.length,
                       ),
                     );
                   }),
