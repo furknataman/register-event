@@ -7,7 +7,7 @@ class InfoUser {
   final String telephone;
   final String school;
   final String job;
-  final List<int> kayitOlduguSunumId;
+  final List<int>? kayitOlduguSunumId;
 
   InfoUser({
     required this.id,
@@ -18,7 +18,7 @@ class InfoUser {
     required this.telephone,
     required this.school,
     required this.job,
-    required this.kayitOlduguSunumId,
+     this.kayitOlduguSunumId,
   });
 
   factory InfoUser.fromJson(Map<String, dynamic> json) {

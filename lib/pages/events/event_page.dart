@@ -6,19 +6,18 @@ import 'package:qr/pages/events/widgets/skeleton.dart';
 import 'package:qr/pages/events/widgets/speakers_info.dart';
 import '../../global/global_variable/events_info.dart';
 import '../home/widgets/events_cart.dart';
-import 'widgets/location_widget.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
-  final String? eventName;
-  const EventsPage(this.eventName, {Key? key}) : super(key: key);
+  final int? eventId;
+  const EventsPage(this.eventId, {Key? key}) : super(key: key);
 
   @override
-  ConsumerState<EventsPage> createState() => _EventsPage(eventName: eventName);
+  ConsumerState<EventsPage> createState() => _EventsPage(eventId: eventId);
 }
 
 class _EventsPage extends ConsumerState<EventsPage> {
-  String? eventName;
-  _EventsPage({@required this.eventName});
+  int? eventId;
+  _EventsPage({@required this.eventId});
   String? timeData;
   ScrollController scrollController = ScrollController();
   bool _isVisible = false;
@@ -37,7 +36,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
   Widget build(
     BuildContext context,
   ) {
-    AsyncValue<ClassModelEvents> getEventInfo = ref.watch(getEvent(eventName.toString()));
+    AsyncValue<ClassModelEvents> getEventInfo = ref.watch(getEvent("3"));
     //final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
     return Scaffold(
@@ -121,13 +120,13 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           textContainer(getEventInfo.description!.toString(),
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
-                          textContainer("Where is ${getEventInfo.eventsLocation}?",
+                          /*textContainer("Where is ${getEventInfo.eventsLocation}?",
                               Theme.of(context).textTheme.displayMedium,
-                              bottomPadding: 10),
+                              bottomPadding: 10),*/
                         ],
                       ),
                     ),
-                    LocationWidget(eventLocationlUrl: getEventInfo.eventLocationlUrl),
+                    //LocationWidget(eventLocationlUrl: getEventInfo.eventLocationlUrl),
                     const SizedBox(
                       height: 30,
                     )

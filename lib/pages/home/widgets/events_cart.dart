@@ -14,9 +14,11 @@ InkWell eventsCart(
   @required Presentation? event,
   @required bool? eventCart,
 }) {
+  String? combinedTime;
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
-
-  String combinedTime = dateConvert(event!.presentationTime, event.duration);
+  if (event!.presentationTime != null) {
+    combinedTime = dateConvert(event.presentationTime!, event.duration);
+  }
 
   return InkWell(
     onTap: () {
@@ -93,7 +95,7 @@ InkWell eventsCart(
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            combinedTime,
+                            combinedTime ?? " ",
                             style: Theme.of(context).textTheme.displayMedium,
                           )
                         ],

@@ -74,6 +74,8 @@ class FilterPage extends ChangeNotifier {
   void reset() {
     time = null;
     selectedList = 0;
+    selectedTarget = 0;
+    selectedBranch = 0;
     notifyListeners();
   }
 

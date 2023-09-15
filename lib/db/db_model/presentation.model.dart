@@ -12,8 +12,7 @@ class Presentation {
   final String duration;
   final String language;
   final String type;
-
-  final String presentationTime;
+  final String? presentationTime;
   // final String? presentationPlace;
   //final String presentationQuota;
 
@@ -31,7 +30,7 @@ class Presentation {
     required this.duration,
     required this.language,
     required this.type,
-    required this.presentationTime,
+    this.presentationTime,
     // this.presentationPlace,
     //required this.presentationQuota,
   });

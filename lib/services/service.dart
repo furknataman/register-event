@@ -6,90 +6,64 @@ import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 
 class WebService {
-  final baseUrl = "http://atc.eyuboglu.com/api/api/";
+  final String baseUrl = "http://atc.eyuboglu.com/api/api/";
   final Dio _dio = Dio();
 
-  Future<String?> login(String email, String password) async {
-    final url = "${baseUrl}AtcYonetim/MobilTokenUret";
-    final data = {
-      'email': email,
-      'password': password,
-    };
-
-    Response response = await _dio.post(
+  Future<Response> _makeRequest(String endpoint,
+      {Map<String, dynamic>? data, String? token}) async {
+    final url = "$baseUrl$endpoint";
+    return await _dio.post(
       url,
       data: data,
-      options: Options(
-        headers: {
-          'accept': 'text/plain',
-          'Content-Type': 'application/json',
-        },
-      ),
+      options: _commonHeaders(token),
     );
+  }
 
-    if (response.statusCode == 200) {
-      {
-        if (response.data["basarili"]) {
-          TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
+  Options _commonHeaders([String? token]) {
+    final headers = {
+      'accept': 'text/plain',
+      'Content-Type': 'application/json',
+    };
 
-          await setToken(tokenResponse.token);
-          return tokenResponse.token;
-        }
-      }
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+
+    return Options(headers: headers);
+  }
+
+  Future<String?> login(String email, String password) async {
+    final response = await _makeRequest("AtcYonetim/MobilTokenUret",
+        data: {'email': email, 'password': password});
+
+    if (response.statusCode == 200 && response.data["basarili"]) {
+      TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
+      await setToken(tokenResponse.token);
+      return tokenResponse.token;
     }
     return null;
   }
 
   Future<InfoUser> fetchUser() async {
-    String? myToken = await getToken();
-
-    final url = "${baseUrl}AtcYonetim/MobilKullaniciBilgileriGetir";
-
-    Response response = await _dio.post(
-      url,
-      data: {'token': myToken},
-      options: Options(
-        headers: {
-          'accept': 'text/plain',
-          'Authorization': 'Bearer $myToken',
-          'Content-Type': 'application/json',
-        },
-      ),
-    );
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/MobilKullaniciBilgileriGetir",
+        data: {'token': myToken}, token: myToken);
 
     if (response.statusCode == 200) {
-      {
-        InfoUser infoUser = InfoUser.fromJson(response.data);
-        return infoUser;
-      }
+      return InfoUser.fromJson(response.data);
     } else {
-      throw Exception('Failed to load presentations');
+      throw Exception('Failed to load user info');
     }
   }
 
   Future<List<Presentation>> fetchAllEvents() async {
-    String? myToken = await getToken();
-
-    final url = "${baseUrl}AtcYonetim/MobilSunumlariListele";
-
-    Response response = await _dio.post(
-      url,
-      data: {'token': myToken},
-      options: Options(
-        headers: {
-          'accept': 'text/plain',
-          'Authorization': 'Bearer $myToken',
-          'Content-Type': 'application/json',
-        },
-      ),
-    );
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/MobilSunumlariListele",
+        data: {'token': myToken}, token: myToken);
 
     if (response.statusCode == 200) {
-      {
-        final List<dynamic> responseData = response.data;
-
-        return responseData.map((data) => Presentation.fromJson(data)).toList();
-      }
+      final List<dynamic> responseData = response.data;
+      return responseData.map((data) => Presentation.fromJson(data)).toList();
     } else {
       throw Exception('Failed to load presentations');
     }

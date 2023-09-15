@@ -45,8 +45,10 @@ class Branch extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            Text(filterProvider.branchList[filterProvider.selectedBranch],
-                style: Theme.of(context).textTheme.bodySmall),
+            FittedBox(
+              child: Text(filterProvider.branchList[filterProvider.selectedBranch],
+                  style: Theme.of(context).textTheme.bodySmall),
+            ),
             const SizedBox(
               width: 6,
             ),

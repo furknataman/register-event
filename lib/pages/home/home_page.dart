@@ -25,6 +25,11 @@ class _HomepageState extends ConsumerState<Homepage> {
     //ref.read<UserInfo>(userInfoConfig).readUser();
   }
 
+  bool isAfter(TimeOfDay first, TimeOfDay second) {
+    return first.hour > second.hour ||
+        (first.hour == second.hour && first.minute > second.minute);
+  }
+
   @override
   Widget build(BuildContext context) {
     final userData = ref.watch(userDataProvider);
@@ -125,11 +130,45 @@ class _HomepageState extends ConsumerState<Homepage> {
                   data: ((data) {
                     var filteredEventList = allEvents;
 
-                    if (filterProvider.selectedList == 3) {
+                    if (filterProvider.selectedList == 3 &&
+                        data.kayitOlduguSunumId!.isNotEmpty) {
                       filteredEventList = filteredEventList
-                          .where((e) => data.kayitOlduguSunumId.contains(e.id))
+                          .where((e) => data.kayitOlduguSunumId!.contains(e.id))
                           .toList();
+                    } else if (filterProvider.selectedList == 2) {
+                      DateTime now = DateTime.now();
+                      TimeOfDay timeFromDateTime =
+                          TimeOfDay(hour: now.hour, minute: now.minute);
+
+                      filteredEventList = filteredEventList.where((e) {
+                           if (e.presentationTime == null) {
+                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
+                        }
+                        TimeOfDay evetnTime = TimeOfDay(
+                          hour: int.parse(e.presentationTime!.split(":")[0]),
+                          minute: int.parse(e.presentationTime!.split(":")[1]),
+                        );
+
+                        return isAfter(evetnTime, timeFromDateTime);
+                      }).toList();
+                    } else if (filterProvider.selectedList == 1) {
+                      DateTime now = DateTime.now();
+                      TimeOfDay timeFromDateTime =
+                          TimeOfDay(hour: now.hour, minute: now.minute);
+
+                      filteredEventList = filteredEventList.where((e) {
+                           if (e.presentationTime == null) {
+                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
+                        }
+                        TimeOfDay evetnTime = TimeOfDay(
+                          hour: int.parse(e.presentationTime!.split(":")[0]),
+                          minute: int.parse(e.presentationTime!.split(":")[1]),
+                        );
+
+                        return isAfter(timeFromDateTime, evetnTime);
+                      }).toList();
                     }
+
                     if (filterProvider.selectedBranch != 0) {
                       filteredEventList = filteredEventList
                           .where((element) => element.branch.contains(
@@ -143,6 +182,25 @@ class _HomepageState extends ConsumerState<Homepage> {
                           .toList();
                     }
 
+                    if (filterProvider.time != null) {
+                      TimeOfDay timeFromDateTime = TimeOfDay(
+                          hour: filterProvider.time!.hour,
+                          minute: filterProvider.time!.minute);
+
+                      filteredEventList = filteredEventList.where((e) {
+                        if (e.presentationTime == null) {
+                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
+                        }
+
+                        TimeOfDay eventTime = TimeOfDay(
+                          hour: int.parse(e.presentationTime!.split(":")[0]),
+                          minute: int.parse(e.presentationTime!.split(":")[1]),
+                        );
+
+                        return isAfter(eventTime, timeFromDateTime);
+                      }).toList();
+                    }
+
                     return Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.only(bottom: 10),
@@ -150,8 +208,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                           context;
                           return eventsCart(
                             context,
-                            eventCart: data.kayitOlduguSunumId
-                                .contains(filteredEventList[index].id),
+                            eventCart: data.kayitOlduguSunumId!.isNotEmpty
+                                ? data.kayitOlduguSunumId!
+                                    .contains(filteredEventList[index].id)
+                                : false,
                             event: filteredEventList[index],
                           );
                         },
