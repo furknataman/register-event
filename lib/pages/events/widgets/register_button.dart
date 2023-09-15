@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+/*import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/theme/theme_extends.dart';
@@ -11,11 +11,11 @@ import '../../../notification/local_notification/notification.dart';
 class RegisterButton extends ConsumerWidget {
   const RegisterButton({
     super.key,
-    required this.userInfo,
+    //required this.userInfo,
     required this.event,
   });
 
-  final UserInfo userInfo;
+  //final UserInfo userInfo;
   final ClassModelEvents? event;
 
   @override
@@ -133,4 +133,4 @@ class RegisterButton extends ConsumerWidget {
           ));
     }
   }
-}
+}*/

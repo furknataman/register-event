@@ -12,7 +12,7 @@ void filterDialog(BuildContext context) {
       isScrollControlled: true,
       builder: (BuildContext context) {
         return Container(
-          height: 277,
+          height: 400,
           decoration: BoxDecoration(
               color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: const BorderRadius.only(
@@ -46,7 +46,7 @@ void filterDialog(BuildContext context) {
                   ],
                 ),
                 SizedBox(
-                  height: 90,
+                  height: 190,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -56,6 +56,22 @@ void filterDialog(BuildContext context) {
                           Text("Starting from",
                               style: Theme.of(context).textTheme.bodyLarge),
                           const DatePicker()
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("What to show",
+                              style: Theme.of(context).textTheme.bodyLarge),
+                          const Picker(),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("What to show",
+                              style: Theme.of(context).textTheme.bodyLarge),
+                          const Picker(),
                         ],
                       ),
                       Row(

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/db_model_events.dart';
 import 'package:qr/global/date_time_converter.dart';
-import 'package:qr/pages/events/widgets/register_button.dart';
 import 'package:qr/pages/events/widgets/skeleton.dart';
 import 'package:qr/pages/events/widgets/speakers_info.dart';
 import '../../global/global_variable/events_info.dart';
-import '../../global/global_variable/user_info.dart';
 import '../home/widgets/events_cart.dart';
 import 'widgets/location_widget.dart';
 
@@ -40,7 +38,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
     BuildContext context,
   ) {
     AsyncValue<ClassModelEvents> getEventInfo = ref.watch(getEvent(eventName.toString()));
-    final userInfo = ref.watch<UserInfo>(userInfoConfig);
+    //final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -94,10 +92,10 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                 getEventInfo.name.toString(),
                                 style: Theme.of(context).textTheme.displayLarge,
                               ),
-                              RegisterButton(
+                             /* RegisterButton(
                                 userInfo: userInfo,
                                 event: getEventInfo,
-                              ),
+                              ),*/
                             ],
                           ),
                           textContainer(

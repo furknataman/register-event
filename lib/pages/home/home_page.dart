@@ -20,6 +20,8 @@ class _HomepageState extends ConsumerState<Homepage> {
   @override
   void initState() {
     super.initState();
+    ref.read(userDataProvider);
+    ref.read(presentationDataProvider);
     //ref.read<UserInfo>(userInfoConfig).readUser();
   }
 

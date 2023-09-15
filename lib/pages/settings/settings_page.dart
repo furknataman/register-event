@@ -60,7 +60,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       data: ((data) {
                         return Column(
                           children: [
-                            Text("${data!.name} ${data.surname}",
+                            Text("${data.name} ${data.surname}",
                                 style: Theme.of(context).textTheme.titleLarge),
                             const SizedBox(
                               height: 5,
@@ -120,11 +120,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                   size: 30,
                                 ),
                                 onPressed: () async {
-                                  await logout();
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const StartPage()));
+                                  logout().then((value) {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => const StartPage()));
+                                  });
                                 },
                               ),
                             )

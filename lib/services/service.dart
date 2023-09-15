@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/Presentation.model.dart';
@@ -90,9 +88,6 @@ class WebService {
       {
         final List<dynamic> responseData = response.data;
 
-        List<Presentation> events =
-            responseData.map((data) => Presentation.fromJson(data)).toList();
-        print(events.first.id);
         return responseData.map((data) => Presentation.fromJson(data)).toList();
       }
     } else {

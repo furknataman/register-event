@@ -89,7 +89,7 @@ InkWell eventsCart(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            truncateString(event!.title, 28),
+                            truncateString(event.title, 28),
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
