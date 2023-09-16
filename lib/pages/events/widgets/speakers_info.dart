@@ -1,32 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:qr/db/db_model/Presentation.model.dart';
 
-import '../../../db/db_model/db_model_events.dart';
 import '../../home/widgets/events_cart.dart';
 
-SizedBox speakersInfo(ClassModelEvents getEventInfo) {
-  return SizedBox(
-    height: 25,
-    child: ListView.separated(
-      separatorBuilder: (BuildContext context, int index) => Padding(
-        padding: const EdgeInsets.only(left: 6, right: 6, top: 4),
-        child: Container(
-          alignment: Alignment.center,
-          width: 2,
-          height: 2,
-          decoration: BoxDecoration(
-              shape: BoxShape.circle, color: Theme.of(context).secondaryHeaderColor),
+Widget speakersInfo(BuildContext context, Presentation getEventInfo) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: [
+      FittedBox(
+        child: Text(
+          getEventInfo.presenter1Name!,
+          style: Theme.of(context).textTheme.titleSmall,
         ),
       ),
-      reverse: false,
-      shrinkWrap: false,
-      scrollDirection: Axis.horizontal,
-      itemBuilder: (context, index) {
-        context;
-        return textContainer(getEventInfo.speakers![index].toString(),
-            Theme.of(context).textTheme.titleSmall,
-            bottomPadding: 0);
-      },
-      itemCount: getEventInfo.speakers!.length,
-    ),
+      getEventInfo.presenter2Name != null
+          ? Row(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 6, right: 6, top: 8),
+                  alignment: Alignment.center,
+                  width: 2,
+                  height: 2,
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).secondaryHeaderColor),
+                ),
+                FittedBox(
+                  child: Text(
+                    getEventInfo.presenter2Name.toString(),
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                )
+              ],
+            )
+          : Container(),
+    ],
   );
 }

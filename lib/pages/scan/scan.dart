@@ -5,8 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../../global/global_variable/events_info.dart';
-
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({Key? key}) : super(key: key);
 
@@ -90,8 +88,8 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   Future<dynamic> dialogAlert() {
     //final userInfo = ref.watch<UserInfo>(userInfoConfig);
 
-    for (int i = 0; i < eventsinfo.length;) {
-      /*if (userInfo.user!.attendedEvents!.contains(id)) {
+    //for (int i = 0; i < eventsinfo.length;) {
+    /*if (userInfo.user!.attendedEvents!.contains(id)) {
         register = false;
         title = "Already Attended ${eventsinfo[i].name} ";
         body = "You have already attended this event";
@@ -124,7 +122,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         break;
       }
       */
-    }
+    //}
 
     return showModalBottomSheet(
         context: context,

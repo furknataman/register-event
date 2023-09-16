@@ -84,6 +84,21 @@ class WebService {
       throw Exception('Failed to load presentations');
     }
   }
+
+  Future<TokenResponse> registerEvent(int presentationId) async {
+    int userId = 0; //TODO add user id
+
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/SunumKayitEkle",
+        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
+
+    if (response.statusCode == 200) {
+      TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
+      return tokenResponse;
+    } else {
+      throw Exception('Failed to load presentations');
+    }
+  }
 }
 
 final webServiceProvider = Provider<WebService>((ref) => WebService());
@@ -98,4 +113,9 @@ final presentationDataProvider = FutureProvider<List<Presentation>>((ref) async 
 
 final eventDetailsProvider = FutureProvider.family<Presentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);
+});
+
+final registerEventProvider =
+    FutureProvider.family<TokenResponse?, int>((ref, presentationId) async {
+  return ref.watch(webServiceProvider).registerEvent(presentationId);
 });

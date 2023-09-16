@@ -96,7 +96,7 @@ InkWell eventsCart(
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            combinedTime ?? " ",
+                            combinedTime! ,
                             style: Theme.of(context).textTheme.displayMedium,
                           )
                         ],

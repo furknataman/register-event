@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/date_time_converter.dart';
 import 'package:qr/pages/events/widgets/skeleton.dart';
+import 'package:qr/pages/events/widgets/speakers_info.dart';
 import 'package:qr/services/service.dart';
+import 'package:qr/theme/theme_extends.dart';
 import '../home/widgets/events_cart.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
@@ -17,17 +19,17 @@ class _EventsPage extends ConsumerState<EventsPage> {
   int? eventId;
   _EventsPage({@required this.eventId});
   String? timeData;
-  ScrollController scrollController = ScrollController();
-  bool _isVisible = false;
+  //ScrollController scrollController = ScrollController();
+  // bool _isVisible = false;
 
   @override
   void initState() {
     super.initState();
-    scrollController.addListener(() {
-      setState(() {
+    /*crollController.addListener(() {
+      /*setState(() {
         _isVisible = scrollController.offset > 130;
-      });
-    });
+      });*/
+    });*/
   }
 
   @override
@@ -46,10 +48,9 @@ class _EventsPage extends ConsumerState<EventsPage> {
               String time =
                   dateConvert(getEventInfo!.presentationTime!, getEventInfo.duration!);
               return CustomScrollView(
-                controller: scrollController,
                 slivers: <Widget>[
                   SliverAppBar(
-                    backgroundColor: Colors.black.withOpacity(0.88),
+                    backgroundColor: Theme.of(context).colorScheme.appColor,
                     pinned: true,
                     snap: false,
                     floating: false,
@@ -57,7 +58,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                     flexibleSpace: FlexibleSpaceBar(
                         collapseMode: CollapseMode.pin,
                         title: Visibility(
-                          visible: _isVisible,
+                          visible: false,
                           child: Text(
                             getEventInfo.title.toString(),
                             style: const TextStyle(color: Colors.white, fontSize: 24),
@@ -109,7 +110,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                               bottomPadding: 17),
                           textContainer(
                               "Speakers", Theme.of(context).textTheme.displayMedium),
-                          //speakersInfo(getEventInfo),
+                          speakersInfo(context, getEventInfo),
                           const SizedBox(
                             height: 17,
                           ),
