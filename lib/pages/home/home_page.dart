@@ -171,13 +171,13 @@ class _HomepageState extends ConsumerState<Homepage> {
 
                     if (filterProvider.selectedBranch != 0) {
                       filteredEventList = filteredEventList
-                          .where((element) => element.branch.contains(
+                          .where((element) => element.branch!.contains(
                               filterProvider.branchList[filterProvider.selectedBranch]))
                           .toList();
                     }
                     if (filterProvider.selectedTarget != 0) {
                       filteredEventList = filteredEventList
-                          .where((element) => element.audience.contains(
+                          .where((element) => element.audience!.contains(
                               filterProvider.targetList[filterProvider.selectedTarget]))
                           .toList();
                     }

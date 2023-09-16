@@ -44,7 +44,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
             error: (err, stack) => Text('Error: $err'),
             data: (getEventInfo) {
               String time =
-                  dateConvert(getEventInfo!.presentationTime!, getEventInfo.duration);
+                  dateConvert(getEventInfo!.presentationTime!, getEventInfo.duration!);
               return CustomScrollView(
                 controller: scrollController,
                 slivers: <Widget>[
@@ -100,7 +100,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                               ),*/
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 20,
                           ),
                           textContainer(

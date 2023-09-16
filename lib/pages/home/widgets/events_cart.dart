@@ -18,12 +18,11 @@ InkWell eventsCart(
   String? combinedTime;
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
   if (event!.presentationTime != null) {
-    combinedTime = dateConvert(event.presentationTime!, event.duration);
+    combinedTime = dateConvert(event.presentationTime!, event.duration!);
   }
 
   return InkWell(
     onTap: () {
-      print(event.id);
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => EventsPage(event.id)));
     },
@@ -93,7 +92,7 @@ InkWell eventsCart(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            truncateString(event.title, 28),
+                            truncateString(event.title!, 28),
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
@@ -108,7 +107,7 @@ InkWell eventsCart(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              event.presenter1Name,
+                              event.presenter1Name!,
                               style: Theme.of(context).textTheme.titleSmall,
                             ),
                             event.presenter2Name != null

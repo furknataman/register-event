@@ -65,13 +65,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                             const SizedBox(
                               height: 5,
                             ),
-                            Text(data.job,
+                            Text(data.job!,
                                 style: Theme.of(context).textTheme.displaySmall),
                             const SizedBox(
                               height: 2,
                             ),
                             FittedBox(
-                              child: Text(data.school,
+                              child: Text(data.school!,
                                   style: Theme.of(context).textTheme.displaySmall),
                             ),
                           ],
