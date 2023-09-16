@@ -10,6 +10,18 @@
             "type": "dart"
         },
         {
+			"name": "Android",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "emulator-5554"
+		},
+		{
+			"name": "iPhone",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "iphone"
+		},
+        {
             "name": "qr (profile mode)",
             "request": "launch",
             "type": "dart",
@@ -21,5 +33,11 @@
             "type": "dart",
             "flutterMode": "release"
         }
-    ]
+    ],
+    "compounds": [
+		{
+			"name": "All Devices",
+			"configurations": ["Android", "iPhone"],
+		}
+	]
 }
