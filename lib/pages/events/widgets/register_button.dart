@@ -3,196 +3,103 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
+import 'package:qr/notification/local_notification/notification.dart';
+
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
-import '../../../notification/local_notification/notification.dart';
 
 class RegisterButton extends ConsumerWidget {
-  const RegisterButton({
-    super.key,
-    //required this.userInfo,
+  RegisterButton({
+    Key? key,
     required this.event,
     required this.eventId,
     required this.userInfo,
-  });
+  }) : super(key: key);
 
-  //final UserInfo userInfo;
   final ClassModelPresentation event;
   final int eventId;
-
   final InfoUser? userInfo;
+
+  final isButtonEnabled = ValueNotifier<bool>(true);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    /* if (event!.dateTime!.millisecondsSinceEpoch < DateTime.now().millisecondsSinceEpoch) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff485FFF),
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: null,
-          child: Row(
-            children: [
-              Text(
-                "Past",
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-            ],
-          ));
-    }  if (userInfo!.kayitOlduguSunumId!.contains(event!.id) == false) {
-      if (userInfo.user!.dateTimeList!.contains(event!.timestamp) == true) {
-        return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff485FFF),
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: const StadiumBorder()),
-            onPressed: null,
-            child: Row(
-              children: [
-                Text(
-                  "No Seat",
-                  style: Theme.of(context).textTheme.displaySmall,
-                ),
-              ],
-            ));
-      } else if (event!.capacity! - event!.participantsNumber! <= 0) {
-        return ElevatedButton(
-            style: ElevatedButton.styleFrom(
-                backgroundColor:
-                    Theme.of(context).floatingActionButtonTheme.backgroundColor,
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                shape: const StadiumBorder()),
-            onPressed: null,
-            child: const Row(
-              children: [
-                Text(
-                  "Full",
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ],
-            ));
-      }*/
     DateTime now = DateTime.now();
     bool containsTime =
         userInfo?.registeredEventTime?.contains(event.presentationTime) ?? false;
-    bool containsId = userInfo?.registeredEventId?.contains(eventId) ?? true;
+    bool containsId = userInfo?.registeredEventId?.contains(eventId) ?? false;
+
+    String buttonText = "Register";
+    Color? buttonColor = Theme.of(context).floatingActionButtonTheme.backgroundColor;
+    VoidCallback? onPressed;
+
     if (event.presentationTime!.microsecondsSinceEpoch < now.microsecondsSinceEpoch) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff485FFF),
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: null,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Past",
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-            ],
-          ));
-    }
-    if (containsTime && !containsId) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xff485FFF),
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: null,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "No Seat",
-                style: Theme.of(context).textTheme.displaySmall,
-              ),
-            ],
-          ));
+      buttonText = "Past";
+      buttonColor = const Color(0xff485FFF);
+      onPressed = null;
+    } else if (containsTime && !containsId) {
+      buttonText = "No Seat";
+      buttonColor = const Color(0xff485FFF);
+      onPressed = null;
     } else if (int.parse(event.presentationQuota ?? "0") - event.remainingQuota! <= 0) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: null,
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "Full",
-                style: TextStyle(color: Colors.white, fontSize: 16),
-              ),
-            ],
-          ));
-    } else if (userInfo?.registeredEventId?.contains(eventId) == false ||
-        userInfo?.registeredEventId == null) {
-      return ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: () async {
-            //userInfo.writeUser(registeredEvents: event!.id, eventTime: event!.timestamp);
-            //eventAction.writeEvents(eventsCollectionName: event!.eventsCollectionName);
-            await WebService().registerEvent(userInfo!.id!, eventId);
-            ref.invalidate(eventDetailsProvider(eventId));
-            ref.invalidate(userDataProvider);
-            LocalNoticeService().addNotification(
-                'testing',
-                'An event is near.',
-                '${event.title} is starting by 10 minutes in ${event.branch}. Don’t forget to scan the qr code.',
-                DateTime.now().millisecondsSinceEpoch +
-                    10000 //event!.dateTime!.millisecondsSinceEpoch + 60000,
-                );
-          },
-          child: const Center(
-            child: Text(
-              "Register",
-              style: TextStyle(color: Colors.white, fontSize: 16),
-            ),
-          ));
+      buttonText = "Full";
+      onPressed = null;
+    } else if (!containsId) {
+      buttonText = "Register";
+      onPressed = () async {
+        isButtonEnabled.value = false;
+        await WebService().registerEvent(userInfo!.id!, eventId);
+        ref.invalidate(eventDetailsProvider(eventId));
+        ref.invalidate(userDataProvider);
+        LocalNoticeService().addNotification(
+            'testing',
+            'An event is near.',
+            '${event.title} is starting by 10 minutes in ${event.branch}. Don’t forget to scan the qr code.',
+            DateTime.now().millisecondsSinceEpoch + 10000);
+        isButtonEnabled.value = true;
+      };
     } else {
-      return ElevatedButton(
+      buttonText = "Unregister";
+      buttonColor = Theme.of(context).colorScheme.unregister;
+      onPressed = () async {
+        isButtonEnabled.value = false;
+        await WebService().removeEvent(userInfo!.id!, eventId);
+        ref.invalidate(eventDetailsProvider(eventId));
+        ref.invalidate(userDataProvider);
+        LocalNoticeService().cancelNotification(1);
+        isButtonEnabled.value = true;
+      };
+    }
+
+    return ValueListenableBuilder<bool>(
+      valueListenable: isButtonEnabled,
+      builder: (context, isEnabled, child) {
+        return ElevatedButton(
           style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.unregister,
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              shape: const StadiumBorder()),
-          onPressed: () async {
-            await WebService().removeEvent(userInfo!.id!, eventId);
-            ref.invalidate(eventDetailsProvider(eventId));
-            ref.invalidate(userDataProvider);
-            //userInfo.removeEvent(registeredEvents: event!.id, eventTime: event!.timestamp);
-            //eventAction.removeEventUser(event: event);
-            LocalNoticeService().cancelNotification(1);
-          },
-          child: const Row(
+            backgroundColor: buttonColor,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            shape: const StadiumBorder(),
+          ),
+          onPressed: isEnabled ? onPressed : null,
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Unregister",
-                style: TextStyle(
+                buttonText,
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 16,
                 ),
               ),
-              SizedBox(
-                width: 10,
-              ),
-              Icon(
-                LucideIcons.calendarCheck,
-                size: 19,
-              )
+              if (buttonText == "Unregister") ...[
+                const SizedBox(width: 10),
+                const Icon(LucideIcons.calendarCheck, size: 19),
+              ]
             ],
-          ));
-    }
+          ),
+        );
+      },
+    );
   }
 }

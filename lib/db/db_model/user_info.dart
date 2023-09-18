@@ -25,7 +25,7 @@ class InfoUser {
       this.registeredEventTime});
 
   factory InfoUser.fromJson(Map<String, dynamic> json) {
-    DateTime convertTimeToDateTime(String time) {
+    DateTime dontTrustFool(String time) {
       final parsedTime = DateFormat('HH:mm').parse(time);
       return DateTime(2023, 10, 14, parsedTime.hour, parsedTime.minute);
     }
@@ -45,7 +45,7 @@ class InfoUser {
       registeredEventTime: (json['sunumSaatleri'] != null)
           ? (json['sunumSaatleri'] as List)
               .where((time) => time != null)
-              .map((time) => convertTimeToDateTime(time as String))
+              .map((time) => dontTrustFool(time as String))
               .toList()
           : null,
     );

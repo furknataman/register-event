@@ -128,7 +128,7 @@ class _HomepageState extends ConsumerState<Homepage> {
               return userData.when(
                   data: ((data) {
                     var filteredEventList = allEvents;
-
+                    print(data.registeredEventId);
                     if (filterProvider.selectedList == 3 &&
                         data.registeredEventId!.isNotEmpty) {
                       filteredEventList = filteredEventList
