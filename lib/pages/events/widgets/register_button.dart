@@ -75,7 +75,46 @@ class RegisterButton extends ConsumerWidget {
               ],
             ));
       }*/
-    if (userInfo?.kayitOlduguSunumId?.contains(eventId) == false ||
+    DateTime now = DateTime.now();
+  
+
+
+
+    if (event.presentationTime!.microsecondsSinceEpoch<now.microsecondsSinceEpoch) {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff485FFF),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: null,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Past",
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+            ],
+          ));
+    } else if (int.parse(event.presentationQuota ?? "0") - event.remainingQuota! <= 0) {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: null,
+          child: const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Full",
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ],
+          ));
+    } else if (userInfo?.kayitOlduguSunumId?.contains(eventId) == false ||
         userInfo?.kayitOlduguSunumId == null) {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(

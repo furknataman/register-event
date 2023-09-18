@@ -12,8 +12,8 @@ class ClassModelPresentation {
   final String? duration;
   final String? language;
   final String? type;
-  final String? presentationTime;
-  // final String? presentationPlace;
+  final DateTime? presentationTime;
+  final String? presentationPlace;
   final String? presentationQuota;
   final int? remainingQuota;
 
@@ -32,11 +32,16 @@ class ClassModelPresentation {
       this.language,
       this.type,
       this.presentationTime,
-      // this.presentationPlace,
+      this.presentationPlace,
       this.presentationQuota,
       this.remainingQuota});
 
   factory ClassModelPresentation.fromJson(Map<String, dynamic> json) {
+    String timeFromJson = json['presentationTime'] ?? "09:00:00";
+    List<String> timeParts = timeFromJson.split(":");
+    int hour = int.parse(timeParts[0]);
+    int minute = int.parse(timeParts[1]);
+    int second = int.parse(timeParts[2]);
     return ClassModelPresentation(
       id: json['id'] ?? 0,
       title: capitalizeFirstLetter(json['title']),
@@ -51,8 +56,8 @@ class ClassModelPresentation {
       duration: json['duration'],
       language: json['language'] ?? " ",
       type: json['type'] ?? " ",
-      presentationTime: json['presentationTime'],
-      //  presentationPlace: json['presentationPlace'],
+      presentationTime: DateTime(2023, 10, 13, hour, minute, second),
+      presentationPlace: json['presentationPlace'] ?? " ",
       presentationQuota: json['presentationQuota'] ?? "0",
       remainingQuota: json['kalanKota'] ?? 0,
     );

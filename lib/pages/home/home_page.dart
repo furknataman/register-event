@@ -9,6 +9,11 @@ import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
 
+bool isAfter(TimeOfDay first, TimeOfDay second) {
+  return first.hour > second.hour ||
+      (first.hour == second.hour && first.minute > second.minute);
+}
+
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
 
@@ -23,11 +28,6 @@ class _HomepageState extends ConsumerState<Homepage> {
     ref.read(userDataProvider);
     ref.read(presentationDataProvider);
     //ref.read<UserInfo>(userInfoConfig).readUser();
-  }
-
-  bool isAfter(TimeOfDay first, TimeOfDay second) {
-    return first.hour > second.hour ||
-        (first.hour == second.hour && first.minute > second.minute);
   }
 
   @override
@@ -136,37 +136,17 @@ class _HomepageState extends ConsumerState<Homepage> {
                           .where((e) => data.kayitOlduguSunumId!.contains(e.id))
                           .toList();
                     } else if (filterProvider.selectedList == 2) {
-                      DateTime now = DateTime.now();
-                      TimeOfDay timeFromDateTime =
-                          TimeOfDay(hour: now.hour, minute: now.minute);
-
-                      filteredEventList = filteredEventList.where((e) {
-                        if (e.presentationTime == null) {
-                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
-                        }
-                        TimeOfDay evetnTime = TimeOfDay(
-                          hour: int.parse(e.presentationTime!.split(":")[0]),
-                          minute: int.parse(e.presentationTime!.split(":")[1]),
-                        );
-
-                        return isAfter(evetnTime, timeFromDateTime);
-                      }).toList();
+                      filteredEventList = filteredEventList
+                          .where((e) =>
+                              e.presentationTime!.millisecondsSinceEpoch >
+                              DateTime.now().millisecondsSinceEpoch)
+                          .toList();
                     } else if (filterProvider.selectedList == 1) {
-                      DateTime now = DateTime.now();
-                      TimeOfDay timeFromDateTime =
-                          TimeOfDay(hour: now.hour, minute: now.minute);
-
-                      filteredEventList = filteredEventList.where((e) {
-                        if (e.presentationTime == null) {
-                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
-                        }
-                        TimeOfDay evetnTime = TimeOfDay(
-                          hour: int.parse(e.presentationTime!.split(":")[0]),
-                          minute: int.parse(e.presentationTime!.split(":")[1]),
-                        );
-
-                        return isAfter(timeFromDateTime, evetnTime);
-                      }).toList();
+                      filteredEventList = filteredEventList
+                          .where((e) =>
+                              e.presentationTime!.millisecondsSinceEpoch <
+                              DateTime.now().millisecondsSinceEpoch)
+                          .toList();
                     }
 
                     if (filterProvider.selectedBranch != 0) {
@@ -183,22 +163,11 @@ class _HomepageState extends ConsumerState<Homepage> {
                     }
 
                     if (filterProvider.time != null) {
-                      TimeOfDay timeFromDateTime = TimeOfDay(
-                          hour: filterProvider.time!.hour,
-                          minute: filterProvider.time!.minute);
-
-                      filteredEventList = filteredEventList.where((e) {
-                        if (e.presentationTime == null) {
-                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
-                        }
-
-                        TimeOfDay eventTime = TimeOfDay(
-                          hour: int.parse(e.presentationTime!.split(":")[0]),
-                          minute: int.parse(e.presentationTime!.split(":")[1]),
-                        );
-
-                        return isAfter(eventTime, timeFromDateTime);
-                      }).toList();
+                      filteredEventList = filteredEventList
+                          .where((e) =>
+                              e.presentationTime!.millisecondsSinceEpoch >
+                              filterProvider.time!.millisecondsSinceEpoch)
+                          .toList();
                     }
                     return Expanded(
                       child: ListView.builder(

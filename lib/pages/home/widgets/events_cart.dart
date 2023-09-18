@@ -15,12 +15,11 @@ InkWell eventsCart(
   @required ClassModelPresentation? event,
   @required bool? eventCart,
 }) {
-  String? combinedTime;
+  String? combinedTime = " ";
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
-  if (event!.presentationTime != null) {
-    combinedTime = dateConvert(event.presentationTime!, event.duration!);
-  }
 
+  int duration = int.parse(event!.duration ?? "0");
+  ClassTime time = classConverter(event.presentationTime!, duration);
   return InkWell(
     onTap: () {
       Navigator.push(
@@ -96,7 +95,7 @@ InkWell eventsCart(
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            combinedTime! ,
+                            "${time.clock} : ${time.endTime}",
                             style: Theme.of(context).textTheme.displayMedium,
                           )
                         ],

@@ -46,8 +46,8 @@ class _EventsPage extends ConsumerState<EventsPage> {
             loading: () => const SkelWidget(),
             error: (err, stack) => Text('Error: $err'),
             data: (getEventInfo) {
-              String time =
-                  dateConvert(getEventInfo!.presentationTime!, getEventInfo.duration!);
+              int duration = int.parse(getEventInfo!.duration ?? "0");
+              ClassTime time = classConverter(getEventInfo.presentationTime!, duration);
               return CustomScrollView(
                 slivers: <Widget>[
                   SliverAppBar(
@@ -61,7 +61,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                         title: Visibility(
                           visible: false,
                           child: Text(
-                            getEventInfo.title.toString(),
+                            "${time.clock} : ${time.endTime}",
                             style: const TextStyle(color: Colors.white, fontSize: 24),
                             textAlign: TextAlign.center,
                           ),
@@ -93,7 +93,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                   children: [
                                     Text(
                                         textAlign: TextAlign.start,
-                                        getEventInfo.title.toString(),
+                                        getEventInfo!.title.toString(),
                                         style: Theme.of(context).textTheme.displayMedium,
                                         overflow: TextOverflow.visible),
                                   ],
@@ -125,7 +125,8 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           ),
                           textContainer(
                               "Date of Event", Theme.of(context).textTheme.displayMedium),
-                          textContainer(time, Theme.of(context).textTheme.titleSmall,
+                          textContainer("${time.clock} : ${time.endTime}",
+                              Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
                           textContainer(
                               "Speakers", Theme.of(context).textTheme.displayMedium),
