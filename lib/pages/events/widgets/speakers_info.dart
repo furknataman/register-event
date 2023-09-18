@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:qr/db/db_model/Presentation.model.dart';
 
-import '../../home/widgets/events_cart.dart';
-
 Widget speakersInfo(BuildContext context, Presentation getEventInfo) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,

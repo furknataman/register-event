@@ -10,6 +10,18 @@
             "type": "dart"
         },
         {
+            "name": "qr (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "qr (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
 			"name": "Android",
 			"request": "launch",
 			"type": "dart",
@@ -21,18 +33,7 @@
 			"type": "dart",
 			"deviceId": "iphone"
 		},
-        {
-            "name": "qr (profile mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "profile"
-        },
-        {
-            "name": "qr (release mode)",
-            "request": "launch",
-            "type": "dart",
-            "flutterMode": "release"
-        }
+       
     ],
     "compounds": [
 		{

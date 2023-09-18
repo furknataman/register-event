@@ -7,6 +7,11 @@ import 'authentication/authservice.dart';
 import 'notification/local_notification/notification.dart';
 import 'theme/dark_theme.dart';
 
+
+
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   FlutterLocalNotificationsPlugin()
@@ -23,6 +28,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      navigatorKey: navigatorKey,
       title: 'Autumn Teachers Conference',
       debugShowCheckedModeBanner: false,
       darkTheme: darkTheme,

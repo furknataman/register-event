@@ -4,19 +4,34 @@ import 'package:qr/db/db_model/Presentation.model.dart';
 import 'package:qr/db/db_model/token_response_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
+import 'package:qr/main.dart';
+
+class YetkisizErisimInterceptor extends Interceptor {
+  @override
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 400 || err.response?.statusCode == 401) {
+      await logout();
+
+      navigatorKey.currentState?.pushReplacementNamed('/start');
+    }
+    super.onError(err, handler);
+  }
+}
 
 class WebService {
   final String baseUrl = "http://atc.eyuboglu.com/api/api/";
-  final Dio _dio = Dio();
+  final Dio _dio = Dio()..interceptors.add(YetkisizErisimInterceptor());
 
   Future<Response> _makeRequest(String endpoint,
       {Map<String, dynamic>? data, String? token}) async {
     final url = "$baseUrl$endpoint";
-    return await _dio.post(
+    final response = await _dio.post(
       url,
       data: data,
       options: _commonHeaders(token),
     );
+
+    return response;
   }
 
   Options _commonHeaders([String? token]) {
@@ -33,7 +48,6 @@ class WebService {
   }
 
   Future<Presentation?> fetchEventDetails(int id) async {
-    print(id);
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/MobilSunumDetay",
         data: {
