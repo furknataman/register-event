@@ -141,7 +141,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                           TimeOfDay(hour: now.hour, minute: now.minute);
 
                       filteredEventList = filteredEventList.where((e) {
-                           if (e.presentationTime == null) {
+                        if (e.presentationTime == null) {
                           return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
                         }
                         TimeOfDay evetnTime = TimeOfDay(
@@ -157,7 +157,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                           TimeOfDay(hour: now.hour, minute: now.minute);
 
                       filteredEventList = filteredEventList.where((e) {
-                           if (e.presentationTime == null) {
+                        if (e.presentationTime == null) {
                           return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
                         }
                         TimeOfDay evetnTime = TimeOfDay(
@@ -200,7 +200,6 @@ class _HomepageState extends ConsumerState<Homepage> {
                         return isAfter(eventTime, timeFromDateTime);
                       }).toList();
                     }
-
                     return Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.only(bottom: 10),
@@ -208,10 +207,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                           context;
                           return eventsCart(
                             context,
-                            eventCart: data.kayitOlduguSunumId!.isNotEmpty
-                                ? data.kayitOlduguSunumId!
-                                    .contains(filteredEventList[index].id)
-                                : false,
+                            eventCart: (data.kayitOlduguSunumId
+                                    ?.contains(filteredEventList[index].id) ??
+                                false),
                             event: filteredEventList[index],
                           );
                         },

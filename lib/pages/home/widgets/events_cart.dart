@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:qr/db/db_model/Presentation.model.dart';
+import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/pages/events/event_page.dart';
 import 'package:skeletons/skeletons.dart';
 
@@ -12,7 +12,7 @@ String truncateString(String str, int cutoff) {
 
 InkWell eventsCart(
   BuildContext context, {
-  @required Presentation? event,
+  @required ClassModelPresentation? event,
   @required bool? eventCart,
 }) {
   String? combinedTime;

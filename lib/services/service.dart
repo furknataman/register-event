@@ -1,12 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/db/db_model/Presentation.model.dart';
+import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/db/db_model/token_response_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/main.dart';
 
-class YetkisizErisimInterceptor extends Interceptor {
+class UnauthorizedException extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 400 || err.response?.statusCode == 401) {
@@ -20,7 +20,7 @@ class YetkisizErisimInterceptor extends Interceptor {
 
 class WebService {
   final String baseUrl = "http://atc.eyuboglu.com/api/api/";
-  final Dio _dio = Dio()..interceptors.add(YetkisizErisimInterceptor());
+  final Dio _dio = Dio()..interceptors.add(UnauthorizedException());
 
   Future<Response> _makeRequest(String endpoint,
       {Map<String, dynamic>? data, String? token}) async {
@@ -47,7 +47,7 @@ class WebService {
     return Options(headers: headers);
   }
 
-  Future<Presentation?> fetchEventDetails(int id) async {
+  Future<ClassModelPresentation?> fetchEventDetails(int id) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/MobilSunumDetay",
         data: {
@@ -56,7 +56,8 @@ class WebService {
         token: myToken);
 
     if (response.statusCode == 200) {
-      Presentation presentationDetails = Presentation.fromJson(response.data);
+      ClassModelPresentation presentationDetails =
+          ClassModelPresentation.fromJson(response.data);
       return presentationDetails;
     }
     return null;
@@ -86,29 +87,40 @@ class WebService {
     }
   }
 
-  Future<List<Presentation>> fetchAllEvents() async {
+  Future<List<ClassModelPresentation>> fetchAllEvents() async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/MobilSunumlariListele",
         data: {'token': myToken}, token: myToken);
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = response.data;
-      return responseData.map((data) => Presentation.fromJson(data)).toList();
+      return responseData.map((data) => ClassModelPresentation.fromJson(data)).toList();
     } else {
       throw Exception('Failed to load presentations');
     }
   }
 
-  Future<TokenResponse> registerEvent(int presentationId) async {
-    int userId = 0; //TODO add user id
-
+  Future<bool> registerEvent(int userId, int presentationId) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/SunumKayitEkle",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
-
     if (response.statusCode == 200) {
-      TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
-      return tokenResponse;
+      if (response.data['basarili'] == true) {
+        return true;
+      }
+
+      throw Exception('Failed to load presentations');
+    } else {
+      throw Exception('Failed to load presentations');
+    }
+  }
+
+  Future<bool> removeEvent(int userId, int presentationId) async {
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/SunumKayitSil",
+        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
+    if (response.statusCode == 200) {
+      return true;
     } else {
       throw Exception('Failed to load presentations');
     }
@@ -121,15 +133,11 @@ final userDataProvider = FutureProvider<InfoUser>((ref) async {
   return ref.watch(webServiceProvider).fetchUser();
 });
 
-final presentationDataProvider = FutureProvider<List<Presentation>>((ref) async {
+final presentationDataProvider = FutureProvider<List<ClassModelPresentation>>((ref) async {
   return ref.watch(webServiceProvider).fetchAllEvents();
 });
 
-final eventDetailsProvider = FutureProvider.family<Presentation?, int>((ref, id) async {
+final eventDetailsProvider =
+    FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);
-});
-
-final registerEventProvider =
-    FutureProvider.family<TokenResponse?, int>((ref, presentationId) async {
-  return ref.watch(webServiceProvider).registerEvent(presentationId);
 });

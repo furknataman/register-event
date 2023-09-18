@@ -2,13 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/theme/light_theme.dart';
 import 'authentication/authservice.dart';
 import 'notification/local_notification/notification.dart';
 import 'theme/dark_theme.dart';
-
-
-
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -28,6 +26,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+        '/start': (context) => const StartPage(),
+        // diğer rotalar...
+      },
       navigatorKey: navigatorKey,
       title: 'Autumn Teachers Conference',
       debugShowCheckedModeBanner: false,

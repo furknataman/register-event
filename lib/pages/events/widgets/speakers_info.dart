@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qr/db/db_model/Presentation.model.dart';
+import 'package:qr/db/db_model/presentation_model.dart';
 
-Widget speakersInfo(BuildContext context, Presentation getEventInfo) {
+Widget speakersInfo(BuildContext context, ClassModelPresentation getEventInfo) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.start,
     children: [

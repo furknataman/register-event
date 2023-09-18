@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/date_time_converter.dart';
+import 'package:qr/pages/events/widgets/register_button.dart';
 import 'package:qr/pages/events/widgets/skeleton.dart';
 import 'package:qr/pages/events/widgets/speakers_info.dart';
 import 'package:qr/services/service.dart';
@@ -38,7 +39,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
   ) {
     final getEventInfo = ref.watch(eventDetailsProvider(eventId!));
     //final userInfo = ref.watch<UserInfo>(userInfoConfig);
-
+    final userData = ref.watch(userDataProvider);
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: getEventInfo.when(
@@ -88,11 +89,15 @@ class _EventsPage extends ConsumerState<EventsPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
                               Flexible(
-                                child: Text(
-                                    textAlign: TextAlign.start,
-                                    getEventInfo.title.toString(),
-                                    style: Theme.of(context).textTheme.displayMedium,
-                                    overflow: TextOverflow.visible),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                        textAlign: TextAlign.start,
+                                        getEventInfo.title.toString(),
+                                        style: Theme.of(context).textTheme.displayMedium,
+                                        overflow: TextOverflow.visible),
+                                  ],
+                                ),
                               ),
                               Container()
                               /* RegisterButton(
@@ -100,6 +105,20 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                 event: getEventInfo,
                               ),*/
                             ],
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                          userData.when(
+                            loading: () => const Text(""),
+                            data: ((data) {
+                              return RegisterButton(
+                                event: getEventInfo,
+                                userInfo: data,
+                                eventId: eventId!,
+                              );
+                            }),
+                            error: (err, stack) => Text('Error: $err'),
                           ),
                           const SizedBox(
                             height: 20,
@@ -116,7 +135,8 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           ),
                           textContainer(
                               "Capacity", Theme.of(context).textTheme.displayMedium),
-                          textContainer("${getEventInfo.id} free seats left from ",
+                          textContainer(
+                              "${getEventInfo.remainingQuota} free seats left from ${getEventInfo.presentationQuota}",
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
                           textContainer(
