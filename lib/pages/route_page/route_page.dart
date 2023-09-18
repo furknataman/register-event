@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/pages/home/home_page.dart';
+import 'package:qr/pages/maps/maps.dart';
 import 'package:qr/pages/scan/scan.dart';
 import 'package:qr/pages/settings/settings_page.dart';
 import 'package:qr/theme/theme_extends.dart';
@@ -35,44 +36,52 @@ class _RoutePageState extends State<RoutePage> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: PageView(
+            physics: const NeverScrollableScrollPhysics(),
             onPageChanged: (index) {
               setState(() => _currentIndex = index);
             },
             controller: _pageController,
-            children: const <Widget>[Homepage(), ScannerPage(), SettingsPage()]),
-        bottomNavigationBar: ClipRRect(
-          /*borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(30), topRight: Radius.circular(30)),*/
-          child: BottomNavigationBar(
-              onTap: (index) {
-                setState(() => _currentIndex = index);
-                _pageController.jumpToPage(index);
-              },
-              backgroundColor: Theme.of(context).colorScheme.mainColor,
-              showSelectedLabels: false,
-              showUnselectedLabels: false,
-              currentIndex: _currentIndex,
-              unselectedItemColor: Colors.white,
-              selectedItemColor: Theme.of(context).colorScheme.appColor,
-              selectedIconTheme: const IconThemeData(color: Color(0xff232f60)),
-              iconSize: 31,
-              items: const <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  activeIcon: Icon(HeroiconsMini.home),
-                  label: " ",
-                  icon: Icon(HeroiconsOutline.home),
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Icon(HeroiconsMini.qrCode),
-                  label: " ",
-                  icon: Icon(HeroiconsOutline.qrCode),
-                ),
-                BottomNavigationBarItem(
-                  activeIcon: Icon(HeroiconsSolid.cog6Tooth),
-                  label: " ",
-                  icon: Icon(HeroiconsOutline.cog6Tooth),
-                )
-              ]),
-        ));
+            children: const <Widget>[
+              Homepage(),
+              ScannerPage(),
+              MapsPage(),
+              SettingsPage()
+            ]),
+        bottomNavigationBar: BottomNavigationBar(
+            onTap: (index) {
+              setState(() => _currentIndex = index);
+              _pageController.jumpToPage(index);
+            },
+            backgroundColor: Theme.of(context).colorScheme.mainColor,
+            showSelectedLabels: false,
+            showUnselectedLabels: false,
+            type: BottomNavigationBarType.fixed,
+            currentIndex: _currentIndex,
+            unselectedItemColor: Colors.white,
+            selectedItemColor: Theme.of(context).colorScheme.appColor,
+            selectedIconTheme: const IconThemeData(color: Color(0xff232f60)),
+            iconSize: 31,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                activeIcon: Icon(HeroiconsMini.home),
+                label: " ",
+                icon: Icon(HeroiconsOutline.home),
+              ),
+              BottomNavigationBarItem(
+                activeIcon: Icon(HeroiconsMini.qrCode),
+                label: " ",
+                icon: Icon(HeroiconsOutline.qrCode),
+              ),
+              BottomNavigationBarItem(
+                activeIcon: Icon(HeroiconsSolid.map),
+                label: " ",
+                icon: Icon(HeroiconsOutline.map),
+              ),
+              BottomNavigationBarItem(
+                activeIcon: Icon(HeroiconsSolid.cog6Tooth),
+                label: " ",
+                icon: Icon(HeroiconsOutline.cog6Tooth),
+              ),
+            ]));
   }
 }
