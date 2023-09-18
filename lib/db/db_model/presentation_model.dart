@@ -56,7 +56,7 @@ class ClassModelPresentation {
       duration: json['duration'],
       language: json['language'] ?? " ",
       type: json['type'] ?? " ",
-      presentationTime: DateTime(2023, 10, 13, hour, minute, second),
+      presentationTime: DateTime(2023, 10, 14, hour, minute, second),
       presentationPlace: json['presentationPlace'] ?? " ",
       presentationQuota: json['presentationQuota'] ?? "0",
       remainingQuota: json['kalanKota'] ?? 0,

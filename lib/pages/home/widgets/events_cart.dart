@@ -15,7 +15,7 @@ InkWell eventsCart(
   @required ClassModelPresentation? event,
   @required bool? eventCart,
 }) {
-  String? combinedTime = " ";
+
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
 
   int duration = int.parse(event!.duration ?? "0");

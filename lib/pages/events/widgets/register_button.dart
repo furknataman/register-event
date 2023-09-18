@@ -76,11 +76,10 @@ class RegisterButton extends ConsumerWidget {
             ));
       }*/
     DateTime now = DateTime.now();
-  
-
-
-
-    if (event.presentationTime!.microsecondsSinceEpoch<now.microsecondsSinceEpoch) {
+    bool containsTime =
+        userInfo?.registeredEventTime?.contains(event.presentationTime) ?? false;
+    bool containsId = userInfo?.registeredEventId?.contains(eventId) ?? true;
+    if (event.presentationTime!.microsecondsSinceEpoch < now.microsecondsSinceEpoch) {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xff485FFF),
@@ -93,6 +92,24 @@ class RegisterButton extends ConsumerWidget {
             children: [
               Text(
                 "Past",
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+            ],
+          ));
+    }
+    if (containsTime && !containsId) {
+      return ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xff485FFF),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              shape: const StadiumBorder()),
+          onPressed: null,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "No Seat",
                 style: Theme.of(context).textTheme.displaySmall,
               ),
             ],
@@ -114,8 +131,8 @@ class RegisterButton extends ConsumerWidget {
               ),
             ],
           ));
-    } else if (userInfo?.kayitOlduguSunumId?.contains(eventId) == false ||
-        userInfo?.kayitOlduguSunumId == null) {
+    } else if (userInfo?.registeredEventId?.contains(eventId) == false ||
+        userInfo?.registeredEventId == null) {
       return ElevatedButton(
           style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).floatingActionButtonTheme.backgroundColor,

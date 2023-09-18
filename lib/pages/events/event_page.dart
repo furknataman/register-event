@@ -93,7 +93,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                   children: [
                                     Text(
                                         textAlign: TextAlign.start,
-                                        getEventInfo!.title.toString(),
+                                        getEventInfo.title.toString(),
                                         style: Theme.of(context).textTheme.displayMedium,
                                         overflow: TextOverflow.visible),
                                   ],

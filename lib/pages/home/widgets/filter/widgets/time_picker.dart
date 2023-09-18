@@ -10,8 +10,8 @@ class DatePicker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     DateTime now = DateTime.now();
-    DateTime mindate = DateTime(now.year, now.month, now.day, 8);
-    DateTime maxdate = DateTime(now.year, now.month, now.day, 18);
+    DateTime mindate = DateTime(2023, 10, 14, 8);
+    DateTime maxdate = DateTime(2023, 10, 14, 18);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     return CupertinoButton(
       padding: EdgeInsets.zero,

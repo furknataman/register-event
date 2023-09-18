@@ -38,7 +38,6 @@ class _HomepageState extends ConsumerState<Homepage> {
     //AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     //final userInfo = ref.watch<UserInfo>(userInfoConfig);
-
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -131,9 +130,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                     var filteredEventList = allEvents;
 
                     if (filterProvider.selectedList == 3 &&
-                        data.kayitOlduguSunumId!.isNotEmpty) {
+                        data.registeredEventId!.isNotEmpty) {
                       filteredEventList = filteredEventList
-                          .where((e) => data.kayitOlduguSunumId!.contains(e.id))
+                          .where((e) => data.registeredEventId!.contains(e.id))
                           .toList();
                     } else if (filterProvider.selectedList == 2) {
                       filteredEventList = filteredEventList
@@ -176,7 +175,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                           context;
                           return eventsCart(
                             context,
-                            eventCart: (data.kayitOlduguSunumId
+                            eventCart: (data.registeredEventId
                                     ?.contains(filteredEventList[index].id) ??
                                 false),
                             event: filteredEventList[index],
