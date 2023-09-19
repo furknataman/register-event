@@ -15,7 +15,6 @@ InkWell eventsCart(
   @required ClassModelPresentation? event,
   @required bool? eventCart,
 }) {
-
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
 
   int duration = int.parse(event!.duration ?? "0");
@@ -91,7 +90,7 @@ InkWell eventsCart(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            truncateString(event.title!, 28),
+                            truncateString(event.title!, 26),
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
