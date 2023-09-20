@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
@@ -35,15 +36,18 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
               child: buildQrView(context)),
-          Positioned(
-            child: Padding(
-              padding: const EdgeInsets.only(left: 80, right: 59, top: 80, bottom: 40),
-              child: Text(
-                textAlign: TextAlign.center,
-                "Scan the QR code of \nyour event.",
-                style: Theme.of(context).textTheme.displayLarge,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 80, bottom: 40),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  "Scan the QR code of \nyour event.",
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
               ),
-            ),
+            ],
           ),
         ],
       ),
@@ -86,43 +90,32 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   bool attendMessage = false;
 
   Future<dynamic> dialogAlert() {
-    //final userInfo = ref.watch<UserInfo>(userInfoConfig);
+    final userData = ref.watch(userDataProvider).asData?.value;
+    final eventData = ref.watch(presentationDataProvider).asData?.value;
 
-    //for (int i = 0; i < eventsinfo.length;) {
-    /*if (userInfo.user!.attendedEvents!.contains(id)) {
-        register = false;
-        title = "Already Attended ${eventsinfo[i].name} ";
-        body = "You have already attended this event";
-        attendMessage = false;
-        break;
-      } else if (attendMessage == true) {
-        register = false;
-        title = "Attending to  ${eventsinfo[i].name} ";
-        body = "You have successfully attended to ${eventsinfo[i].name}, seminar";
-        attendMessage = false;
-        break;
-      } else if (eventsinfo[i].key!.contains(result!.code.toString()) == true) {
-        id = eventsinfo[i].id!;
-
-        if (userInfo.user!.registeredEvents!.contains(id)) {
-          register = true;
-          title = "Attending to ${eventsinfo[i].name} ";
-          body = "You are about to attend to${eventsinfo[i].name}, are you sure?";
-          break;
-        } else {
-          title = "Non-registered";
-          body =
-              "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page. ";
-          break;
-        }
-      } else {
-        title = "Unrecognized Code";
-        body =
-            "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
+    int? eventIdMatchingWithCode;
+    for (var event in eventData!) {
+      if (event.id!.toString().contains(result!.code.toString())) {
+        eventIdMatchingWithCode = event.id;
         break;
       }
-      */
-    //}
+    }
+
+    if (eventIdMatchingWithCode == null) {
+      title = "Unrecognized Code";
+      body =
+          "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
+    } else if (userData!.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
+      register = true;
+      title =
+          "Attending to ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
+      body =
+          "You are about to attend to${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title}, are you sure?";
+    } else {
+      title = "Non-registered";
+      body =
+          "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page.";
+    }
 
     return showModalBottomSheet(
         context: context,

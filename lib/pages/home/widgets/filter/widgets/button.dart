@@ -40,7 +40,9 @@ class FilterBottombar extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30.0)),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pop(context);
+            },
             child: const FittedBox(
               child: Text(
                 "Ok",

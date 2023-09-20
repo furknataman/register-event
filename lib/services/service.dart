@@ -8,11 +8,21 @@ import 'package:qr/main.dart';
 
 class UnauthorizedException extends Interceptor {
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) async {
+  void onResponse(Response response, ResponseInterceptorHandler handler) async {
+    if (response.statusCode == 400 || response.statusCode == 401) {
+      await logout();
+
+      await navigatorKey.currentState?.pushReplacementNamed('/start');
+    }
+    super.onResponse(response, handler);
+  }
+
+  @override
+  Future onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 400 || err.response?.statusCode == 401) {
       await logout();
 
-      navigatorKey.currentState?.pushReplacementNamed('/start');
+      await navigatorKey.currentState?.pushReplacementNamed('/start');
     }
     super.onError(err, handler);
   }
@@ -20,7 +30,10 @@ class UnauthorizedException extends Interceptor {
 
 class WebService {
   final String baseUrl = "http://atc.eyuboglu.com/api/api/";
-  final Dio _dio = Dio()..interceptors.add(UnauthorizedException());
+  final Dio _dio = Dio();
+  WebService() {
+    _dio.interceptors.add(UnauthorizedException());
+  }
 
   Future<Response> _makeRequest(String endpoint,
       {Map<String, dynamic>? data, String? token}) async {
@@ -100,7 +113,7 @@ class WebService {
     }
   }
 
-  Future<bool> registerEvent(int userId, int presentationId) async {
+  Future<bool?> registerEvent(int userId, int presentationId) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/SunumKayitEkle",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
@@ -141,3 +154,5 @@ final eventDetailsProvider =
     FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);
 });
+
+

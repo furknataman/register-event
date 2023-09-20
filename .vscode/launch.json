@@ -35,10 +35,10 @@
 			"deviceId": "iphone"
 		},
         {
-			"name": "Furkan's Apple",
+			"name": "iPad",
 			"request": "launch",
 			"type": "dart",
-			"deviceId": "iphone"
+			"deviceId": "76d63c49d342f92be5ef7e0959693963aac7c383"
 		},
        
     ],

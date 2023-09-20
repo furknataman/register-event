@@ -27,7 +27,6 @@ class _HomepageState extends ConsumerState<Homepage> {
     super.initState();
     ref.read(userDataProvider);
     ref.read(presentationDataProvider);
-    //ref.read<UserInfo>(userInfoConfig).readUser();
   }
 
   @override
@@ -35,9 +34,7 @@ class _HomepageState extends ConsumerState<Homepage> {
     final userData = ref.watch(userDataProvider);
     final eventData = ref.watch(presentationDataProvider);
 
-    //AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
-    //final userInfo = ref.watch<UserInfo>(userInfoConfig);
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -94,7 +91,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                             "Upcoming Events",
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
-                          filterProvider.selectedList == 0 && filterProvider.time == null
+                          filterProvider.selectedList == 0 &&
+                                  filterProvider.time == null &&
+                                  filterProvider.selectedBranch == 0 &&
+                                  filterProvider.selectedTarget == 0
                               ? IconButton(
                                   onPressed: () {
                                     filterDialog(context);
@@ -129,11 +129,13 @@ class _HomepageState extends ConsumerState<Homepage> {
                   data: ((data) {
                     var filteredEventList = allEvents;
 
-                    if (filterProvider.selectedList == 3 &&
-                        data.registeredEventId!.isNotEmpty) {
-                      filteredEventList = filteredEventList
-                          .where((e) => data.registeredEventId!.contains(e.id))
-                          .toList();
+                    if (filterProvider.selectedList == 3) {
+                      filteredEventList = filteredEventList.where((e) {
+                        if (data.registeredEventId == null || e.id == null) {
+                          return false; // Eğer herhangi bir değer null ise bu elemanı listeye almıyoruz.
+                        }
+                        return data.registeredEventId!.contains(e.id);
+                      }).toList();
                     } else if (filterProvider.selectedList == 2) {
                       filteredEventList = filteredEventList
                           .where((e) =>
@@ -189,55 +191,6 @@ class _HomepageState extends ConsumerState<Homepage> {
                   loading: () => const Text(""));
             },
           )
-          /* allEventsAsync.when(
-          loading: () => const SkeletonWidget(),
-          error: (err, stack) => Text('Error: $err'),
-          data: (allEvents) {
-            var filteredEventList = allEvents;
-
-            if (filterProvider.selectedList == 1) {
-              filteredEventList = allEvents
-                  .where((e) =>
-                      e.dateTime.millisecondsSinceEpoch <
-                      DateTime.now().millisecondsSinceEpoch)
-                  .toList();
-            } else if (filterProvider.selectedList == 2) {
-              filteredEventList = allEvents
-                  .where((e) =>
-                      e.dateTime.millisecondsSinceEpoch >
-                      DateTime.now().millisecondsSinceEpoch)
-                  .toList();
-            } else if (filterProvider.selectedList == 3) {
-              filteredEventList = allEvents
-                  .where((e) => userInfo.user!.registeredEvents!.contains(e.id))
-                  .toList();
-            }
-            if (filterProvider.time != null) {
-              filteredEventList = allEvents
-                  .where((e) =>
-                      e.dateTime.millisecondsSinceEpoch >
-                      filterProvider.time!.millisecondsSinceEpoch)
-                  .toList();
-            }
-            filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
-
-            return Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 10),
-                itemBuilder: (context, index) {
-                  context;
-                  return eventsCart(
-                    context,
-                    eventCart: userInfo.user!.registeredEvents!
-                        .contains(filteredEventList[index].id),
-                    event: filteredEventList[index],
-                  );
-                },
-                itemCount: filteredEventList.length,
-              ),
-            );
-          },
-        ),*/
         ]));
   }
 }
