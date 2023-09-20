@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/date_time_converter.dart';
+import 'package:qr/global/widgets/internet_control.dart';
 import 'package:qr/pages/events/widgets/register_button.dart';
 import 'package:qr/pages/events/widgets/skeleton.dart';
 import 'package:qr/pages/events/widgets/speakers_info.dart';
@@ -20,17 +21,10 @@ class _EventsPage extends ConsumerState<EventsPage> {
   int? eventId;
   _EventsPage({@required this.eventId});
   String? timeData;
-  //ScrollController scrollController = ScrollController();
-  // bool _isVisible = false;
 
   @override
   void initState() {
     super.initState();
-    /*crollController.addListener(() {
-      /*setState(() {
-        _isVisible = scrollController.offset > 130;
-      });*/
-    });*/
   }
 
   @override
@@ -38,13 +32,29 @@ class _EventsPage extends ConsumerState<EventsPage> {
     BuildContext context,
   ) {
     final getEventInfo = ref.watch(eventDetailsProvider(eventId!));
-    //final userInfo = ref.watch<UserInfo>(userInfoConfig);
     final userData = ref.watch(userDataProvider);
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: getEventInfo.when(
             loading: () => const SkelWidget(),
-            error: (err, stack) => Text('Error: $err'),
+            error: (err, stack) => Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text(
+                        'An error occurred. Can you try again?',
+                        style: Theme.of(context).textTheme.displayMedium,
+                      ),
+                      IconButton(
+                          onPressed: () async {
+                            ref.invalidate(userDataProvider);
+                            ref.invalidate(eventDetailsProvider(eventId!));
+                          },
+                          icon: const Icon(Icons.restart_alt))
+                    ],
+                  ),
+                ),
             data: (getEventInfo) {
               int duration = int.parse(getEventInfo!.duration ?? "0");
               ClassTime time = classConverter(getEventInfo.presentationTime!, duration);
@@ -100,10 +110,6 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                 ),
                               ),
                               Container()
-                              /* RegisterButton(
-                                userInfo: userInfo,
-                                event: getEventInfo,
-                              ),*/
                             ],
                           ),
                           const SizedBox(
@@ -118,7 +124,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                 eventId: eventId!,
                               );
                             }),
-                            error: (err, stack) => Text('Error: $err'),
+                            error: (err, stack) => internetControl(context, ref),
                           ),
                           const SizedBox(
                             height: 20,

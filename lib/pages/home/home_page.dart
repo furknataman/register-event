@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:qr/global/widgets/internet_control.dart';
 import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
 import 'package:qr/services/service.dart';
@@ -122,17 +123,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                 )),
           ),
           eventData.when(
-            error: (err, stack) => Column(
-              children: [
-                const Text('An error occurred. Can you try again?'),
-                IconButton(
-                    onPressed: () async {
-                      ref.invalidate(userDataProvider);
-                      ref.invalidate(presentationDataProvider);
-                    },
-                    icon: const Icon(Icons.restart_alt))
-              ],
-            ),
+            error: (err, stack) => internetControl(context, ref),
             loading: () => const SkeletonWidget(),
             data: (allEvents) {
               return userData.when(
