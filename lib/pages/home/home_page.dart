@@ -61,7 +61,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                                   data: ((data) {
                                     return Text("${data.name} ${data.surname}");
                                   }),
-                                  error: (err, stack) => Text('Error: $err'),
+                                  error: (err, stack) => const Text(" "),
                                 )
                               ],
                             ),
@@ -122,7 +122,17 @@ class _HomepageState extends ConsumerState<Homepage> {
                 )),
           ),
           eventData.when(
-            error: (err, stack) => Text('Error: $err'),
+            error: (err, stack) => Column(
+              children: [
+                const Text('An error occurred. Can you try again?'),
+                IconButton(
+                    onPressed: () async {
+                      ref.invalidate(userDataProvider);
+                      ref.invalidate(presentationDataProvider);
+                    },
+                    icon: const Icon(Icons.restart_alt))
+              ],
+            ),
             loading: () => const SkeletonWidget(),
             data: (allEvents) {
               return userData.when(

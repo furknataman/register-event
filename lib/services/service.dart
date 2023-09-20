@@ -5,6 +5,8 @@ import 'package:qr/db/db_model/token_response_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/main.dart';
+import 'package:qr/notification/toast_message/toast_message.dart';
+import 'package:qr/services/check_internet.dart';
 
 class UnauthorizedException extends Interceptor {
   @override
@@ -38,6 +40,15 @@ class WebService {
   Future<Response> _makeRequest(String endpoint,
       {Map<String, dynamic>? data, String? token}) async {
     final url = "$baseUrl$endpoint";
+
+    final isConnected = await hasInternetConnection();
+    if (!isConnected) {
+      toastMessage("İnternet yok");
+      throw DioException(
+        requestOptions: RequestOptions(path: ''),
+        error: 'No internet connection',
+      );
+    }
     final response = await _dio.post(
       url,
       data: data,
@@ -90,7 +101,6 @@ class WebService {
 
   Future<InfoUser> fetchUser() async {
     final myToken = await getToken();
-    print(myToken);
     final response = await _makeRequest("AtcYonetim/MobilKullaniciBilgileriGetir",
         data: {'token': myToken}, token: myToken);
 
