@@ -13,11 +13,9 @@ class LoginForm extends StatelessWidget {
 
   final GoogleProvider getGoogle;
   final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(false);
-  final ValueNotifier<String?> _errorMessage = ValueNotifier<String?>(null);
 
   Future<void> _handleLogin(BuildContext context) async {
     _isLoading.value = true;
-    _errorMessage.value = null;
 
     await WebService().login("furkan.ataman@eyuboglu.k12.tr", "12345");
 
@@ -90,31 +88,6 @@ class LoginForm extends StatelessWidget {
             },
           ),
         ),
-        /* SizedBox(
-          height: 50,
-          child: ValueListenableBuilder<String?>(
-            valueListenable: _errorMessage,
-            builder: (context, errorMessage, child) {
-              if (errorMessage != null) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    errorMessage,
-                    style: const TextStyle(color: Colors.red),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            },
-          ),
-        ),*/
-        /* InkWell(
-          onTap: () {},
-          child: const Text(
-            "I forgot my password", 
-            style: TextStyle(color: Colors.white, fontSize: 16),
-          ),
-        )*/
       ],
     );
   }

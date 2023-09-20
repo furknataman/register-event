@@ -90,6 +90,7 @@ class WebService {
 
   Future<InfoUser> fetchUser() async {
     final myToken = await getToken();
+    print(myToken);
     final response = await _makeRequest("AtcYonetim/MobilKullaniciBilgileriGetir",
         data: {'token': myToken}, token: myToken);
 
@@ -154,5 +155,3 @@ final eventDetailsProvider =
     FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);
 });
-
-

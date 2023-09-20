@@ -24,7 +24,7 @@ class LocalNoticeService {
   }
 
   Future<void> addNotification(
-      String? channel, String? title, String? body, int? endTime) async {
+      String? channel, String? title, String? body, int? endTime, int id) async {
     // #1
     tzdata.initializeTimeZones();
     final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime!);
@@ -44,7 +44,7 @@ class LocalNoticeService {
     );
 
 // #3
-    const id = 1;
+    
 
 // #4
     await _localNotificationsPlugin.zonedSchedule(

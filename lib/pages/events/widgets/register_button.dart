@@ -4,7 +4,6 @@ import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/notification/local_notification/notification.dart';
-
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 
@@ -41,7 +40,7 @@ class RegisterButton extends ConsumerWidget {
       buttonText = "No Seat";
       buttonColor = const Color(0xff485FFF);
       onPressed = null;
-    } else if (int.parse(event.presentationQuota ?? "0") - event.remainingQuota! <= 0) {
+    } else if (event.remainingQuota! <= 0) {
       buttonText = "Full";
       onPressed = null;
     } else if (!containsId) {
@@ -55,7 +54,8 @@ class RegisterButton extends ConsumerWidget {
             'testing',
             'An event is near.',
             '${event.title} is starting by 10 minutes in ${event.branch}. Don’t forget to scan the qr code.',
-            DateTime.now().millisecondsSinceEpoch + 10000);
+            DateTime.now().millisecondsSinceEpoch + 10000,
+            eventId);
         isButtonEnabled.value = true;
       };
     } else {
@@ -66,7 +66,7 @@ class RegisterButton extends ConsumerWidget {
         await WebService().removeEvent(userInfo!.id!, eventId);
         ref.invalidate(eventDetailsProvider(eventId));
         ref.invalidate(userDataProvider);
-        LocalNoticeService().cancelNotification(1);
+        LocalNoticeService().cancelNotification(eventId);
         isButtonEnabled.value = true;
       };
     }
