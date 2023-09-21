@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:qr/db/db_model/Presentation.model.dart';
+import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/pages/events/event_page.dart';
 import 'package:skeletons/skeletons.dart';
 
@@ -12,15 +12,13 @@ String truncateString(String str, int cutoff) {
 
 InkWell eventsCart(
   BuildContext context, {
-  @required Presentation? event,
+  @required ClassModelPresentation? event,
   @required bool? eventCart,
 }) {
-  String? combinedTime;
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
-  if (event!.presentationTime != null) {
-    combinedTime = dateConvert(event.presentationTime!, event.duration!);
-  }
 
+  int duration = int.parse(event!.duration ?? "0");
+  ClassTime time = classConverter(event.presentationTime!, duration);
   return InkWell(
     onTap: () {
       Navigator.push(
@@ -92,11 +90,11 @@ InkWell eventsCart(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            truncateString(event.title!, 28),
+                            truncateString(event.title!, 26),
                             style: Theme.of(context).textTheme.displayMedium,
                           ),
                           Text(
-                            combinedTime ?? " ",
+                            "${time.clock} : ${time.endTime}",
                             style: Theme.of(context).textTheme.displayMedium,
                           )
                         ],

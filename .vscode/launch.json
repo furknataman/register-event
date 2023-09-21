@@ -4,6 +4,7 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+
         {
             "name": "qr",
             "request": "launch",
@@ -20,6 +21,31 @@
             "request": "launch",
             "type": "dart",
             "flutterMode": "release"
-        }
-    ]
+        },
+        {
+			"name": "Android",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "emulator-5554"
+		},
+		{
+			"name": "iPhone",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "iphone"
+		},
+        {
+			"name": "iPad",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "76d63c49d342f92be5ef7e0959693963aac7c383"
+		},
+       
+    ],
+    "compounds": [
+		{
+			"name": "All Devices",
+			"configurations": ["Android", "iPhone"],
+		}
+	]
 }

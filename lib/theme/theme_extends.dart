@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 extension CustomColorScheme on ColorScheme {
-  Color get appColor => const Color(0xffe43c2f);
+  Color get appColor => const Color(0xff8f1910);
   Color get unregister => brightness == Brightness.light
       ? const Color(0xffEB5757)
       : const Color.fromARGB(255, 144, 65, 65);

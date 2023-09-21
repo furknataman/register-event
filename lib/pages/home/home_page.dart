@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
+import 'package:qr/global/widgets/internet_control.dart';
 import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
-import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
+
+bool isAfter(TimeOfDay first, TimeOfDay second) {
+  return first.hour > second.hour ||
+      (first.hour == second.hour && first.minute > second.minute);
+}
 
 class Homepage extends ConsumerStatefulWidget {
   const Homepage({super.key});
@@ -22,12 +27,6 @@ class _HomepageState extends ConsumerState<Homepage> {
     super.initState();
     ref.read(userDataProvider);
     ref.read(presentationDataProvider);
-    //ref.read<UserInfo>(userInfoConfig).readUser();
-  }
-
-  bool isAfter(TimeOfDay first, TimeOfDay second) {
-    return first.hour > second.hour ||
-        (first.hour == second.hour && first.minute > second.minute);
   }
 
   @override
@@ -35,10 +34,7 @@ class _HomepageState extends ConsumerState<Homepage> {
     final userData = ref.watch(userDataProvider);
     final eventData = ref.watch(presentationDataProvider);
 
-    //AsyncValue<List> allEventsAsync = ref.watch(getEventsList);
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
-    //final userInfo = ref.watch<UserInfo>(userInfoConfig);
-
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -65,11 +61,11 @@ class _HomepageState extends ConsumerState<Homepage> {
                                   data: ((data) {
                                     return Text("${data.name} ${data.surname}");
                                   }),
-                                  error: (err, stack) => Text('Error: $err'),
+                                  error: (err, stack) => const Text(" "),
                                 )
                               ],
                             ),
-                            IconButton(
+                            /*IconButton(
                               icon: const Icon(
                                 HeroiconsOutline.bell,
                                 color: Colors.white,
@@ -82,7 +78,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                                       builder: (context) => const NotificationPage()),
                                 );
                               },
-                            )
+                            )*/
                           ]),
                     ),
                     Padding(
@@ -95,7 +91,10 @@ class _HomepageState extends ConsumerState<Homepage> {
                             "Upcoming Events",
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
-                          filterProvider.selectedList == 0 && filterProvider.time == null
+                          filterProvider.selectedList == 0 &&
+                                  filterProvider.time == null &&
+                                  filterProvider.selectedBranch == 0 &&
+                                  filterProvider.selectedTarget == 0
                               ? IconButton(
                                   onPressed: () {
                                     filterDialog(context);
@@ -123,50 +122,32 @@ class _HomepageState extends ConsumerState<Homepage> {
                 )),
           ),
           eventData.when(
-            error: (err, stack) => Text('Error: $err'),
+            error: (err, stack) => internetControl(context, ref),
             loading: () => const SkeletonWidget(),
             data: (allEvents) {
               return userData.when(
                   data: ((data) {
                     var filteredEventList = allEvents;
 
-                    if (filterProvider.selectedList == 3 &&
-                        data.kayitOlduguSunumId!.isNotEmpty) {
-                      filteredEventList = filteredEventList
-                          .where((e) => data.kayitOlduguSunumId!.contains(e.id))
-                          .toList();
+                    if (filterProvider.selectedList == 3) {
+                      filteredEventList = filteredEventList.where((e) {
+                        if (data.registeredEventId == null || e.id == null) {
+                          return false; // Eğer herhangi bir değer null ise bu elemanı listeye almıyoruz.
+                        }
+                        return data.registeredEventId!.contains(e.id);
+                      }).toList();
                     } else if (filterProvider.selectedList == 2) {
-                      DateTime now = DateTime.now();
-                      TimeOfDay timeFromDateTime =
-                          TimeOfDay(hour: now.hour, minute: now.minute);
-
-                      filteredEventList = filteredEventList.where((e) {
-                           if (e.presentationTime == null) {
-                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
-                        }
-                        TimeOfDay evetnTime = TimeOfDay(
-                          hour: int.parse(e.presentationTime!.split(":")[0]),
-                          minute: int.parse(e.presentationTime!.split(":")[1]),
-                        );
-
-                        return isAfter(evetnTime, timeFromDateTime);
-                      }).toList();
+                      filteredEventList = filteredEventList
+                          .where((e) =>
+                              e.presentationTime!.millisecondsSinceEpoch >
+                              DateTime.now().millisecondsSinceEpoch)
+                          .toList();
                     } else if (filterProvider.selectedList == 1) {
-                      DateTime now = DateTime.now();
-                      TimeOfDay timeFromDateTime =
-                          TimeOfDay(hour: now.hour, minute: now.minute);
-
-                      filteredEventList = filteredEventList.where((e) {
-                           if (e.presentationTime == null) {
-                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
-                        }
-                        TimeOfDay evetnTime = TimeOfDay(
-                          hour: int.parse(e.presentationTime!.split(":")[0]),
-                          minute: int.parse(e.presentationTime!.split(":")[1]),
-                        );
-
-                        return isAfter(timeFromDateTime, evetnTime);
-                      }).toList();
+                      filteredEventList = filteredEventList
+                          .where((e) =>
+                              e.presentationTime!.millisecondsSinceEpoch <
+                              DateTime.now().millisecondsSinceEpoch)
+                          .toList();
                     }
 
                     if (filterProvider.selectedBranch != 0) {
@@ -183,24 +164,12 @@ class _HomepageState extends ConsumerState<Homepage> {
                     }
 
                     if (filterProvider.time != null) {
-                      TimeOfDay timeFromDateTime = TimeOfDay(
-                          hour: filterProvider.time!.hour,
-                          minute: filterProvider.time!.minute);
-
-                      filteredEventList = filteredEventList.where((e) {
-                        if (e.presentationTime == null) {
-                          return true; // presentationTime değeri null ise elemanı listeye eklemek için true dön
-                        }
-
-                        TimeOfDay eventTime = TimeOfDay(
-                          hour: int.parse(e.presentationTime!.split(":")[0]),
-                          minute: int.parse(e.presentationTime!.split(":")[1]),
-                        );
-
-                        return isAfter(eventTime, timeFromDateTime);
-                      }).toList();
+                      filteredEventList = filteredEventList
+                          .where((e) =>
+                              e.presentationTime!.millisecondsSinceEpoch >
+                              filterProvider.time!.millisecondsSinceEpoch)
+                          .toList();
                     }
-
                     return Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.only(bottom: 10),
@@ -208,10 +177,9 @@ class _HomepageState extends ConsumerState<Homepage> {
                           context;
                           return eventsCart(
                             context,
-                            eventCart: data.kayitOlduguSunumId!.isNotEmpty
-                                ? data.kayitOlduguSunumId!
-                                    .contains(filteredEventList[index].id)
-                                : false,
+                            eventCart: (data.registeredEventId
+                                    ?.contains(filteredEventList[index].id) ??
+                                false),
                             event: filteredEventList[index],
                           );
                         },
@@ -223,55 +191,6 @@ class _HomepageState extends ConsumerState<Homepage> {
                   loading: () => const Text(""));
             },
           )
-          /* allEventsAsync.when(
-          loading: () => const SkeletonWidget(),
-          error: (err, stack) => Text('Error: $err'),
-          data: (allEvents) {
-            var filteredEventList = allEvents;
-
-            if (filterProvider.selectedList == 1) {
-              filteredEventList = allEvents
-                  .where((e) =>
-                      e.dateTime.millisecondsSinceEpoch <
-                      DateTime.now().millisecondsSinceEpoch)
-                  .toList();
-            } else if (filterProvider.selectedList == 2) {
-              filteredEventList = allEvents
-                  .where((e) =>
-                      e.dateTime.millisecondsSinceEpoch >
-                      DateTime.now().millisecondsSinceEpoch)
-                  .toList();
-            } else if (filterProvider.selectedList == 3) {
-              filteredEventList = allEvents
-                  .where((e) => userInfo.user!.registeredEvents!.contains(e.id))
-                  .toList();
-            }
-            if (filterProvider.time != null) {
-              filteredEventList = allEvents
-                  .where((e) =>
-                      e.dateTime.millisecondsSinceEpoch >
-                      filterProvider.time!.millisecondsSinceEpoch)
-                  .toList();
-            }
-            filteredEventList.sort((b, a) => b.dateTime.compareTo(a.dateTime));
-
-            return Expanded(
-              child: ListView.builder(
-                padding: const EdgeInsets.only(bottom: 10),
-                itemBuilder: (context, index) {
-                  context;
-                  return eventsCart(
-                    context,
-                    eventCart: userInfo.user!.registeredEvents!
-                        .contains(filteredEventList[index].id),
-                    event: filteredEventList[index],
-                  );
-                },
-                itemCount: filteredEventList.length,
-              ),
-            );
-          },
-        ),*/
         ]));
   }
 }

@@ -1,22 +1,62 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/db/db_model/Presentation.model.dart';
+import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/db/db_model/token_response_model.dart';
 import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
+import 'package:qr/main.dart';
+import 'package:qr/notification/toast_message/toast_message.dart';
+import 'package:qr/services/check_internet.dart';
+
+class UnauthorizedException extends Interceptor {
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) async {
+    if (response.statusCode == 400 || response.statusCode == 401) {
+      await logout();
+      await navigatorKey.currentState?.pushReplacementNamed('/start');
+    }
+    super.onResponse(response, handler);
+  }
+
+  @override
+  Future onError(DioException err, ErrorInterceptorHandler handler) async {
+    if (err.response?.statusCode == 400 || err.response?.statusCode == 401) {
+      await logout();
+
+      await navigatorKey.currentState?.pushReplacementNamed('/start');
+    } else {
+      toastMessage("An error occurred, please try again");
+    }
+    super.onError(err, handler);
+  }
+}
 
 class WebService {
   final String baseUrl = "http://atc.eyuboglu.com/api/api/";
   final Dio _dio = Dio();
+  WebService() {
+    _dio.interceptors.add(UnauthorizedException());
+  }
 
   Future<Response> _makeRequest(String endpoint,
       {Map<String, dynamic>? data, String? token}) async {
     final url = "$baseUrl$endpoint";
-    return await _dio.post(
+
+    final isConnected = await hasInternetConnection();
+    if (!isConnected) {
+      toastMessage("No internet connection");
+      throw DioException(
+        requestOptions: RequestOptions(path: ''),
+        error: 'No internet connection',
+      );
+    }
+    final response = await _dio.post(
       url,
       data: data,
       options: _commonHeaders(token),
     );
+
+    return response;
   }
 
   Options _commonHeaders([String? token]) {
@@ -32,8 +72,7 @@ class WebService {
     return Options(headers: headers);
   }
 
-  Future<Presentation?> fetchEventDetails(int id) async {
-    print(id);
+  Future<ClassModelPresentation?> fetchEventDetails(int id) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/MobilSunumDetay",
         data: {
@@ -42,13 +81,15 @@ class WebService {
         token: myToken);
 
     if (response.statusCode == 200) {
-      Presentation presentationDetails = Presentation.fromJson(response.data);
+      ClassModelPresentation presentationDetails =
+          ClassModelPresentation.fromJson(response.data);
       return presentationDetails;
     }
     return null;
   }
 
   Future<String?> login(String email, String password) async {
+    await logout();
     final response = await _makeRequest("AtcYonetim/MobilTokenUret",
         data: {'email': email, 'password': password});
 
@@ -72,14 +113,51 @@ class WebService {
     }
   }
 
-  Future<List<Presentation>> fetchAllEvents() async {
+  Future<List<ClassModelPresentation>> fetchAllEvents() async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/MobilSunumlariListele",
         data: {'token': myToken}, token: myToken);
 
     if (response.statusCode == 200) {
       final List<dynamic> responseData = response.data;
-      return responseData.map((data) => Presentation.fromJson(data)).toList();
+      return responseData.map((data) => ClassModelPresentation.fromJson(data)).toList();
+    } else {
+      throw Exception('Failed to load presentations');
+    }
+  }
+
+  Future<bool?> registerEvent(int userId, int presentationId) async {
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/SunumKayitEkle",
+        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
+    if (response.statusCode == 200) {
+      if (response.data['basarili'] == true) {
+        return true;
+      }
+
+      throw Exception('Failed to load presentations');
+    } else {
+      throw Exception('Failed to load presentations');
+    }
+  }
+
+  Future<bool> removeEvent(int userId, int presentationId) async {
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/SunumKayitSil",
+        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      throw Exception('Failed to load presentations');
+    }
+  }
+
+  Future<bool> attendanceEvent(int userId, int presentationId) async {
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/SunumKayitSil",
+        data: {'yoklama': userId, "mesaj": presentationId}, token: myToken);
+    if (response.statusCode == 200) {
+      return response.data['yoklama'];
     } else {
       throw Exception('Failed to load presentations');
     }
@@ -92,10 +170,11 @@ final userDataProvider = FutureProvider<InfoUser>((ref) async {
   return ref.watch(webServiceProvider).fetchUser();
 });
 
-final presentationDataProvider = FutureProvider<List<Presentation>>((ref) async {
+final presentationDataProvider = FutureProvider<List<ClassModelPresentation>>((ref) async {
   return ref.watch(webServiceProvider).fetchAllEvents();
 });
 
-final eventDetailsProvider = FutureProvider.family<Presentation?, int>((ref, id) async {
+final eventDetailsProvider =
+    FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);
 });

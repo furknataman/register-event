@@ -2,10 +2,14 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/theme/light_theme.dart';
+import 'package:qr/theme/theme_mode.dart';
 import 'authentication/authservice.dart';
 import 'notification/local_notification/notification.dart';
 import 'theme/dark_theme.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,16 +21,22 @@ void main() async {
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var darkMode = ref.watch(darkModeProvider);
     return MaterialApp(
+      routes: {
+        '/start': (context) => const StartPage(),
+        // diğer rotalar...
+      },
+      navigatorKey: navigatorKey,
       title: 'Autumn Teachers Conference',
       debugShowCheckedModeBanner: false,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
       theme: lightTheme,
       home: AuthService().loginwithApi(),
     );

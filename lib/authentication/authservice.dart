@@ -23,18 +23,13 @@ class AuthService {
 
   loginwithApi() {
     return FutureBuilder<String?>(
-      future: getToken(), // getToken fonksiyonunu çağır
+      future: getToken(),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-        // Eğer veri yükleniyorsa bir yükleme animasyonu göster
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
-        }
-        // Eğer token varsa ana ekrana yönlendir
-        else if (snapshot.data != null) {
+        } else if (snapshot.data != null) {
           return const RoutePage();
-        }
-        // Eğer token yoksa giriş ekranına yönlendir
-        else {
+        } else {
           return const StartPage();
         }
       },
