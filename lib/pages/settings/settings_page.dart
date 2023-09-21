@@ -1,9 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
+import 'package:qr/theme/theme_mode.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -23,7 +25,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     //final getGoogle = ref.watch<GoogleProvider>(googleConfig);
     //final userInfo = ref.read<UserInfo>(userInfoConfig);
     final userData = ref.watch(userDataProvider);
-
+    var darkMode = ref.watch(darkModeProvider);
     return Scaffold(
       body: Container(
         padding: const EdgeInsets.only(left: 15, right: 15),
@@ -79,16 +81,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       }),
                       error: (err, stack) => Text('Error: $err'),
                     ),
-                    /*Text(userInfo.user!.name.toString(),
-                        style: Theme.of(context).textTheme.titleLarge),*/
-
-                    /* Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text("Enable Notifications",
-                            style: Theme.of(context).textTheme.bodyLarge),
-                      ],
-                    ),*/
                     const SizedBox(
                       height: 40,
                     ),
@@ -97,16 +89,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Visit TOK Website",
+                            Text("Dark Mode",
                                 style: Theme.of(context).textTheme.bodyLarge),
-                            IconButton(
-                              icon: Icon(
-                                Icons.public,
-                                color: Theme.of(context).colorScheme.appColor,
-                                size: 30,
+                            Padding(
+                              padding: const EdgeInsets.only(right: 4.0),
+                              child: CupertinoSwitch(
+                                value: darkMode,
+                                activeColor: const Color(0xffB84A62),
+                                onChanged: (val) {
+                                  ref.read(darkModeProvider.notifier).toggle();
+                                },
                               ),
-                              onPressed: () {},
-                            ),
+                            )
                           ],
                         ),
                         Row(
@@ -138,19 +132,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ],
                 ),
               ),
-              /* Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("database", style: Theme.of(context).textTheme.bodyLarge),
-                  IconButton(
-                    icon: const Icon(
-                      Icons.login,
-                      size: 30,
-                    ),
-                    onPressed: () {},
-                  )
-                ],
-              )*/
             ]),
       ),
     );

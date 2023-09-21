@@ -92,7 +92,7 @@ class RegisterButton extends ConsumerWidget {
                   fontSize: 16,
                 ),
               ),
-              if (buttonText == "Unregister") ...[
+              if (buttonText == "Unregister")...[
                 const SizedBox(width: 10),
                 const Icon(LucideIcons.calendarCheck, size: 19),
               ]

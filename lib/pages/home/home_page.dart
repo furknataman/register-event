@@ -6,7 +6,6 @@ import 'package:qr/pages/home/widgets/filter/filter.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
-import '../notification/notification.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
 

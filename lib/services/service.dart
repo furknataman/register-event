@@ -13,7 +13,6 @@ class UnauthorizedException extends Interceptor {
   void onResponse(Response response, ResponseInterceptorHandler handler) async {
     if (response.statusCode == 400 || response.statusCode == 401) {
       await logout();
-
       await navigatorKey.currentState?.pushReplacementNamed('/start');
     }
     super.onResponse(response, handler);
@@ -25,6 +24,8 @@ class UnauthorizedException extends Interceptor {
       await logout();
 
       await navigatorKey.currentState?.pushReplacementNamed('/start');
+    } else {
+      toastMessage("An error occurred, please try again");
     }
     super.onError(err, handler);
   }
@@ -43,7 +44,7 @@ class WebService {
 
     final isConnected = await hasInternetConnection();
     if (!isConnected) {
-      toastMessage("İnternet yok");
+      toastMessage("No internet connection");
       throw DioException(
         requestOptions: RequestOptions(path: ''),
         error: 'No internet connection',
@@ -145,7 +146,7 @@ class WebService {
     final response = await _makeRequest("AtcYonetim/SunumKayitSil",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
-      return response.data['yoklama'];
+      return true;
     } else {
       throw Exception('Failed to load presentations');
     }
