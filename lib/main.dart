@@ -4,7 +4,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/theme/light_theme.dart';
-import 'package:qr/theme/theme_mode.dart';
 import 'authentication/authservice.dart';
 import 'notification/local_notification/notification.dart';
 import 'theme/dark_theme.dart';
@@ -26,7 +25,6 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var darkMode = ref.watch(darkModeProvider);
     return MaterialApp(
       routes: {
         '/start': (context) => const StartPage(),
@@ -36,7 +34,7 @@ class MyApp extends ConsumerWidget {
       title: 'Autumn Teachers Conference',
       debugShowCheckedModeBanner: false,
       darkTheme: darkTheme,
-      themeMode: darkMode ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.system == ThemeMode.dark ? ThemeMode.dark : ThemeMode.light,
       theme: lightTheme,
       home: AuthService().loginwithApi(),
     );
