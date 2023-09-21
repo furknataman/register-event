@@ -88,6 +88,7 @@ class WebService {
   }
 
   Future<String?> login(String email, String password) async {
+    await logout();
     final response = await _makeRequest("AtcYonetim/MobilTokenUret",
         data: {'email': email, 'password': password});
 
@@ -144,7 +145,18 @@ class WebService {
     final response = await _makeRequest("AtcYonetim/SunumKayitSil",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
-      return true;
+      return response.data['yoklama'];
+    } else {
+      throw Exception('Failed to load presentations');
+    }
+  }
+
+  Future<bool> attendanceEvent(int userId, int presentationId) async {
+    final myToken = await getToken();
+    final response = await _makeRequest("AtcYonetim/SunumKayitSil",
+        data: {'yoklama': userId, "mesaj": presentationId}, token: myToken);
+    if (response.statusCode == 200) {
+      return response.data['yoklama'];
     } else {
       throw Exception('Failed to load presentations');
     }
