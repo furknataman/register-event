@@ -28,6 +28,13 @@ class _EventsPage extends ConsumerState<EventsPage> {
   }
 
   @override
+  void dispose() {
+    ref.invalidate(userDataProvider);
+    ref.invalidate(eventDetailsProvider(eventId!));
+    super.dispose();
+  }
+
+  @override
   Widget build(
     BuildContext context,
   ) {

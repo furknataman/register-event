@@ -34,7 +34,7 @@ class MyApp extends ConsumerWidget {
       title: 'Autumn Teachers Conference',
       debugShowCheckedModeBanner: false,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.system == ThemeMode.dark ? ThemeMode.dark : ThemeMode.light,
+      themeMode: ThemeMode.system,
       theme: lightTheme,
       home: AuthService().loginwithApi(),
     );
