@@ -76,9 +76,10 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
       result = scanData;
-      controller.pauseCamera();
+      await controller.pauseCamera();
+      Future.delayed(const Duration(seconds: 1));
       dialogAlert();
     });
   }
@@ -90,9 +91,9 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   bool attendMessage = false;
 
   Future<dynamic> dialogAlert() {
-    final userData = ref.watch(userDataProvider).asData?.value;
+    final userData = ref.watch(userDataProvider);
     final eventData = ref.watch(presentationDataProvider).asData?.value;
-
+    int? userId;
     int? eventIdMatchingWithCode;
     for (var event in eventData!) {
       if (event.id!.toString().contains(result!.code.toString())) {
@@ -101,22 +102,33 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
       }
     }
 
-    if (eventIdMatchingWithCode == null) {
-      title = "Unrecognized Code";
-      body =
-          "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
-    } else if (userData!.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
-      register = true;
-      title =
-          "Attending to ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
-      body =
-          "You are about to attend to${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title}, are you sure?";
-    } else {
-      title = "Non-registered";
-      body =
-          "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page.";
-    }
-
+    userData.when(
+      data: (data) {
+        userId = data.id;
+        if (data.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
+          register = false;
+          title =
+              "Already Attended ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
+          body = "You have already attended this event";
+        } else if (eventIdMatchingWithCode == null) {
+          title = "Unrecognized Code";
+          body =
+              "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
+        } else if (data.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
+          register = true;
+          title =
+              "Attending to ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
+          body =
+              "You are about to attend to${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title}, are you sure?";
+        } else {
+          title = "Non-registered";
+          body =
+              "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page.";
+        }
+      },
+      loading: () => const Text(" "),
+      error: (error, stackTrace) => const Text(" "),
+    );
     return showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -182,23 +194,25 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                          backgroundColor: Theme.of(context).colorScheme.appColor,
                           padding:
                               const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0)),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (register == false) {
                             Navigator.pop(context);
                             controller!.resumeCamera();
                           } else {
                             attendMessage = true;
+                            ref.invalidate(userDataProvider);
+                            ref.invalidate(presentationDataProvider);
 
-                            // userInfo.writeAttend(registeredEvents: id);
+                            await WebService()
+                                .attendanceEvent(userId!, eventIdMatchingWithCode!);
+                            controller!.resumeCamera();
                             Navigator.pop(context);
-                            dialogAlert();
                           }
                         },
                         child: const Text(

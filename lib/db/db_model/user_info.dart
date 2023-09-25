@@ -11,6 +11,7 @@ class InfoUser {
   final String? job;
   final List<int>? registeredEventId;
   final List<DateTime>? registeredEventTime;
+  final List<int>? attendedToEventId;
 
   InfoUser(
       {this.id,
@@ -22,7 +23,8 @@ class InfoUser {
       this.school,
       this.job,
       this.registeredEventId,
-      this.registeredEventTime});
+      this.registeredEventTime,
+      this.attendedToEventId});
 
   factory InfoUser.fromJson(Map<String, dynamic> json) {
     DateTime dontTrustFool(String time) {
@@ -47,6 +49,9 @@ class InfoUser {
               .where((time) => time != null)
               .map((time) => dontTrustFool(time as String))
               .toList()
+          : null,
+      attendedToEventId: (json['yoklamaTrueSunumId'] != null)
+          ? List<int>.from(json['yoklamaTrueSunumId'])
           : null,
     );
   }
