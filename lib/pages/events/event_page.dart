@@ -58,6 +58,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                   ),
                 ),
             data: (getEventInfo) {
+              print(eventId);
               int duration = int.parse(getEventInfo!.duration ?? "0");
               ClassTime time = classConverter(getEventInfo.presentationTime!, duration);
               return CustomScrollView(

@@ -91,9 +91,9 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   bool attendMessage = false;
 
   Future<dynamic> dialogAlert() {
-    final userData = ref.watch(userDataProvider).asData?.value;
+    final userData = ref.watch(userDataProvider);
     final eventData = ref.watch(presentationDataProvider).asData?.value;
-
+    int? userId;
     int? eventIdMatchingWithCode;
     for (var event in eventData!) {
       if (event.id!.toString().contains(result!.code.toString())) {
@@ -101,26 +101,34 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         break;
       }
     }
-    if (userData?.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
-      title =
-          "Already Attended ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
-      body = "You have already attended this event";
-    } else if (eventIdMatchingWithCode == null) {
-      title = "Unrecognized Code";
-      body =
-          "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
-    } else if (userData?.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
-      register = true;
-      title =
-          "Attending to ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
-      body =
-          "You are about to attend to${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title}, are you sure?";
-    } else {
-      title = "Non-registered";
-      body =
-          "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page.";
-    }
 
+    userData.when(
+      data: (data) {
+        userId = data.id;
+        if (data.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
+          register = false;
+          title =
+              "Already Attended ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
+          body = "You have already attended this event";
+        } else if (eventIdMatchingWithCode == null) {
+          title = "Unrecognized Code";
+          body =
+              "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
+        } else if (data.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
+          register = true;
+          title =
+              "Attending to ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
+          body =
+              "You are about to attend to${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title}, are you sure?";
+        } else {
+          title = "Non-registered";
+          body =
+              "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page.";
+        }
+      },
+      loading: () => const Text(" "),
+      error: (error, stackTrace) => const Text(" "),
+    );
     return showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -203,7 +211,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                             ref.invalidate(presentationDataProvider);
 
                             await WebService()
-                                .attendanceEvent(userData!.id!, eventIdMatchingWithCode!);
+                                .attendanceEvent(userId!, eventIdMatchingWithCode!);
                             controller!.resumeCamera();
                             Navigator.pop(context);
                           }
