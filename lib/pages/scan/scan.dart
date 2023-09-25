@@ -76,9 +76,10 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     setState(() {
       this.controller = controller;
     });
-    controller.scannedDataStream.listen((scanData) {
+    controller.scannedDataStream.listen((scanData) async {
       result = scanData;
-      controller.pauseCamera();
+      await controller.pauseCamera();
+      Future.delayed(const Duration(seconds: 1));
       dialogAlert();
     });
   }
@@ -100,12 +101,15 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         break;
       }
     }
-
-    if (eventIdMatchingWithCode == null) {
+    if (userData?.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
+      title =
+          "Already Attended ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
+      body = "You have already attended this event";
+    } else if (eventIdMatchingWithCode == null) {
       title = "Unrecognized Code";
       body =
           "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
-    } else if (userData!.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
+    } else if (userData?.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
       register = true;
       title =
           "Attending to ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
@@ -189,16 +193,19 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30.0)),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (register == false) {
                             Navigator.pop(context);
                             controller!.resumeCamera();
                           } else {
                             attendMessage = true;
+                            ref.invalidate(userDataProvider);
+                            ref.invalidate(presentationDataProvider);
 
-                            // userInfo.writeAttend(registeredEvents: id);
+                            await WebService()
+                                .attendanceEvent(userData!.id!, eventIdMatchingWithCode!);
+                            controller!.resumeCamera();
                             Navigator.pop(context);
-                            dialogAlert();
                           }
                         },
                         child: const Text(

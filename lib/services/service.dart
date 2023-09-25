@@ -154,10 +154,11 @@ class WebService {
 
   Future<bool> attendanceEvent(int userId, int presentationId) async {
     final myToken = await getToken();
-    final response = await _makeRequest("AtcYonetim/SunumKayitSil",
-        data: {'yoklama': userId, "mesaj": presentationId}, token: myToken);
+    final response = await _makeRequest("AtcYonetim/SunumYoklamaAl",
+        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
-      return response.data['yoklama'];
+      toastMessage("You have already attended this event");
+      return true;
     } else {
       throw Exception('Failed to load presentations');
     }

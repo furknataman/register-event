@@ -17,9 +17,12 @@ class LoginForm extends StatelessWidget {
   Future<void> _handleLogin(BuildContext context) async {
     _isLoading.value = true;
 
-    await WebService().login("furkan.ataman@eyuboglu.k12.tr", "12345");
+    await WebService().login(
+        getGoogle.controllerEmail.text,
+        getGoogle
+            .controllerPassword.text); //.login("furkan.ataman@eyuboglu.k12.tr", "12345");
 
-    //.login(getGoogle.controllerEmail.text, getGoogle.controllerPassword.text);
+    //
     String? localToken = await getToken();
     _isLoading.value = false;
 
@@ -62,7 +65,7 @@ class LoginForm extends StatelessWidget {
               ),
             )),*/
         SizedBox(
-          height: 40,
+          height: 33,
           child: ValueListenableBuilder<bool>(
             valueListenable: _isLoading,
             builder: (context, isLoading, child) {
