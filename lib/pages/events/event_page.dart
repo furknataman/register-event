@@ -22,6 +22,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
   _EventsPage({@required this.eventId});
   String? timeData;
 
+
   @override
   void dispose() {
     ref.invalidate(userDataProvider);

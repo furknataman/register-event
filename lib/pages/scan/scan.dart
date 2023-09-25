@@ -194,8 +194,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                       ),
                       ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).floatingActionButtonTheme.backgroundColor,
+                          backgroundColor: Theme.of(context).colorScheme.appColor,
                           padding:
                               const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
                           shape: RoundedRectangleBorder(
