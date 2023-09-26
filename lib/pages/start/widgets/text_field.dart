@@ -4,6 +4,7 @@ import 'package:qr/notification/toast_message/toast_message.dart';
 import 'package:qr/pages/route_page/route_page.dart';
 import 'package:qr/services/service.dart';
 import '../../../authentication/login_service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({
@@ -44,7 +45,7 @@ class LoginForm extends StatelessWidget {
             icon: Icons.alternate_email,
             controller: getGoogle.controllerEmail),
         loginTextField(
-            labelText: "Password",
+            labelText:   AppLocalizations.of(context)!.password,
             icon: Icons.lock_outline,
             obs: true,
             controller: getGoogle.controllerPassword),
@@ -83,9 +84,9 @@ class LoginForm extends StatelessWidget {
                         decoration: const BoxDecoration(
                             color: Color.fromARGB(255, 190, 51, 41),
                             borderRadius: BorderRadius.all(Radius.circular(30))),
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(fontSize: 20, color: Colors.white),
+                        child:  Text(
+                            AppLocalizations.of(context)!.login,
+                          style: const TextStyle(fontSize: 20, color: Colors.white),
                         ),
                       ));
             },

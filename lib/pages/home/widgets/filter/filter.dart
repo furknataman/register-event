@@ -4,6 +4,7 @@ import 'package:qr/pages/home/widgets/filter/widgets/show_branch.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/show_picker.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/show_target.dart';
 import 'package:qr/pages/home/widgets/filter/widgets/time_picker.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void filterDialog(BuildContext context) {
   showModalBottomSheet(
@@ -42,8 +43,8 @@ void filterDialog(BuildContext context) {
                     ),
                     Container(
                       alignment: Alignment.topLeft,
-                      child:
-                          Text("Filters", style: Theme.of(context).textTheme.displayLarge),
+                      child: Text(AppLocalizations.of(context)!.filters,
+                          style: Theme.of(context).textTheme.displayLarge),
                     ),
                   ],
                 ),
@@ -55,7 +56,7 @@ void filterDialog(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Starting from",
+                          Text(AppLocalizations.of(context)!.startFrom,
                               style: Theme.of(context).textTheme.bodyLarge),
                           const DatePicker()
                         ],
@@ -63,7 +64,7 @@ void filterDialog(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("What to show",
+                          Text(AppLocalizations.of(context)!.whatToShow,
                               style: Theme.of(context).textTheme.bodyLarge),
                           const Picker(),
                         ],
@@ -71,7 +72,7 @@ void filterDialog(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Target group",
+                          Text(AppLocalizations.of(context)!.targetGroup,
                               style: Theme.of(context).textTheme.bodyLarge),
                           const Target(),
                         ],
@@ -79,7 +80,8 @@ void filterDialog(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text("Branch", style: Theme.of(context).textTheme.bodyLarge),
+                          Text(AppLocalizations.of(context)!.branch,
+                              style: Theme.of(context).textTheme.bodyLarge),
                           const Branch(),
                         ],
                       )

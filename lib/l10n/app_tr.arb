@@ -1,3 +1,23 @@
 {
-    "hi": "Merhaba"
+    "hi": "Merhaba",
+    "login": "Giriş Yap",
+    "logout": "Çıkış Yap",
+    "register": "Kayıt Ol",
+    "full": "Dolu",
+    "unregister": "Kaydı Sil",
+    "upcoming": "Yaklaşan Etkinlikler",
+    "password": "Şifre",
+    "timeOfEvent": "Etkinlik Tarihi",
+    "speakers": "Konuşmacılar",
+    "capacity": "Kapasite",
+    "description": "Açıklama",
+    "scanqr": "Etkinliğinizin QR kodunu tarayın",
+    "filters": "Filtrele",
+    "reset": "Sıfırla",
+    "ok":"Uygula",
+    "startFrom":"Başlangıç",
+    "whatToShow":"Ne Gösterilecek",
+    "targetGroup": "Hedef grup",
+    "branch":"Branş",
+    "past":"Geçti"
 }

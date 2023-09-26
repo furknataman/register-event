@@ -33,7 +33,13 @@ class MyApp extends ConsumerWidget {
         '/start': (context) => const StartPage(),
       },
       supportedLocales: L10n9.all,
-      locale: const Locale('em'),
+      localeResolutionCallback: (locale, supportedLocales) {
+        if (locale?.languageCode == 'tr') {
+          return const Locale('tr', '');
+        } else {
+          return const Locale('en', '');
+        }
+      },
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,

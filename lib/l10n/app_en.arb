@@ -1,3 +1,23 @@
 {
-    "hi": "Hi"
+    "hi": "Hi",
+    "login": "Login",
+    "logout": "Logout",
+    "register": "Register",
+    "unregister": "Unregister",
+    "full": "Full",
+    "upcoming": "Upcomming Events",
+    "password": "Password",
+    "timeOfEvent": "Date of Event",
+    "speakers": "Speakers",
+    "capacity": "Capacity",
+    "description": "Description",
+    "scanqr": "Scan the QR code of your event",
+    "filters": "Filters",
+    "reset": "Reset",
+    "ok":"Ok",
+    "startFrom":"Starting from",
+    "whatToShow":"What to show",
+    "targetGroup": "Target group",
+    "branch":"Branch",
+    "past":"Past"
 }
