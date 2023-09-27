@@ -11,7 +11,7 @@
     "speakers": "Speakers",
     "capacity": "Capacity",
     "description": "Description",
-    "scanqr": "Scan the QR code of your event",
+    "scanqr": "Scan the QR code of \nyour event",
     "filters": "Filters",
     "reset": "Reset",
     "ok":"Ok",
@@ -19,5 +19,13 @@
     "whatToShow":"What to show",
     "targetGroup": "Target group",
     "branch":"Branch",
-    "past":"Past"
+    "past":"Past",
+    "emaik":"E-mail",
+    "conferancesName": "Autumn Teachers Conference",
+    "noPermission": "No Permission",
+    "all": "All",
+    "pastEvent": "Past Events",
+    "ongoingEvents": "Ongoing Events",
+    "registeredEvents": "Registered Events"
+
 }

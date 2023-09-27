@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({Key? key}) : super(key: key);
@@ -43,7 +44,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                 padding: const EdgeInsets.only(top: 80, bottom: 40),
                 child: Text(
                   textAlign: TextAlign.center,
-                  "Scan the QR code of \nyour event.",
+                  AppLocalizations.of(context)!.scanqr,
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
               ),
@@ -186,7 +187,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                             Navigator.pop(context);
                             controller!.resumeCamera();
                           },
-                          child: Text("Cancel ",
+                          child: Text("Cancel",
                               style: Theme.of(context).textTheme.labelLarge),
                         ),
                       const SizedBox(
@@ -236,7 +237,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.noPermission)),
       );
     }
   }

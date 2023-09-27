@@ -40,11 +40,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     height: 120,
                   ),
                   Text(
-                    "Autumn Teachers Conference",
+                    AppLocalizations.of(context)!.conferancesName,
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.appColor,
-                        fontSize: 18,
-                        fontFamily: 'Raleway'),
+                      color: Theme.of(context).colorScheme.appColor,
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),
