@@ -52,6 +52,7 @@ flutter:
   assets:
     - assets/svg/
     - assets/images/
+    - assets/lesson_images/
     - android/app/src/main/res/mipmap-mdpi/
     - android/app/src/main/res/mipmap-xhdpi/
     - android/app/src/main/res/mipmap-xxhdpi/

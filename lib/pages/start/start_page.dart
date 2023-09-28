@@ -12,38 +12,41 @@ class StartPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final getGoogle = ref.watch<GoogleProvider>(googleConfig);
     return Scaffold(
-      body: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [
-            Color.fromARGB(255, 255, 72, 72),
-            Color(0xff0D175F),
-          ],
-        )),
-        child: Stack(children: [
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: elipse(MediaQuery.of(context).size.width),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                const StartPageWidgets(),
-                Container(
-                  margin: const EdgeInsets.only(left: 90, right: 90),
-                  height: 250,
-                  child: LoginForm(getGoogle: getGoogle),
-                ),
-              ],
+      backgroundColor: const Color.fromARGB(255, 255, 72, 72),
+      body: SingleChildScrollView(
+        child: Container(
+          width: double.infinity,
+          height: MediaQuery.of(context).size.height,
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [
+              Color.fromARGB(255, 255, 72, 72),
+              Color(0xff0D175F),
+            ],
+          )),
+          child: Stack(children: [
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: elipse(MediaQuery.of(context).size.width),
             ),
-          ),
-        ]),
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const StartPageWidgets(),
+                  Container(
+                    margin: const EdgeInsets.only(left: 90, right: 90),
+                    height: 250,
+                    child: LoginForm(getGoogle: getGoogle),
+                  ),
+                ],
+              ),
+            ),
+          ]),
+        ),
       ),
     );
   }

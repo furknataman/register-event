@@ -188,7 +188,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                       ),
                     );
                   }),
-                  error: (err, stack) => Text('Error: $err'),
+                  error: (err, stack) => const Text(" "),
                   loading: () => const Text(""));
             },
           )

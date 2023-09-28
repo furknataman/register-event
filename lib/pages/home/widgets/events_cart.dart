@@ -2,12 +2,65 @@ import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
 import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/pages/events/event_page.dart';
-import 'package:skeletons/skeletons.dart';
-
 import '../../../global/date_time_converter.dart';
 
 String truncateString(String str, int cutoff) {
   return (str.length <= cutoff) ? str : '${str.substring(0, cutoff)}...';
+}
+
+imageName(eventName) {
+  switch (eventName) {
+    case 'Disiplinlerarası / INTERDISCIPLINARY':
+      return ("assets/lesson_images/INTERDISCIPLINARY.PNG");
+    case 'IB Orta Yıllar Programı / IB MYP':
+      return ("assets/lesson_images/IB_MYP.PNG");
+    case 'Beden Eğitimi / PE':
+      return ("assets/lesson_images/PE.png");
+    case 'Bilgi Teknolojisi / IT':
+      return ("assets/lesson_images/IT.png");
+    case 'Biyoloji / BIOLOGY':
+      return ("assets/lesson_images/BIOLOGY.png");
+    case 'Coğrafya / GEOGRAPHY':
+      return ("assets/lesson_images/GEOGRAPHY.png");
+    case 'IB Diploma Programı / IB DP':
+      return ("assets/lesson_images/IB_DP.PNG");
+    case 'Felsefe / PHILOSOPHY':
+      return ("assets/lesson_images/PHILOSOPHY.png");
+    case 'Fen Bilgisi / SCIENCE':
+      return ("assets/lesson_images/SCIENCE.png");
+    case 'Fizik / PHYSICS':
+      return ("assets/lesson_images/PHYSICS.png");
+    case 'Genel Eğitim / GENERAL EDUCATION':
+      return ("assets/lesson_images/GENERAL_EDUCATION.PNG");
+    case 'IB İlk Yıllar Programı / IB PYP':
+      return ("assets/lesson_images/IB_PYP.PNG");
+    case 'Anaokulu / KINDERGARDEN':
+      return ("assets/lesson_images/EARLY_YEARS.PNG");
+    case 'İngilizce / ENGLISH':
+      return ("assets/lesson_images/ESL.PNG");
+    case 'Kimya / CHEMISTRY':
+      return ("assets/lesson_images/CHEMISTRY.PNG");
+    case 'Kütüphane / LIBRARY':
+      return ("assets/lesson_images/LIBRARY.PNG");
+    case 'Matematik / MATHS':
+      return ("assets/lesson_images/MATH.png");
+    case 'Müzik / MUSIC':
+      return ("assets/lesson_images/MUSIC.PNG");
+    case 'Rehberlik / GUIDANCE':
+      return ("assets/lesson_images/GUIDANCE.PNG");
+    case 'Resim / VISUAL ARTS':
+      return ("assets/lesson_images/ARTS.PNG");
+    case 'Sosyal Bilimler / SOCIAL STUDIES':
+      return ("assets/lesson_images/SOCIAL_STUDIES.PNG");
+    case 'Tarih / HISTORY':
+      return ("assets/lesson_images/SOCIAL_STUDIES.PNG");
+    case 'Türkçe - Türk Dili ve Edebiyatı / TURKISH - TURKISH LANGUAGE AND LITERATURE':
+      return ("assets/lesson_images/TURKISH.png");
+    case 'Yabancı Diller / FOREIGN LANGUAGES':
+      return ("assets/lesson_images/FOREIGN LANGUAGES.PNG");
+    case 'Yönetim / MANAGEMENT AND LEADERSHIP':
+      return ("assets/lesson_images/ADMINISTRATION.PNG");
+  }
 }
 
 InkWell eventsCart(
@@ -15,14 +68,14 @@ InkWell eventsCart(
   @required ClassModelPresentation? event,
   @required bool? eventCart,
 }) {
+  String name = imageName(event!.branch);
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
-
   int duration = int.parse(event!.duration ?? "0");
   ClassTime time = classConverter(event.presentationTime!, duration);
   return InkWell(
     onTap: () {
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EventsPage(event.id)));
+          context, MaterialPageRoute(builder: (context) => EventsPage(event.id, name)));
     },
     child: Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -54,21 +107,10 @@ InkWell eventsCart(
               height: 180,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(10.0),
-                  child: Image.network(
-                      "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
-                      fit: BoxFit.cover,
-                      loadingBuilder: (context, child, loadingProgress) {
-                    if (loadingProgress == null) {
-                      return child;
-                    } else {
-                      return SkeletonItem(
-                        child: SkeletonAvatar(
-                          style: SkeletonAvatarStyle(
-                              width: MediaQuery.of(context).size.width - 20, height: 200),
-                        ),
-                      );
-                    }
-                  })),
+                  child: Image.asset(
+                    name,
+                    fit: BoxFit.cover,
+                  )),
             ),
           ),
           Positioned(

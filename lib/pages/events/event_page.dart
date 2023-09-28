@@ -12,15 +12,18 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
   final int? eventId;
-  const EventsPage(this.eventId, {Key? key}) : super(key: key);
+  final String? evetImageName;
+  const EventsPage(this.eventId, this.evetImageName, {Key? key}) : super(key: key);
 
   @override
-  ConsumerState<EventsPage> createState() => _EventsPage(eventId: eventId);
+  ConsumerState<EventsPage> createState() =>
+      _EventsPage(eventId: eventId, evetImageName: evetImageName);
 }
 
 class _EventsPage extends ConsumerState<EventsPage> {
   int? eventId;
-  _EventsPage({@required this.eventId});
+  final String? evetImageName;
+  _EventsPage({@required this.eventId, @required this.evetImageName});
   String? timeData;
 
   @override
@@ -86,9 +89,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                 bottomLeft: Radius.circular(20),
                                 bottomRight: Radius.circular(20),
                               ),
-                              child: Image.network(
-                                  "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
-                                  fit: BoxFit.cover)),
+                              child: Image.asset(evetImageName!, fit: BoxFit.cover)),
                         )),
                   ),
                   SliverList(

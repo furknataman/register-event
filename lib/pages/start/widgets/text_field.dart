@@ -31,7 +31,7 @@ class LoginForm extends StatelessWidget {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const RoutePage()));
     } else {
-      toastMessage("Username or password is incorrect");
+      toastMessage(AppLocalizations.of(context)!.loginError);
     }
   }
 
@@ -41,30 +41,14 @@ class LoginForm extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         loginTextField(
-            labelText: AppLocalizations.of(context)!.emaik,
+            labelText: AppLocalizations.of(context)!.email,
             icon: Icons.alternate_email,
             controller: getGoogle.controllerEmail),
         loginTextField(
-            labelText:   AppLocalizations.of(context)!.password,
+            labelText: AppLocalizations.of(context)!.password,
             icon: Icons.lock_outline,
             obs: true,
             controller: getGoogle.controllerPassword),
-        /* InkWell(
-            onTap: () {
-              //  getGoogle.signIn();
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: 120,
-              height: 46,
-              decoration: const BoxDecoration(
-                  color: Color(0xff485FFF),
-                  borderRadius: BorderRadius.all(Radius.circular(30))),
-              child: const Text(
-                "Login",
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-            )),*/
         SizedBox(
           height: 33,
           child: ValueListenableBuilder<bool>(
@@ -75,7 +59,6 @@ class LoginForm extends StatelessWidget {
                   : InkWell(
                       onTap: () {
                         _handleLogin(context);
-                        //  getGoogle.signIn();
                       },
                       child: Container(
                         alignment: Alignment.center,
@@ -84,8 +67,8 @@ class LoginForm extends StatelessWidget {
                         decoration: const BoxDecoration(
                             color: Color.fromARGB(255, 190, 51, 41),
                             borderRadius: BorderRadius.all(Radius.circular(30))),
-                        child:  Text(
-                            AppLocalizations.of(context)!.login,
+                        child: Text(
+                          AppLocalizations.of(context)!.login,
                           style: const TextStyle(fontSize: 20, color: Colors.white),
                         ),
                       ));
