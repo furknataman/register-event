@@ -15,17 +15,25 @@
     "filters": "Filters",
     "reset": "Reset",
     "ok":"Ok",
+    "cancel":"Cancel",
     "startFrom":"Starting from",
     "whatToShow":"What to show",
     "targetGroup": "Target group",
     "branch":"Branch",
     "past":"Past",
-    "emaik":"E-mail",
+    "email":"E-mail",
     "conferancesName": "Autumn Teachers Conference",
     "noPermission": "No Permission",
     "all": "All",
     "pastEvent": "Past Events",
     "ongoingEvents": "Ongoing Events",
-    "registeredEvents": "Registered Events"
-
+    "registeredEvents": "Registered Events",
+    "nonRegistered":"Non-Registered",
+    "nonRegisterMessage": "You are not registered the event that you have scanned.",
+    "allreadyAttended":"Already Attended",
+    "allReadyAttendedMessage":"You have already attended this event",
+    "attendedEvent":"Join The Event",
+    "attendedEventMessage":  "You are about to attend to {eventTitle}, are you sure?",
+    "unrecognized":"Unrecognized Code",
+    "unrecognizedMessage":"The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors."
 }

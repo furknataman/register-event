@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 
 class FilterPage extends ChangeNotifier {
   String defaultText = "All";
@@ -23,32 +21,33 @@ class FilterPage extends ChangeNotifier {
   ];
   List<String> branchList = <String>[
     'All',
-    'PE',
-    'IT',
     'BIOLOGY',
-    'GEOGRAPHY',
-    'IB DP',
-    'PHILOSOPHY',
-    'SCIENCE',
-    'PHYSICS',
+    'CHEMISTRY',
+    'ENGLISH',
+    'FOREIGN LANGUAGES',
     'GENERAL EDUCATION',
+    'GEOGRAPHY',
+    'GUIDANCE',
+    'HISTORY',
+    'IB DP',
     'IB MYP',
     'IB PYP',
+    'INTERDISCIPLINARY',
+    'IT',
     'KINDERGARDEN',
-    'ENGLISH',
-    'CHEMISTRY',
     'LIBRARY',
+    'MANAGEMENT AND LEADERSHIP',
     'MATHS',
     'MUSIC',
-    'GUIDANCE',
-    'VISUAL ARTS',
+    'PE',
+    'PHILOSOPHY',
+    'PHYSICS',
+    'SCIENCE',
     'SOCIAL STUDIES',
-    'HISTORY',
     'TURKISH LANGUAGE AND LITERATURE',
-    'FOREIGN LANGUAGES',
-    'MANAGEMENT AND LEADERSHIP',
-    'INTERDISCIPLINARY',
+    'VISUAL ARTS'
   ];
+  void filterNameUpdated(BuildContext context) {}
   int selectedList = 0;
   int selectedBranch = 0;
   int selectedTarget = 0;

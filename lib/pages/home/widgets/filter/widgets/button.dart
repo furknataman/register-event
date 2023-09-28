@@ -17,6 +17,7 @@ class FilterBottombar extends ConsumerWidget {
       children: [
         SizedBox(
           width: 120,
+          height: 40,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.disable,
@@ -36,6 +37,7 @@ class FilterBottombar extends ConsumerWidget {
         ),
         SizedBox(
           width: 120,
+          height: 40,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.appColor,

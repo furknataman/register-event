@@ -41,7 +41,7 @@ class LoginForm extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         loginTextField(
-            labelText: "E-mail",
+            labelText: AppLocalizations.of(context)!.emaik,
             icon: Icons.alternate_email,
             controller: getGoogle.controllerEmail),
         loginTextField(

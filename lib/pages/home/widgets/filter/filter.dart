@@ -56,17 +56,9 @@ void filterDialog(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(AppLocalizations.of(context)!.startFrom,
+                          Text(AppLocalizations.of(context)!.branch,
                               style: Theme.of(context).textTheme.bodyLarge),
-                          const DatePicker()
-                        ],
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(AppLocalizations.of(context)!.whatToShow,
-                              style: Theme.of(context).textTheme.bodyLarge),
-                          const Picker(),
+                          const Branch(),
                         ],
                       ),
                       Row(
@@ -80,11 +72,19 @@ void filterDialog(BuildContext context) {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(AppLocalizations.of(context)!.branch,
+                          Text(AppLocalizations.of(context)!.startFrom,
                               style: Theme.of(context).textTheme.bodyLarge),
-                          const Branch(),
+                          const DatePicker()
                         ],
-                      )
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(AppLocalizations.of(context)!.whatToShow,
+                              style: Theme.of(context).textTheme.bodyLarge),
+                          const Picker(),
+                        ],
+                      ),
                     ],
                   ),
                 ),
