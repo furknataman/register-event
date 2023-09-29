@@ -94,7 +94,7 @@ InkWell eventsCart(
                 color: Theme.of(context).primaryColor,
                 borderRadius: const BorderRadius.all(Radius.circular(13))),
             width: MediaQuery.of(context).size.width - 40,
-            height: 237,
+            height: 270,
           ),
           Positioned(
             top: 0,
@@ -122,7 +122,7 @@ InkWell eventsCart(
                     borderRadius: const BorderRadius.only(
                         bottomRight: Radius.circular(10),
                         bottomLeft: Radius.circular(10))),
-                height: 71,
+                height: 95,
                 width: MediaQuery.of(context).size.width - 40,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -131,9 +131,11 @@ InkWell eventsCart(
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            truncateString(event.title!, 26),
-                            style: Theme.of(context).textTheme.displayMedium,
+                          Flexible(
+                            child: Text(
+                              truncateString(event.title!, 20),
+                              style: Theme.of(context).textTheme.displayMedium,
+                            ),
                           ),
                           Text(
                             "${time.clock} : ${time.endTime}",
@@ -172,33 +174,13 @@ InkWell eventsCart(
                                 : Container(),
                           ],
                         )),
-                      )
-                      /*  SizedBox(
-                        height: 25,
-                        child: ListView.separated(
-                          separatorBuilder: (BuildContext context, int index) => Padding(
-                            padding: const EdgeInsets.only(left: 6, right: 6, top: 4),
-                            child: Container(
-                              alignment: Alignment.center,
-                              width: 2,
-                              height: 2,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Theme.of(context).secondaryHeaderColor),
-                            ),
-                          ),
-                          reverse: false,
-                          shrinkWrap: false,
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            context;
-                            return textContainer(event.speakers![index].toString(),
-                                Theme.of(context).textTheme.titleSmall,
-                                bottomPadding: 0);
-                          },
-                          itemCount: event.speakers!.length,
+                      ),
+                      FittedBox(
+                        child: Text(
+                          event.school!,
+                          style: Theme.of(context).textTheme.titleSmall,
                         ),
-                      ),*/
+                      ),
                     ]),
               )),
           /* Positioned(
@@ -228,7 +210,7 @@ InkWell eventsCart(
                     : const Icon(LucideIcons.calendar, size: 28, color: Color(0xffBDBDBD)),
               )),
           Positioned(
-              bottom: 80,
+              bottom: 105,
               left: 30,
               child: Container(
                 alignment: Alignment.center,

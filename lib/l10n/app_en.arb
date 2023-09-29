@@ -36,5 +36,6 @@
     "attendedEventMessage":  "You are about to attend to {eventTitle}, are you sure?",
     "unrecognized":"Unrecognized Code",
     "unrecognizedMessage":"The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.",
-    "loginError":"Username or password is incorrect"
+    "loginError":"Username or password is incorrect",
+    "connectionError":"An error occurred. Can you try again?"
 }
