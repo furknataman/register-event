@@ -40,5 +40,5 @@
     "connectionError":"Bir hata oluştu. Tekrar deneyebilir misiniz?",
      "localNotifTitle":"Bir etkinlik yaklaşıyor.",
     "localNotifBody":"${title} 10 dakika sonra ${branch}'da başlıyor. QR kodu taramayı unutmayın.",
-    "noSeat": "No Seat",
+    "noSeat": "Zaman Aralığı Dolu"
 }

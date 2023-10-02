@@ -75,7 +75,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           ],
                         );
                       }),
-                      error: (err, stack) => Text('Error: $err'),
+                      error: (err, stack) => const Text(""),
                     ),
                     const SizedBox(
                       height: 40,
@@ -97,6 +97,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 ),
                                 onPressed: () async {
                                   logout().then((value) {
+                                    
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

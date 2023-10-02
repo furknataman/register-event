@@ -49,7 +49,7 @@ class RegisterButton extends ConsumerWidget {
         isButtonEnabled.value = true;
       };
     } else if (containsTime && !containsId) {
-      buttonText = "No Seat";
+      buttonText = AppLocalizations.of(context)!.noSeat;
       buttonColor = const Color(0xff485FFF);
       onPressed = null;
     } else if (event.remainingQuota! <= 0) {
