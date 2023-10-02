@@ -64,8 +64,9 @@ class RegisterButton extends ConsumerWidget {
         ref.invalidate(userDataProvider);
         LocalNoticeService().addNotification(
             'testing',
-            'An event is near.',
-            '${event.title} is starting by 10 minutes in ${event.branch}. Don’t forget to scan the qr code.',
+            AppLocalizations.of(context)!.localNotifTitle,
+            AppLocalizations.of(context)!
+                .localNotifBody(event.title.toString(), event.branch.toString()),
             DateTime.now().millisecondsSinceEpoch + 10000,
             eventId);
         isButtonEnabled.value = true;

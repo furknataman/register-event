@@ -37,5 +37,8 @@
     "unrecognized":"Unrecognized Code",
     "unrecognizedMessage":"The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.",
     "loginError":"Username or password is incorrect",
-    "connectionError":"An error occurred. Can you try again?"
+    "connectionError":"An error occurred. Can you try again?",
+    "localNotifTitle":"An event is near.",
+    "localNotifBody":"{title} is starting by 10 minutes in {branch}. Don’t forget to scan the qr code.",
+    "noSeat": "Time Slot Full",
 }

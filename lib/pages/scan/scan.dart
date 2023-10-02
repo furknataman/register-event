@@ -44,7 +44,10 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                 child: Text(
                   textAlign: TextAlign.center,
                   AppLocalizations.of(context)!.scanqr,
-                  style: Theme.of(context).textTheme.displayLarge,
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge!
+                      .copyWith(color: Colors.white),
                 ),
               ),
             ],
@@ -79,7 +82,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     controller.scannedDataStream.listen((scanData) async {
       result = scanData;
       await controller.pauseCamera();
-      Future.delayed(const Duration(seconds: 1));
+      Future.delayed(const Duration(seconds: 3));
       dialogAlert();
     });
   }
