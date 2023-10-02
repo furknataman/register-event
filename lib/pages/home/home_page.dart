@@ -8,6 +8,7 @@ import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 bool isAfter(TimeOfDay first, TimeOfDay second) {
   return first.hour > second.hour ||
@@ -53,7 +54,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Welcome,",
+                                  AppLocalizations.of(context)!.hi,
                                   style: Theme.of(context).textTheme.bodyMedium,
                                 ),
                                 userData.when(
@@ -88,7 +89,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Upcoming Events",
+                            AppLocalizations.of(context)!.upcoming,
                             style: Theme.of(context).textTheme.headlineLarge,
                           ),
                           filterProvider.selectedList == 0 &&
@@ -187,7 +188,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                       ),
                     );
                   }),
-                  error: (err, stack) => Text('Error: $err'),
+                  error: (err, stack) => const Text(" "),
                   loading: () => const Text(""));
             },
           )

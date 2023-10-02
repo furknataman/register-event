@@ -8,20 +8,23 @@ import 'package:qr/pages/events/widgets/speakers_info.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import '../home/widgets/events_cart.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
   final int? eventId;
-  const EventsPage(this.eventId, {Key? key}) : super(key: key);
+  final String? evetImageName;
+  const EventsPage(this.eventId, this.evetImageName, {Key? key}) : super(key: key);
 
   @override
-  ConsumerState<EventsPage> createState() => _EventsPage(eventId: eventId);
+  ConsumerState<EventsPage> createState() =>
+      _EventsPage(eventId: eventId, evetImageName: evetImageName);
 }
 
 class _EventsPage extends ConsumerState<EventsPage> {
   int? eventId;
-  _EventsPage({@required this.eventId});
+  final String? evetImageName;
+  _EventsPage({@required this.eventId, @required this.evetImageName});
   String? timeData;
-
 
   @override
   void dispose() {
@@ -59,7 +62,6 @@ class _EventsPage extends ConsumerState<EventsPage> {
                   ),
                 ),
             data: (getEventInfo) {
-              print(eventId);
               int duration = int.parse(getEventInfo!.duration ?? "0");
               ClassTime time = classConverter(getEventInfo.presentationTime!, duration);
               return CustomScrollView(
@@ -87,9 +89,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                 bottomLeft: Radius.circular(20),
                                 bottomRight: Radius.circular(20),
                               ),
-                              child: Image.network(
-                                  "https://images.unsplash.com/photo-1509228468518-180dd4864904?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2340&q=80",
-                                  fit: BoxFit.cover)),
+                              child: Image.asset(evetImageName!, fit: BoxFit.cover)),
                         )),
                   ),
                   SliverList(
@@ -133,25 +133,25 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           const SizedBox(
                             height: 20,
                           ),
-                          textContainer(
-                              "Date of Event", Theme.of(context).textTheme.displayMedium),
+                          textContainer(AppLocalizations.of(context)!.timeOfEvent,
+                              Theme.of(context).textTheme.displayMedium),
                           textContainer("${time.clock} : ${time.endTime}",
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
-                          textContainer(
-                              "Speakers", Theme.of(context).textTheme.displayMedium),
+                          textContainer(AppLocalizations.of(context)!.speakers,
+                              Theme.of(context).textTheme.displayMedium),
                           speakersInfo(context, getEventInfo),
                           const SizedBox(
                             height: 17,
                           ),
-                          textContainer(
-                              "Capacity", Theme.of(context).textTheme.displayMedium),
+                          textContainer(AppLocalizations.of(context)!.capacity,
+                              Theme.of(context).textTheme.displayMedium),
                           textContainer(
                               "${getEventInfo.remainingQuota} free seats left from ${getEventInfo.presentationQuota}",
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
-                          textContainer(
-                              "Description", Theme.of(context).textTheme.displayMedium),
+                          textContainer(AppLocalizations.of(context)!.description,
+                              Theme.of(context).textTheme.displayMedium),
                           textContainer(getEventInfo.description.toString(),
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),

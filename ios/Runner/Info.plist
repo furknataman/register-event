@@ -8,6 +8,11 @@
 	<array>
     	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	</array>
+	<key>CFBundleLocalizations</key>
+	<array>
+    	<string>en</string> <!-- English -->
+    	<string>tr</string> <!-- Turkish -->
+	</array>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

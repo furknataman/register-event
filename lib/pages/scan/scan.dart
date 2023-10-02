@@ -1,10 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ScannerPage extends ConsumerStatefulWidget {
   const ScannerPage({Key? key}) : super(key: key);
@@ -43,7 +43,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                 padding: const EdgeInsets.only(top: 80, bottom: 40),
                 child: Text(
                   textAlign: TextAlign.center,
-                  "Scan the QR code of \nyour event.",
+                  AppLocalizations.of(context)!.scanqr,
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
               ),
@@ -107,23 +107,19 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         userId = data.id;
         if (data.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
           register = false;
-          title =
-              "Already Attended ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
-          body = "You have already attended this event";
+          title = AppLocalizations.of(context)!.allreadyAttended;
+          body = AppLocalizations.of(context)!.allReadyAttendedMessage;
         } else if (eventIdMatchingWithCode == null) {
-          title = "Unrecognized Code";
-          body =
-              "The code you have scanned cannot be recognized by our system. Please scan only the codes printed on doors.";
+          title = AppLocalizations.of(context)!.unrecognized;
+          body = AppLocalizations.of(context)!.unrecognizedMessage;
         } else if (data.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
           register = true;
-          title =
-              "Attending to ${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title} ";
-          body =
-              "You are about to attend to${eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title}, are you sure?";
+          title = AppLocalizations.of(context)!.attendedEvent;
+          body = AppLocalizations.of(context)!.attendedEventMessage(
+              eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title!);
         } else {
-          title = "Non-registered";
-          body =
-              "You are not registered the event that you have scanned. Please try one of that you are. You can see them on your home page.";
+          title = AppLocalizations.of(context)!.nonRegistered;
+          body = AppLocalizations.of(context)!.nonRegisterMessage;
         }
       },
       loading: () => const Text(" "),
@@ -186,7 +182,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                             Navigator.pop(context);
                             controller!.resumeCamera();
                           },
-                          child: Text("Cancel ",
+                          child: Text(AppLocalizations.of(context)!.cancel,
                               style: Theme.of(context).textTheme.labelLarge),
                         ),
                       const SizedBox(
@@ -215,9 +211,9 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                             Navigator.pop(context);
                           }
                         },
-                        child: const Text(
-                          "Okay",
-                          style: TextStyle(fontWeight: FontWeight.w700),
+                        child: Text(
+                          AppLocalizations.of(context)!.ok,
+                          style: const TextStyle(fontWeight: FontWeight.w700),
                         ),
                       )
                     ],
@@ -233,10 +229,9 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   }
 
   void onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
+        SnackBar(content: Text(AppLocalizations.of(context)!.noPermission)),
       );
     }
   }

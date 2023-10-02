@@ -6,6 +6,7 @@ import 'package:qr/db/db_model/user_info.dart';
 import 'package:qr/notification/local_notification/notification.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class RegisterButton extends ConsumerWidget {
   RegisterButton({
@@ -28,12 +29,12 @@ class RegisterButton extends ConsumerWidget {
         userInfo?.registeredEventTime?.contains(event.presentationTime) ?? false;
     bool containsId = userInfo?.registeredEventId?.contains(eventId) ?? false;
 
-    String buttonText = "Register";
+    String buttonText = AppLocalizations.of(context)!.register;
     Color? buttonColor = Theme.of(context).floatingActionButtonTheme.backgroundColor;
     VoidCallback? onPressed;
 
     if (event.presentationTime!.microsecondsSinceEpoch < now.microsecondsSinceEpoch) {
-      buttonText = "Past";
+      buttonText = AppLocalizations.of(context)!.past;
       buttonColor = const Color(0xff485FFF);
       onPressed = null;
     } else if (containsTime && !containsId) {
@@ -41,10 +42,10 @@ class RegisterButton extends ConsumerWidget {
       buttonColor = const Color(0xff485FFF);
       onPressed = null;
     } else if (event.remainingQuota! <= 0) {
-      buttonText = "Full";
+      buttonText = AppLocalizations.of(context)!.full;
       onPressed = null;
     } else if (!containsId) {
-      buttonText = "Register";
+      buttonText = AppLocalizations.of(context)!.register;
       onPressed = () async {
         isButtonEnabled.value = false;
         await WebService().registerEvent(userInfo!.id!, eventId);
@@ -59,7 +60,7 @@ class RegisterButton extends ConsumerWidget {
         isButtonEnabled.value = true;
       };
     } else {
-      buttonText = "Unregister";
+      buttonText = AppLocalizations.of(context)!.unregister;
       buttonColor = Theme.of(context).colorScheme.unregister;
       onPressed = () async {
         isButtonEnabled.value = false;
@@ -92,7 +93,7 @@ class RegisterButton extends ConsumerWidget {
                   fontSize: 16,
                 ),
               ),
-              if (buttonText == "Unregister") ...[
+              if (buttonText == AppLocalizations.of(context)!.unregister) ...[
                 const SizedBox(width: 10),
                 const Icon(LucideIcons.calendarCheck, size: 19),
               ]

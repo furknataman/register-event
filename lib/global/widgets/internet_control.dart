@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/services/service.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Widget internetControl(BuildContext context, WidgetRef ref) {
   return Expanded(
@@ -9,7 +10,7 @@ Widget internetControl(BuildContext context, WidgetRef ref) {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          'An error occurred. Can you try again?',
+          AppLocalizations.of(context)!.connectionError,
           style: Theme.of(context).textTheme.displayMedium,
         ),
         IconButton(

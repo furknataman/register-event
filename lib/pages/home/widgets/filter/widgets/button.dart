@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/pages/home/widgets/filter/filter_provider.dart';
 import 'package:qr/theme/theme_extends.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class FilterBottombar extends ConsumerWidget {
   const FilterBottombar({
@@ -16,6 +17,7 @@ class FilterBottombar extends ConsumerWidget {
       children: [
         SizedBox(
           width: 120,
+          height: 40,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.disable,
@@ -26,7 +28,8 @@ class FilterBottombar extends ConsumerWidget {
               filterProvider.reset();
             },
             child: FittedBox(
-                child: Text("Reset ", style: Theme.of(context).textTheme.labelLarge)),
+                child: Text(AppLocalizations.of(context)!.reset,
+                    style: Theme.of(context).textTheme.labelLarge)),
           ),
         ),
         const SizedBox(
@@ -34,6 +37,7 @@ class FilterBottombar extends ConsumerWidget {
         ),
         SizedBox(
           width: 120,
+          height: 40,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Theme.of(context).colorScheme.appColor,
@@ -43,10 +47,10 @@ class FilterBottombar extends ConsumerWidget {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const FittedBox(
+            child: FittedBox(
               child: Text(
-                "Ok",
-                style: TextStyle(fontWeight: FontWeight.w700),
+                AppLocalizations.of(context)!.ok,
+                style: const TextStyle(fontWeight: FontWeight.w700),
               ),
             ),
           ),

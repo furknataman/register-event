@@ -4,6 +4,7 @@ import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -39,11 +40,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     height: 120,
                   ),
                   Text(
-                    "Autumn Teachers Conference",
+                    AppLocalizations.of(context)!.conferancesName,
                     style: TextStyle(
-                        color: Theme.of(context).colorScheme.appColor,
-                        fontSize: 18,
-                        fontFamily: 'Raleway'),
+                      color: Theme.of(context).colorScheme.appColor,
+                      fontSize: 18,
+                    ),
                   ),
                 ],
               ),
@@ -84,7 +85,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Logout", style: Theme.of(context).textTheme.bodyLarge),
+                            Text(AppLocalizations.of(context)!.logout,
+                                style: Theme.of(context).textTheme.bodyLarge),
                             Padding(
                               padding: const EdgeInsets.only(right: 4.0),
                               child: IconButton(
