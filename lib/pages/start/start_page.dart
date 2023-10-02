@@ -38,7 +38,7 @@ class StartPage extends ConsumerWidget {
                 children: [
                   const StartPageWidgets(),
                   Container(
-                    margin: const EdgeInsets.only(left: 90, right: 90),
+                    margin: const EdgeInsets.only(left: 70, right: 70),
                     height: 250,
                     child: LoginForm(getGoogle: getGoogle),
                   ),
