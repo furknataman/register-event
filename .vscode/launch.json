@@ -5,6 +5,7 @@
     "version": "0.2.0",
     "configurations": [
 
+
         {
             "name": "qr",
             "request": "launch",
@@ -33,6 +34,12 @@
 			"request": "launch",
 			"type": "dart",
 			"deviceId": "iphone"
+		},
+        {
+			"name": "Furkan's iPhone",
+			"request": "launch",
+			"type": "dart",
+			"deviceId": "00008030-001A38463423402E"
 		},
         {
 			"name": "iPad",

@@ -33,7 +33,7 @@
     "allreadyAttended":"Etkinliğe Katıldınız",
     "allReadyAttendedMessage":"Bu etkinliğe zaten katıldınız.",
     "attendedEvent":"Etkinliğe Katıl.",
-    "attendedEventMessage": "{eventTitle}etkinliğine katılmak üzeresiniz, emin misiniz?",
+    "attendedEventMessage": "{eventTitle} etkinliğine katılmak üzeresiniz, emin misiniz?",
     "unrecognized":"Tanınmayan Kod",
     "unrecognizedMessage":"Taradığınız kod sistemimiz tarafından tanınamıyor. Lütfen yalnızca kapıların üzerinde yazılı olan kodları tarayın.",
     "loginError":"Kullanıcı adı veya şifre hatalı",

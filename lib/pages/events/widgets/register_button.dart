@@ -37,6 +37,17 @@ class RegisterButton extends ConsumerWidget {
       buttonText = AppLocalizations.of(context)!.past;
       buttonColor = const Color(0xff485FFF);
       onPressed = null;
+    } else if (containsId) {
+      buttonText = AppLocalizations.of(context)!.unregister;
+      buttonColor = Theme.of(context).colorScheme.unregister;
+      onPressed = () async {
+        isButtonEnabled.value = false;
+        await WebService().removeEvent(userInfo!.id!, eventId);
+        ref.invalidate(eventDetailsProvider(eventId));
+        ref.invalidate(userDataProvider);
+        LocalNoticeService().cancelNotification(eventId);
+        isButtonEnabled.value = true;
+      };
     } else if (containsTime && !containsId) {
       buttonText = "No Seat";
       buttonColor = const Color(0xff485FFF);
@@ -57,17 +68,6 @@ class RegisterButton extends ConsumerWidget {
             '${event.title} is starting by 10 minutes in ${event.branch}. Don’t forget to scan the qr code.',
             DateTime.now().millisecondsSinceEpoch + 10000,
             eventId);
-        isButtonEnabled.value = true;
-      };
-    } else {
-      buttonText = AppLocalizations.of(context)!.unregister;
-      buttonColor = Theme.of(context).colorScheme.unregister;
-      onPressed = () async {
-        isButtonEnabled.value = false;
-        await WebService().removeEvent(userInfo!.id!, eventId);
-        ref.invalidate(eventDetailsProvider(eventId));
-        ref.invalidate(userDataProvider);
-        LocalNoticeService().cancelNotification(eventId);
         isButtonEnabled.value = true;
       };
     }

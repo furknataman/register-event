@@ -46,7 +46,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20.0, right: 15),
+                      padding: const EdgeInsets.only(left: 20.0, right: 15, top: 10),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [

@@ -179,6 +179,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                                 borderRadius: BorderRadius.circular(30.0)),
                           ),
                           onPressed: () {
+                            register = false;
                             Navigator.pop(context);
                             controller!.resumeCamera();
                           },
@@ -204,7 +205,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                             attendMessage = true;
                             ref.invalidate(userDataProvider);
                             ref.invalidate(presentationDataProvider);
-
+                            register = false;
                             await WebService()
                                 .attendanceEvent(userId!, eventIdMatchingWithCode!);
                             controller!.resumeCamera();
