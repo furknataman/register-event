@@ -70,7 +70,7 @@ InkWell eventsCart(
 }) {
   String name = imageName(event!.branch);
   //ClassTime time = classConverter(event!.presentationTime, event.duration!);
-  int duration = int.parse(event!.duration ?? "0");
+  int duration = int.parse(event.duration ?? "0");
   ClassTime time = classConverter(event.presentationTime!, duration);
   return InkWell(
     onTap: () {
