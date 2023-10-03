@@ -10,6 +10,7 @@
     "timeOfEvent": "Date of Event",
     "speakers": "Speakers",
     "capacity": "Capacity",
+    "freeSeats":"{remainingQuota} free seats left from {presentationQuota}",
     "description": "Description",
     "scanqr": "Scan the QR code of \nyour event",
     "filters": "Filters",

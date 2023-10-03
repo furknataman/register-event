@@ -147,7 +147,9 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           textContainer(AppLocalizations.of(context)!.capacity,
                               Theme.of(context).textTheme.displayMedium),
                           textContainer(
-                              "${getEventInfo.remainingQuota} free seats left from ${getEventInfo.presentationQuota}",
+                              AppLocalizations.of(context)!.freeSeats(
+                                  getEventInfo.remainingQuota.toString(),
+                                  getEventInfo.presentationQuota.toString()),
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
                           textContainer(AppLocalizations.of(context)!.description,

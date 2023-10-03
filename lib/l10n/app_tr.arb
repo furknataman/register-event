@@ -10,6 +10,7 @@
     "timeOfEvent": "Etkinlik Tarihi",
     "speakers": "Konuşmacılar",
     "capacity": "Kapasite",
+    "freeSeats":"{remainingQuota} adet boş yer kaldı, toplam kontenjan {presentationQuota}",
     "description": "Açıklama",
     "scanqr": "Etkinliğinizin \nQR kodunu tarayın",
     "filters": "Filtrele",
@@ -38,7 +39,7 @@
     "unrecognizedMessage":"Taradığınız kod sistemimiz tarafından tanınamıyor. Lütfen yalnızca kapıların üzerinde yazılı olan kodları tarayın.",
     "loginError":"Kullanıcı adı veya şifre hatalı",
     "connectionError":"Bir hata oluştu. Tekrar deneyebilir misiniz?",
-     "localNotifTitle":"Bir etkinlik yaklaşıyor.",
+    "localNotifTitle":"Bir etkinlik yaklaşıyor.",
     "localNotifBody":"${title} 10 dakika sonra ${branch}'da başlıyor. QR kodu taramayı unutmayın.",
     "noSeat": "Zaman Aralığı Dolu"
 }
