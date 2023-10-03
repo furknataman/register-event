@@ -67,7 +67,7 @@ class RegisterButton extends ConsumerWidget {
             AppLocalizations.of(context)!.localNotifTitle,
             AppLocalizations.of(context)!
                 .localNotifBody(event.title.toString(), event.branch.toString()),
-            DateTime.now().millisecondsSinceEpoch + 10000,
+            event.presentationTime!.millisecondsSinceEpoch - 600000,
             eventId);
         isButtonEnabled.value = true;
       };
