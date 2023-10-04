@@ -97,7 +97,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                 ),
                                 onPressed: () async {
                                   logout().then((value) {
-                                    
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(

@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
 import 'package:qr/pages/home/home_page.dart';
 import 'package:qr/pages/maps/maps.dart';
 import 'package:qr/pages/scan/scan.dart';
 import 'package:qr/pages/settings/settings_page.dart';
+import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 
 import '../../notification/push_notification/push_notification.dart';
 
-class RoutePage extends StatefulWidget {
+class RoutePage extends ConsumerStatefulWidget {
   const RoutePage({super.key});
 
   @override
-  State<RoutePage> createState() => _RoutePageState();
+  ConsumerState<RoutePage> createState() => _RoutePageState();
 }
 
-class _RoutePageState extends State<RoutePage> {
+class _RoutePageState extends ConsumerState<RoutePage> {
   late PageController _pageController;
 
   @override
@@ -23,6 +25,8 @@ class _RoutePageState extends State<RoutePage> {
     super.initState();
     _pageController = PageController();
     setFiraBase();
+    ref.refresh(userDataProvider);
+    ref.refresh(presentationDataProvider);
   }
 
   int _currentIndex = 0;
