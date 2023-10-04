@@ -15,6 +15,7 @@ class ClassModelPresentation {
   final DateTime? presentationTime;
   final String? presentationPlace;
   final String? presentationQuota;
+  final String? ratingForm;
   final int? remainingQuota;
 
   ClassModelPresentation(
@@ -33,6 +34,7 @@ class ClassModelPresentation {
       this.type,
       this.presentationTime,
       this.presentationPlace,
+      this.ratingForm,
       this.presentationQuota,
       this.remainingQuota});
 
@@ -56,6 +58,7 @@ class ClassModelPresentation {
       duration: json['duration'],
       language: json['language'] ?? " ",
       type: json['type'] ?? " ",
+      ratingForm: json['evaluationLink'] ?? " ",
       presentationTime: DateTime(2023, 10, 14, hour, minute, second),
       presentationPlace: json['presentationPlace'] ?? " ",
       presentationQuota: json['presentationQuota'] ?? "0",

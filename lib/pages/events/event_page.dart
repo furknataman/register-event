@@ -7,6 +7,7 @@ import 'package:qr/pages/events/widgets/skeleton.dart';
 import 'package:qr/pages/events/widgets/speakers_info.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../home/widgets/events_cart.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -157,12 +158,37 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           textContainer(getEventInfo.description.toString(),
                               Theme.of(context).textTheme.titleSmall,
                               bottomPadding: 17),
-                          /*textContainer("Where is ${getEventInfo.eventsLocation}?",
-                              Theme.of(context).textTheme.displayMedium,
-                              bottomPadding: 10),*/
+                          userData.when(
+                            loading: () => const Text(""),
+                            data: ((data) {
+                              if (data.attendedToEventId?.contains(getEventInfo.id) ??
+                                  true) {
+                                return ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: const Color(0xff485FFF),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    shape: const StadiumBorder(),
+                                  ),
+                                  onPressed: () async {
+                                    final Uri url = Uri.parse(getEventInfo.ratingForm!);
+                                    if (!await launchUrl(url)) {
+                                      throw Exception('Could not launch $url');
+                                    }
+                                  },
+                                  child: const Text('Değerlendirme Anketi'),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }),
+                            error: (err, stack) => internetControl(context, ref),
+                          ),
                         ],
                       ),
                     ),
+
                     //LocationWidget(eventLocationlUrl: getEventInfo.eventLocationlUrl),
                     const SizedBox(
                       height: 30,
