@@ -42,5 +42,7 @@
     "localNotifTitle":"An event is near.",
     "localNotifBody":"{title} is starting by 10 minutes in {branch}. Don’t forget to scan the qr code.",
     "noSeat": "Time Slot Full",
-    "appRate":"Evaluation Survey"
+    "appRate":"Evaluation Survey",
+    "rollCallTitle":"Inspection",
+    "rollCallBody":"Do you confirm the roll call?"
 }

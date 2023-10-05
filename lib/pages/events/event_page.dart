@@ -50,7 +50,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        'An error occurred. Can you try again?',
+                        AppLocalizations.of(context)!.connectionError,
                         style: Theme.of(context).textTheme.displayMedium,
                       ),
                       IconButton(
