@@ -177,7 +177,13 @@ class _EventsPage extends ConsumerState<EventsPage> {
                                       throw Exception('Could not launch $url');
                                     }
                                   },
-                                  child: const Text('Değerlendirme Anketi'),
+                                  child: Text(
+                                    AppLocalizations.of(context)!.appRate,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
                                 );
                               } else {
                                 return Container();
