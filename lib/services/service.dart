@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/db_model/presentation_model.dart';
 import 'package:qr/db/db_model/token_response_model.dart';
@@ -7,6 +8,7 @@ import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/main.dart';
 import 'package:qr/notification/toast_message/toast_message.dart';
 import 'package:qr/services/check_internet.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class UnauthorizedException extends Interceptor {
   @override
@@ -152,12 +154,13 @@ class WebService {
     }
   }
 
-  Future<bool> attendanceEvent(int userId, int presentationId) async {
+  Future<bool> attendanceEvent(
+      BuildContext context, int userId, int presentationId) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/SunumYoklamaAl",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
-      toastMessage("You have already attended this event");
+      toastMessage(AppLocalizations.of(context)!.scanAttendMessage);
       return true;
     } else {
       throw Exception('Failed to load presentations');

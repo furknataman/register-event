@@ -31,7 +31,11 @@ dependencies:
   dio: ^5.3.2
   shared_preferences: ^2.2.1
   photo_view: ^0.14.0
-  connectivity_plus: ^4.0.2
+  connectivity_plus:
+    git:
+      url: https://github.com/fluttercommunity/plus_plugins.git
+      path: packages/connectivity_plus/connectivity_plus
+      ref: cf7d93fbfc76830acf2db755543cf4235a49df60
   url_launcher: ^6.1.14
 
 dev_dependencies:

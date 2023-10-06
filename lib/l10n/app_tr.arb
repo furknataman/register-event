@@ -44,5 +44,6 @@
     "noSeat": "Zaman Aralığı Dolu",
     "appRate":"Değerlendirme Anketi",
     "rollCallTitle":"Yoklama",
-    "rollCallBody":"Yoklamayı onaylıyor musunuz?"
+    "rollCallBody":"Yoklamayı onaylıyor musunuz?",
+    "scanAttendMessage":"Etkinlik girişiniz onaylandı, giriş yapabilirsiniz."
 }

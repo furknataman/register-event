@@ -44,5 +44,6 @@
     "noSeat": "Time Slot Full",
     "appRate":"Evaluation Survey",
     "rollCallTitle":"Inspection",
-    "rollCallBody":"Do you confirm the roll call?"
+    "rollCallBody":"Do you confirm the roll call?",
+    "scanAttendMessage":"Your event entry has been approved, you can log in."
 }
