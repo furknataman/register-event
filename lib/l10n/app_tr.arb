@@ -45,5 +45,8 @@
     "appRate":"Değerlendirme Anketi",
     "rollCallTitle":"Yoklama",
     "rollCallBody":"Yoklamayı onaylıyor musunuz?",
-    "scanAttendMessage":"Etkinlik girişiniz onaylandı, giriş yapabilirsiniz."
+    "scanAttendMessage":"Etkinlik girişiniz onaylandı, giriş yapabilirsiniz.",
+    "generalForm":"Konferans Değerlendirme Formu",
+    "status":"Giriş Durumu",
+    "canLogin":"Giriş Yapabilir."
 }

@@ -161,8 +161,7 @@ class _EventsPage extends ConsumerState<EventsPage> {
                           userData.when(
                             loading: () => const Text(""),
                             data: ((data) {
-                              if (data.attendedToEventId?.contains(getEventInfo.id) ??
-                                  true) {
+                              if (data.attendedToEventId?.contains(eventId) ?? false) {
                                 return ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xff485FFF),

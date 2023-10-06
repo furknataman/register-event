@@ -75,12 +75,26 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           const SizedBox(
                             height: 2,
                           ),
-                          data.generalRollCall ?? false
-                              ? FittedBox(
-                                  child: Text(data.generalRollCall!.toString(),
-                                      style: Theme.of(context).textTheme.displaySmall),
-                                )
-                              : Container(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${AppLocalizations.of(context)!.status}: ",
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                              data.generalRollCall ?? false
+                                  ? FittedBox(
+                                      child: Text(AppLocalizations.of(context)!.canLogin,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700)),
+                                    )
+                                  : Container(),
+                            ],
+                          )
                         ],
                       );
                     }),
@@ -94,58 +108,54 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     children: [
                       userData.when(
                         data: (data) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(AppLocalizations.of(context)!.logout,
-                                  style: Theme.of(context).textTheme.bodyLarge),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 4.0),
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.web,
-                                    color: Theme.of(context).colorScheme.appColor,
-                                    size: 30,
-                                  ),
-                                  onPressed: () async {
-                                    final Uri url = Uri.parse(data.generalForm.toString());
-                                    if (!await launchUrl(url)) {
-                                      throw Exception('Could not launch $url');
-                                    }
-                                    ;
-                                  },
+                          return InkWell(
+                            onTap: () async {
+                              final Uri url = Uri.parse(data.generalForm.toString());
+                              if (!await launchUrl(url)) {
+                                throw Exception('Could not launch $url');
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(AppLocalizations.of(context)!.generalForm,
+                                    style: Theme.of(context).textTheme.bodyLarge),
+                                Icon(
+                                  Icons.web,
+                                  color: Theme.of(context).colorScheme.appColor,
+                                  size: 30,
                                 ),
-                              )
-                            ],
+                              ],
+                            ),
                           );
                         },
                         error: (err, stack) => const Text(""),
                         loading: () => const Text(""),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(AppLocalizations.of(context)!.logout,
-                              style: Theme.of(context).textTheme.bodyLarge),
-                          Padding(
-                            padding: const EdgeInsets.only(right: 4.0),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.login,
-                                color: Theme.of(context).colorScheme.appColor,
-                                size: 30,
-                              ),
-                              onPressed: () async {
-                                logout().then((value) {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => const StartPage()));
-                                });
-                              },
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          logout().then((value) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const StartPage()));
+                          });
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(AppLocalizations.of(context)!.logout,
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            Icon(
+                              Icons.login,
+                              color: Theme.of(context).colorScheme.appColor,
+                              size: 30,
                             ),
-                          )
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

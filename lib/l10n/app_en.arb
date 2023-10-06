@@ -45,5 +45,8 @@
     "appRate":"Evaluation Survey",
     "rollCallTitle":"Inspection",
     "rollCallBody":"Do you confirm the roll call?",
-    "scanAttendMessage":"Your event entry has been approved, you can log in."
+    "scanAttendMessage":"Your event entry has been approved, you can log in.",
+    "generalForm":"Conference Evaluation Form",
+    "status":"Login Status",
+    "canLogin":"Allowed"
 }
