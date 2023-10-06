@@ -33,7 +33,7 @@ class FilterPage extends ChangeNotifier {
     'IB MYP',
     'IB PYP',
     'INTERDISCIPLINARY',
-    'IT',
+    'Information Technology',
     'KINDERGARDEN',
     'LIBRARY',
     'MANAGEMENT AND LEADERSHIP',

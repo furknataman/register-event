@@ -26,7 +26,7 @@ class Branch extends ConsumerWidget {
           children: List<Widget>.generate(filterProvider.branchList.length, (int index) {
             return Center(
               child: Text(
-                filterProvider.branchList[index],
+                filterProvider.branchList[index].toUpperCase(),
                 style: const TextStyle(fontSize: 16),
               ),
             );

@@ -5,6 +5,7 @@ import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -48,69 +49,117 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 230,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    userData.when(
-                      loading: () => const Text(""),
-                      data: ((data) {
-                        return Column(
-                          children: [
-                            Text("${data.name} ${data.surname}",
-                                style: Theme.of(context).textTheme.titleLarge),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(data.job!,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  userData.when(
+                    data: ((data) {
+                      return Column(
+                        children: [
+                          Text("${data.name} ${data.surname}",
+                              style: Theme.of(context).textTheme.titleLarge),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          FittedBox(
+                            child: Text(data.job!,
                                 style: Theme.of(context).textTheme.displaySmall),
-                            const SizedBox(
-                              height: 2,
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          FittedBox(
+                            child: Text(data.school!,
+                                style: Theme.of(context).textTheme.displaySmall),
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${AppLocalizations.of(context)!.status}: ",
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                              data.generalRollCall ?? false
+                                  ? FittedBox(
+                                      child: Text(AppLocalizations.of(context)!.canLogin,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge!
+                                              .copyWith(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w700)),
+                                    )
+                                  : Container(),
+                            ],
+                          )
+                        ],
+                      );
+                    }),
+                    error: (err, stack) => const Text(""),
+                    loading: () => const Text(""),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Column(
+                    children: [
+                      userData.when(
+                        data: (data) {
+                          return InkWell(
+                            onTap: () async {
+                              final Uri url = Uri.parse(data.generalForm.toString());
+                              if (!await launchUrl(url)) {
+                                throw Exception('Could not launch $url');
+                              }
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(AppLocalizations.of(context)!.generalForm,
+                                    style: Theme.of(context).textTheme.bodyLarge),
+                                Icon(
+                                  Icons.web,
+                                  color: Theme.of(context).colorScheme.appColor,
+                                  size: 30,
+                                ),
+                              ],
                             ),
-                            FittedBox(
-                              child: Text(data.school!,
-                                  style: Theme.of(context).textTheme.displaySmall),
-                            ),
-                          ],
-                        );
-                      }),
-                      error: (err, stack) => const Text(""),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Column(
-                      children: [
-                        Row(
+                          );
+                        },
+                        error: (err, stack) => const Text(""),
+                        loading: () => const Text(""),
+                      ),
+                      const SizedBox(
+                        height: 3,
+                      ),
+                      InkWell(
+                        onTap: () async {
+                          logout().then((value) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const StartPage()));
+                          });
+                        },
+                        child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(AppLocalizations.of(context)!.logout,
                                 style: Theme.of(context).textTheme.bodyLarge),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.login,
-                                  color: Theme.of(context).colorScheme.appColor,
-                                  size: 30,
-                                ),
-                                onPressed: () async {
-                                  logout().then((value) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => const StartPage()));
-                                  });
-                                },
-                              ),
-                            )
+                            Icon(
+                              Icons.login,
+                              color: Theme.of(context).colorScheme.appColor,
+                              size: 30,
+                            ),
                           ],
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ]),
       ),

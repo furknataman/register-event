@@ -41,5 +41,12 @@
     "connectionError":"Bir hata oluştu. Tekrar deneyebilir misiniz?",
     "localNotifTitle":"Bir etkinlik yaklaşıyor.",
     "localNotifBody":"${title} 10 dakika sonra ${branch}'da başlıyor. QR kodu taramayı unutmayın.",
-    "noSeat": "Zaman Aralığı Dolu"
+    "noSeat": "Zaman Aralığı Dolu",
+    "appRate":"Değerlendirme Anketi",
+    "rollCallTitle":"Yoklama",
+    "rollCallBody":"Yoklamayı onaylıyor musunuz?",
+    "scanAttendMessage":"Etkinlik girişiniz onaylandı, giriş yapabilirsiniz.",
+    "generalForm":"Konferans Değerlendirme Formu",
+    "status":"Giriş Durumu",
+    "canLogin":"Giriş Yapabilir."
 }

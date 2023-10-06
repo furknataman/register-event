@@ -9,6 +9,8 @@ class InfoUser {
   final String? telephone;
   final String? school;
   final String? job;
+  final String? generalForm;
+  final bool? generalRollCall;
   final List<int>? registeredEventId;
   final List<DateTime>? registeredEventTime;
   final List<int>? attendedToEventId;
@@ -21,7 +23,9 @@ class InfoUser {
       this.password,
       this.telephone,
       this.school,
+      this.generalRollCall,
       this.job,
+      this.generalForm,
       this.registeredEventId,
       this.registeredEventTime,
       this.attendedToEventId});
@@ -35,8 +39,10 @@ class InfoUser {
     return InfoUser(
       id: json['id'] ?? 0,
       name: json['name'] ?? " ",
+      generalForm: json['anketLinki'],
       surname: json['surname'] ?? " ",
       email: json['email'] ?? " ",
+      generalRollCall: json['genelYoklama'] ?? false,
       password: json['password'] ?? " ",
       telephone: json['telephone'] ?? " ",
       school: json['school'] ?? " ",

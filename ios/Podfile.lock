@@ -125,6 +125,8 @@ PODS:
     - Flutter
     - FlutterMacOS
   - Toast (4.0.0)
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
@@ -136,6 +138,7 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -173,9 +176,11 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  connectivity_plus: 07c49e96d7fc92bc9920617b83238c4d178b446a
+  connectivity_plus: bf0076dd84a130856aa636df1c71ccaff908fa1d
   Firebase: 66043bd4579e5b73811f96829c694c7af8d67435
   firebase_analytics: 84fbf469b4964adb5410e25f3f45433dac480ccf
   firebase_core: 77172d0a9d8d19d07606e24406e4c2fc14d3265b
@@ -198,6 +203,7 @@ SPEC CHECKSUMS:
   ReachabilitySwift: 985039c6f7b23a1da463388634119492ff86c825
   shared_preferences_foundation: 5b919d13b803cadd15ed2dc053125c68730e5126
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
+  url_launcher_ios: 08a3dfac5fb39e8759aeb0abbd5d9480f30fc8b4
 
 PODFILE CHECKSUM: 58fa40d65f31f28cafcd8680b5dc2dad456d601b
 

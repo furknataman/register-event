@@ -127,7 +127,6 @@ class _HomepageState extends ConsumerState<Homepage> {
               return userData.when(
                   data: ((data) {
                     var filteredEventList = allEvents;
-
                     if (filterProvider.selectedList == 3) {
                       filteredEventList = filteredEventList.where((e) {
                         if (data.registeredEventId == null || e.id == null) {

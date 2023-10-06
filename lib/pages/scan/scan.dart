@@ -17,6 +17,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  bool isBottomSheetDisplayed = false;
 
   @override
   void reassemble() {
@@ -80,10 +81,13 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) async {
-      result = scanData;
-      await controller.pauseCamera();
-      Future.delayed(const Duration(seconds: 3));
-      dialogAlert();
+      if (!isBottomSheetDisplayed) {
+        // Check if bottom sheet is not displayed
+        result = scanData;
+        await controller.pauseCamera();
+        isBottomSheetDisplayed = true; // Set flag to true
+        dialogAlert();
+      }
     });
   }
 
@@ -98,36 +102,46 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     final eventData = ref.watch(presentationDataProvider).asData?.value;
     int? userId;
     int? eventIdMatchingWithCode;
-    for (var event in eventData!) {
-      if (event.id!.toString().contains(result!.code.toString())) {
-        eventIdMatchingWithCode = event.id;
-        break;
-      }
-    }
 
     userData.when(
-      data: (data) {
-        userId = data.id;
-        if (data.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
-          register = false;
-          title = AppLocalizations.of(context)!.allreadyAttended;
-          body = AppLocalizations.of(context)!.allReadyAttendedMessage;
-        } else if (eventIdMatchingWithCode == null) {
-          title = AppLocalizations.of(context)!.unrecognized;
-          body = AppLocalizations.of(context)!.unrecognizedMessage;
-        } else if (data.registeredEventId?.contains(eventIdMatchingWithCode) ?? false) {
-          register = true;
-          title = AppLocalizations.of(context)!.attendedEvent;
-          body = AppLocalizations.of(context)!.attendedEventMessage(
-              eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title!);
-        } else {
-          title = AppLocalizations.of(context)!.nonRegistered;
-          body = AppLocalizations.of(context)!.nonRegisterMessage;
-        }
-      },
-      loading: () => const Text(" "),
-      error: (error, stackTrace) => const Text(" "),
-    );
+        data: (data) {
+          userId = data.id;
+
+          if (result!.code.toString() == "2023") {
+            eventIdMatchingWithCode = 2023;
+            register = true;
+            title = AppLocalizations.of(context)!.rollCallTitle;
+            body = AppLocalizations.of(context)!.rollCallBody;
+          } else {
+            for (var event in eventData!) {
+              if (event.id!.toString().contains(result!.code.toString())) {
+                eventIdMatchingWithCode = event.id;
+                break;
+              }
+            }
+
+            if (data.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
+              register = false;
+              title = AppLocalizations.of(context)!.allreadyAttended;
+              body = AppLocalizations.of(context)!.allReadyAttendedMessage;
+            } else if (eventIdMatchingWithCode == null) {
+              title = AppLocalizations.of(context)!.unrecognized;
+              body = AppLocalizations.of(context)!.unrecognizedMessage;
+            } else if (data.registeredEventId?.contains(eventIdMatchingWithCode) ??
+                false) {
+              register = true;
+              title = AppLocalizations.of(context)!.attendedEvent;
+              body = AppLocalizations.of(context)!.attendedEventMessage(
+                  eventData.firstWhere((e) => e.id == eventIdMatchingWithCode).title!);
+            } else {
+              title = AppLocalizations.of(context)!.nonRegistered;
+              body = AppLocalizations.of(context)!.nonRegisterMessage;
+            }
+          }
+        },
+        loading: () => const Text(" "),
+        error: (error, stackTrace) => const Text(" "));
+
     return showModalBottomSheet(
         context: context,
         shape: const RoundedRectangleBorder(
@@ -182,6 +196,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                                 borderRadius: BorderRadius.circular(30.0)),
                           ),
                           onPressed: () {
+                            isBottomSheetDisplayed = false;
                             register = false;
                             Navigator.pop(context);
                             controller!.resumeCamera();
@@ -201,6 +216,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                               borderRadius: BorderRadius.circular(30.0)),
                         ),
                         onPressed: () async {
+                          isBottomSheetDisplayed = false;
                           if (register == false) {
                             Navigator.pop(context);
                             controller!.resumeCamera();
@@ -209,9 +225,10 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                             ref.invalidate(userDataProvider);
                             ref.invalidate(presentationDataProvider);
                             register = false;
-                            await WebService()
-                                .attendanceEvent(userId!, eventIdMatchingWithCode!);
+                            await WebService().attendanceEvent(
+                                context, userId!, eventIdMatchingWithCode!);
                             controller!.resumeCamera();
+
                             Navigator.pop(context);
                           }
                         },

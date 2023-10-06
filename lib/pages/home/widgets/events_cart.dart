@@ -16,7 +16,7 @@ imageName(eventName) {
       return ("assets/lesson_images/IB_MYP.PNG");
     case 'Beden Eğitimi / PE':
       return ("assets/lesson_images/PE.png");
-    case 'Bilgi Teknolojisi / IT':
+    case 'Bilgi Teknolojisi / Information Technology':
       return ("assets/lesson_images/IT.png");
     case 'Biyoloji / BIOLOGY':
       return ("assets/lesson_images/BIOLOGY.png");
