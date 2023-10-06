@@ -5,6 +5,7 @@ import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -48,69 +49,107 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 230,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    userData.when(
-                      loading: () => const Text(""),
-                      data: ((data) {
-                        return Column(
-                          children: [
-                            Text("${data.name} ${data.surname}",
-                                style: Theme.of(context).textTheme.titleLarge),
-                            const SizedBox(
-                              height: 5,
-                            ),
-                            Text(data.job!,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  userData.when(
+                    data: ((data) {
+                      return Column(
+                        children: [
+                          Text("${data.name} ${data.surname}",
+                              style: Theme.of(context).textTheme.titleLarge),
+                          const SizedBox(
+                            height: 5,
+                          ),
+                          FittedBox(
+                            child: Text(data.job!,
                                 style: Theme.of(context).textTheme.displaySmall),
-                            const SizedBox(
-                              height: 2,
-                            ),
-                            FittedBox(
-                              child: Text(data.school!,
-                                  style: Theme.of(context).textTheme.displaySmall),
-                            ),
-                          ],
-                        );
-                      }),
-                      error: (err, stack) => const Text(""),
-                    ),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(AppLocalizations.of(context)!.logout,
-                                style: Theme.of(context).textTheme.bodyLarge),
-                            Padding(
-                              padding: const EdgeInsets.only(right: 4.0),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.login,
-                                  color: Theme.of(context).colorScheme.appColor,
-                                  size: 30,
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          FittedBox(
+                            child: Text(data.school!,
+                                style: Theme.of(context).textTheme.displaySmall),
+                          ),
+                          const SizedBox(
+                            height: 2,
+                          ),
+                          data.generalRollCall ?? false
+                              ? FittedBox(
+                                  child: Text(data.generalRollCall!.toString(),
+                                      style: Theme.of(context).textTheme.displaySmall),
+                                )
+                              : Container(),
+                        ],
+                      );
+                    }),
+                    error: (err, stack) => const Text(""),
+                    loading: () => const Text(""),
+                  ),
+                  const SizedBox(
+                    height: 40,
+                  ),
+                  Column(
+                    children: [
+                      userData.when(
+                        data: (data) {
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(AppLocalizations.of(context)!.logout,
+                                  style: Theme.of(context).textTheme.bodyLarge),
+                              Padding(
+                                padding: const EdgeInsets.only(right: 4.0),
+                                child: IconButton(
+                                  icon: Icon(
+                                    Icons.web,
+                                    color: Theme.of(context).colorScheme.appColor,
+                                    size: 30,
+                                  ),
+                                  onPressed: () async {
+                                    final Uri url = Uri.parse(data.generalForm.toString());
+                                    if (!await launchUrl(url)) {
+                                      throw Exception('Could not launch $url');
+                                    }
+                                    ;
+                                  },
                                 ),
-                                onPressed: () async {
-                                  logout().then((value) {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => const StartPage()));
-                                  });
-                                },
+                              )
+                            ],
+                          );
+                        },
+                        error: (err, stack) => const Text(""),
+                        loading: () => const Text(""),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(AppLocalizations.of(context)!.logout,
+                              style: Theme.of(context).textTheme.bodyLarge),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 4.0),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.login,
+                                color: Theme.of(context).colorScheme.appColor,
+                                size: 30,
                               ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                              onPressed: () async {
+                                logout().then((value) {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const StartPage()));
+                                });
+                              },
+                            ),
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ]),
       ),
