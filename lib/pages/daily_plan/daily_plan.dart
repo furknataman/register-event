@@ -20,7 +20,7 @@ class DailyPlanPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: const Color(0xff8f1910),
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.appColor,
         ),
@@ -61,11 +61,6 @@ class DailyPlanPage extends StatelessWidget {
                   );
                 },
               ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Image.asset("assets/images/atc_icon.png",
-                  width: MediaQuery.of(context).size.width / 1.5),
             ),
           ],
         ));

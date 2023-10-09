@@ -48,5 +48,7 @@
     "scanAttendMessage":"Etkinlik girişiniz onaylandı, giriş yapabilirsiniz.",
     "generalForm":"Konferans Değerlendirme Formu",
     "status":"Giriş Durumu",
-    "canLogin":"Giriş Yapabilir."
+    "canLogin":"Giriş Yapabilir.",
+    "dailySchedule" :"Günlük Program",
+    "eventLocation" : "Etkinlik Yeri"
 }

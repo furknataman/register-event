@@ -109,15 +109,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     children: [
                       InkWell(
                         onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>  DailyPlanPage()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => DailyPlanPage()));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("Günlük Plan",
+                            Text(AppLocalizations.of(context)!.dailySchedule,
                                 style: Theme.of(context).textTheme.bodyLarge),
                             Icon(
                               Icons.arrow_forward_ios_sharp,
