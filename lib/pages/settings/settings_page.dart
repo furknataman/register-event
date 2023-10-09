@@ -112,7 +112,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const DailyPlanPage()));
+                                  builder: (context) =>  DailyPlanPage()));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
