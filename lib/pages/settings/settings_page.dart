@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
+import 'package:qr/pages/daily_plan/daily_plan.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
@@ -106,6 +107,29 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                   ),
                   Column(
                     children: [
+                      InkWell(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const DailyPlanPage()));
+                        },
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Günlük Plan",
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            Icon(
+                              Icons.arrow_forward_ios_sharp,
+                              color: Theme.of(context).colorScheme.appColor,
+                              size: 24,
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 6,
+                      ),
                       userData.when(
                         data: (data) {
                           return InkWell(
@@ -133,7 +157,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                         loading: () => const Text(""),
                       ),
                       const SizedBox(
-                        height: 3,
+                        height: 6,
                       ),
                       InkWell(
                         onTap: () async {
