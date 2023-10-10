@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/l10n/l10n.dart';
 import 'package:qr/pages/start/start_page.dart';
@@ -15,11 +16,13 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
   await SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
   ]);
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   FlutterLocalNotificationsPlugin()
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
