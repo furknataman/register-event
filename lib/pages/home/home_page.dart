@@ -44,7 +44,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(left: 20.0, right: 15, top: 10),
+                      padding: const EdgeInsets.only(left: 20.0, right: 15, top: 5),
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -58,12 +58,19 @@ class _HomepageState extends ConsumerState<Homepage> {
                                 userData.when(
                                   loading: () => const Text(""),
                                   data: ((data) {
-                                    return Text("${data.name} ${data.surname}");
+                                    return Text(
+                                      "${data.name} ${data.surname}",
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium!
+                                          .copyWith(fontWeight: FontWeight.w600),
+                                    );
                                   }),
                                   error: (err, stack) => const Text(" "),
                                 )
                               ],
                             ),
+
                             /*IconButton(
                               icon: const Icon(
                                 HeroiconsOutline.bell,
@@ -81,8 +88,7 @@ class _HomepageState extends ConsumerState<Homepage> {
                           ]),
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsets.only(left: 19, top: 25, bottom: 5, right: 15),
+                      padding: const EdgeInsets.only(left: 19, right: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [

@@ -46,7 +46,7 @@ class ClassModelPresentation {
     int second = int.parse(timeParts[2]);
     return ClassModelPresentation(
       id: json['id'] ?? 0,
-      title: capitalizeFirstLetter(json['title']),
+      title: (json['title']),
       description: json['description'] ?? " ",
       presenter1Name: json['presenter1Name'] ?? " ",
       presenter1Email: json['presenter1Email'] ?? " ",
@@ -65,17 +65,4 @@ class ClassModelPresentation {
       remainingQuota: json['kalanKota'] ?? 0,
     );
   }
-}
-
-String capitalizeFirstLetter(String text) {
-  if (text.isEmpty) {
-    return "";
-  }
-
-  return text.split(' ').map((word) {
-    if (word.isNotEmpty) {
-      return word[0].toUpperCase() + word.substring(1).toLowerCase();
-    }
-    return "";
-  }).join(' ');
 }

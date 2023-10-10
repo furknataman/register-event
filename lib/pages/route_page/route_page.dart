@@ -51,41 +51,44 @@ class _RoutePageState extends ConsumerState<RoutePage> {
               MapsPage(),
               SettingsPage()
             ]),
-        bottomNavigationBar: BottomNavigationBar(
-            onTap: (index) {
-              setState(() => _currentIndex = index);
-              _pageController.jumpToPage(index);
-            },
-            backgroundColor: Theme.of(context).colorScheme.mainColor,
-            showSelectedLabels: false,
-            showUnselectedLabels: false,
-            type: BottomNavigationBarType.fixed,
-            currentIndex: _currentIndex,
-            unselectedItemColor: Colors.white,
-            selectedItemColor: Theme.of(context).colorScheme.appColor,
-            selectedIconTheme: const IconThemeData(color: Color(0xff232f60)),
-            iconSize: 31,
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                activeIcon: Icon(HeroiconsMini.home),
-                label: " ",
-                icon: Icon(HeroiconsOutline.home),
-              ),
-              BottomNavigationBarItem(
-                activeIcon: Icon(HeroiconsMini.qrCode),
-                label: " ",
-                icon: Icon(HeroiconsOutline.qrCode),
-              ),
-              BottomNavigationBarItem(
-                activeIcon: Icon(HeroiconsSolid.map),
-                label: " ",
-                icon: Icon(HeroiconsOutline.map),
-              ),
-              BottomNavigationBarItem(
-                activeIcon: Icon(HeroiconsSolid.cog6Tooth),
-                label: " ",
-                icon: Icon(HeroiconsOutline.cog6Tooth),
-              ),
-            ]));
+        bottomNavigationBar: SizedBox(
+          height: 95,
+          child: BottomNavigationBar(
+              onTap: (index) {
+                setState(() => _currentIndex = index);
+                _pageController.jumpToPage(index);
+              },
+              backgroundColor: Theme.of(context).colorScheme.mainColor,
+              showSelectedLabels: false,
+              showUnselectedLabels: false,
+              type: BottomNavigationBarType.fixed,
+              currentIndex: _currentIndex,
+              unselectedItemColor: Colors.white,
+              selectedItemColor: Theme.of(context).colorScheme.appColor,
+              selectedIconTheme: const IconThemeData(color: Color(0xff232f60)),
+              iconSize: 31,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  activeIcon: Icon(HeroiconsMini.home),
+                  label: " ",
+                  icon: Icon(HeroiconsOutline.home),
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(HeroiconsMini.qrCode),
+                  label: " ",
+                  icon: Icon(HeroiconsOutline.qrCode),
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(HeroiconsSolid.map),
+                  label: " ",
+                  icon: Icon(HeroiconsOutline.map),
+                ),
+                BottomNavigationBarItem(
+                  activeIcon: Icon(HeroiconsSolid.cog6Tooth),
+                  label: " ",
+                  icon: Icon(HeroiconsOutline.cog6Tooth),
+                ),
+              ]),
+        ));
   }
 }

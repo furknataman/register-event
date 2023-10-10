@@ -27,7 +27,6 @@ class DailyPlanPage extends StatelessWidget {
         body: Column(
           children: [
             Expanded(
-              flex: 5,
               child: ListView.builder(
                 itemCount: entries.length,
                 itemBuilder: (context, index) {
