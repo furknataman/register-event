@@ -42,6 +42,8 @@ dependencies:
 flutter_native_splash:
   color: "#ffffff"
   image: assets/images/eek_logo.png
+  android: true
+  ios: false
 
   android_12:
     image: assets/images/eek_logoo.png
