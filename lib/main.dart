@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/l10n/l10n.dart';
+import 'package:qr/notification/push_notification/push_notification.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/theme/light_theme.dart';
 import 'authentication/authservice.dart';
@@ -23,8 +24,9 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Future.delayed(const Duration(seconds: 2));
   FlutterNativeSplash.remove();
-
+  setFiraBase();
   FlutterLocalNotificationsPlugin()
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.requestPermission();

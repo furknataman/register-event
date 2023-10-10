@@ -33,7 +33,8 @@ class InfoUser {
   factory InfoUser.fromJson(Map<String, dynamic> json) {
     DateTime dontTrustFool(String time) {
       final parsedTime = DateFormat('HH:mm').parse(time);
-      return DateTime(2023, 10, 14, parsedTime.hour, parsedTime.minute);
+      final formatedData = DateTime(2023, 10, 14, parsedTime.hour, parsedTime.minute);
+      return formatedData;
     }
 
     return InfoUser(
@@ -53,7 +54,7 @@ class InfoUser {
       registeredEventTime: (json['sunumSaatleri'] != null)
           ? (json['sunumSaatleri'] as List)
               .where((time) => time != null)
-              .map((time) => dontTrustFool(time as String))
+              .map((time) => dontTrustFool(time.toString()))
               .toList()
           : null,
       attendedToEventId: (json['yoklamaTrueSunumId'] != null)

@@ -41,12 +41,11 @@ dependencies:
 
 flutter_native_splash:
   color: "#ffffff"
-  image: assets/images/eyblogo1.png
-  color_dark: "#121212"
+  image: assets/images/eek_logo.png
 
   android_12:
-    image: assets/images/eyblogo1.png
-    color_dark: "#121212"
+    image: assets/images/eek_logoo.png
+    color: "#ffffff"
 
 dev_dependencies:
   flutter_test:

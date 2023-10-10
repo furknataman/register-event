@@ -8,7 +8,6 @@ import 'package:qr/pages/settings/settings_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 
-import '../../notification/push_notification/push_notification.dart';
 
 class RoutePage extends ConsumerStatefulWidget {
   const RoutePage({super.key});
@@ -24,7 +23,6 @@ class _RoutePageState extends ConsumerState<RoutePage> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    setFiraBase();
     ref.refresh(userDataProvider);
     ref.refresh(presentationDataProvider);
   }

@@ -32,7 +32,6 @@ class _HomepageState extends ConsumerState<Homepage> {
   Widget build(BuildContext context) {
     final userData = ref.watch(userDataProvider);
     final eventData = ref.watch(presentationDataProvider);
-
     final filterProvider = ref.watch<FilterPage>(alertPageConfig);
     return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -133,6 +132,7 @@ class _HomepageState extends ConsumerState<Homepage> {
               return userData.when(
                   data: ((data) {
                     var filteredEventList = allEvents;
+
                     if (filterProvider.selectedList == 3) {
                       filteredEventList = filteredEventList.where((e) {
                         if (data.registeredEventId == null || e.id == null) {
@@ -170,10 +170,11 @@ class _HomepageState extends ConsumerState<Homepage> {
                     if (filterProvider.time != null) {
                       filteredEventList = filteredEventList
                           .where((e) =>
-                              e.presentationTime!.millisecondsSinceEpoch >
+                              e.presentationTime!.millisecondsSinceEpoch >=
                               filterProvider.time!.millisecondsSinceEpoch)
                           .toList();
                     }
+
                     return Expanded(
                       child: ListView.builder(
                         padding: const EdgeInsets.only(bottom: 10),
