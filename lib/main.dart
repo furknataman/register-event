@@ -23,6 +23,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  FlutterNativeSplash.remove();
 
   FlutterLocalNotificationsPlugin()
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()

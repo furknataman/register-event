@@ -218,11 +218,13 @@ InkWell eventsCart(
                     color: Theme.of(context).cardColor,
                     borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 26,
-                width: 60,
-                /* child: Text(
-                  event.eventsLocation!,
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),*/
+                width: 150,
+                child: FittedBox(
+                  child: Text(
+                    event.presentationPlace.toString(),
+                    style: Theme.of(context).textTheme.labelMedium,
+                  ),
+                ),
               )),
         ],
       ),
