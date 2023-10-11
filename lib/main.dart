@@ -24,6 +24,7 @@ void main() async {
     DeviceOrientation.portraitDown,
   ]);
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  await Future.delayed(const Duration(seconds: 2));
   FlutterNativeSplash.remove();
   setFiraBase();
   FlutterLocalNotificationsPlugin()

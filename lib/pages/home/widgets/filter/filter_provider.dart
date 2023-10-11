@@ -35,7 +35,6 @@ class FilterPage extends ChangeNotifier {
     'INTERDISCIPLINARY',
     'Information Technology',
     'KINDERGARDEN',
-    'LIBRARY',
     'MANAGEMENT AND LEADERSHIP',
     'MATHS',
     'MUSIC',

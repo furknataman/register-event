@@ -222,13 +222,13 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
                             controller!.resumeCamera();
                           } else {
                             attendMessage = true;
-                            ref.invalidate(userDataProvider);
-                            ref.invalidate(presentationDataProvider);
+
                             register = false;
                             await WebService().attendanceEvent(
                                 context, userId!, eventIdMatchingWithCode!);
                             controller!.resumeCamera();
-
+                            ref.invalidate(userDataProvider);
+                            ref.invalidate(presentationDataProvider);
                             Navigator.pop(context);
                           }
                         },
