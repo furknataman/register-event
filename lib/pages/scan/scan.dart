@@ -107,7 +107,7 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         data: (data) {
           userId = data.id;
 
-          if (result!.code.toString() == "2023") {
+          if (result!.code.toString() == "0fCpKyBVgZFsobgYPo6j2w2e0VA1yxLT") {
             eventIdMatchingWithCode = 2023;
             register = true;
             title = AppLocalizations.of(context)!.rollCallTitle;
