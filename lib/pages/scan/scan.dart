@@ -82,10 +82,9 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     });
     controller.scannedDataStream.listen((scanData) async {
       if (!isBottomSheetDisplayed) {
-        // Check if bottom sheet is not displayed
         result = scanData;
         await controller.pauseCamera();
-        isBottomSheetDisplayed = true; // Set flag to true
+        isBottomSheetDisplayed = true; 
         dialogAlert();
       }
     });
