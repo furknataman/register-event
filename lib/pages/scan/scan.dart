@@ -114,13 +114,11 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
             body = AppLocalizations.of(context)!.rollCallBody;
           } else {
             for (var event in eventData!) {
-              if (event.id == int.parse(result!.code.toString())) {
+              if (event.id == int.tryParse(result!.code.toString())) {
                 eventIdMatchingWithCode = event.id;
                 break;
               }
             }
-            print(eventIdMatchingWithCode);
-
             if (data.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
               register = false;
               title = AppLocalizations.of(context)!.allreadyAttended;
