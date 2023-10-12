@@ -218,7 +218,7 @@ InkWell eventsCart(
                     color: Theme.of(context).cardColor,
                     borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 26,
-                width: 150,
+                width: 170,
                 child: FittedBox(
                   child: Text(
                     event.presentationPlace.toString(),

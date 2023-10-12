@@ -82,10 +82,9 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
     });
     controller.scannedDataStream.listen((scanData) async {
       if (!isBottomSheetDisplayed) {
-        // Check if bottom sheet is not displayed
         result = scanData;
         await controller.pauseCamera();
-        isBottomSheetDisplayed = true; // Set flag to true
+        isBottomSheetDisplayed = true; 
         dialogAlert();
       }
     });
@@ -107,19 +106,18 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         data: (data) {
           userId = data.id;
 
-          if (result!.code.toString() == "2023") {
+          if (result!.code.toString() == "0fCpKyBVgZFsobgYPo6j2w2e0VA1yxLT") {
             eventIdMatchingWithCode = 2023;
             register = true;
             title = AppLocalizations.of(context)!.rollCallTitle;
             body = AppLocalizations.of(context)!.rollCallBody;
           } else {
             for (var event in eventData!) {
-              if (event.id!.toString().contains(result!.code.toString())) {
+              if (event.id == int.tryParse(result!.code.toString())) {
                 eventIdMatchingWithCode = event.id;
                 break;
               }
             }
-
             if (data.attendedToEventId?.contains(eventIdMatchingWithCode) ?? false) {
               register = false;
               title = AppLocalizations.of(context)!.allreadyAttended;

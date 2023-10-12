@@ -26,9 +26,7 @@ class UnauthorizedException extends Interceptor {
       await logout();
 
       await navigatorKey.currentState?.pushReplacementNamed('/start');
-    } else {
-      toastMessage("An error occurred, please try again");
-    }
+    } 
     super.onError(err, handler);
   }
 }
