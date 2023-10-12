@@ -7,7 +7,7 @@
     "unregister": "Kaydı Sil",
     "upcoming": "Yaklaşan Etkinlikler",
     "password": "Şifre",
-    "timeOfEvent": "Etkinlik Tarihi",
+    "timeOfEvent": "Etkinlik Saati",
     "speakers": "Konuşmacılar",
     "capacity": "Kapasite",
     "freeSeats":"{remainingQuota} adet boş yer kaldı, toplam kontenjan {presentationQuota}",

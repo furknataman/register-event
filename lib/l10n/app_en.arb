@@ -7,7 +7,7 @@
     "full": "Full",
     "upcoming": "Upcomming Events",
     "password": "Password",
-    "timeOfEvent": "Date of Event",
+    "timeOfEvent": "Time of Event",
     "speakers": "Speakers",
     "capacity": "Capacity",
     "freeSeats":"{remainingQuota} free seats left from {presentationQuota}",

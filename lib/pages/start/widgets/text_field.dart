@@ -14,6 +14,7 @@ class LoginForm extends StatelessWidget {
 
   final GoogleProvider getGoogle;
   final ValueNotifier<bool> _isLoading = ValueNotifier<bool>(false);
+  final ValueNotifier<bool> _isPasswordObscured = ValueNotifier<bool>(true);
 
   Future<void> _handleLogin(BuildContext context) async {
     _isLoading.value = true;
@@ -78,33 +79,50 @@ class LoginForm extends StatelessWidget {
       ],
     );
   }
-}
 
-TextField loginTextField(
-    {@required String? labelText,
+  Widget loginTextField({
+    required String? labelText,
     IconData? icon,
     bool obs = false,
-    @required TextEditingController? controller}) {
-  return TextField(
-    controller: controller,
-    keyboardType: TextInputType.visiblePassword,
-    obscureText: obs,
-    style: const TextStyle(color: Colors.white, fontSize: 14),
-    decoration: InputDecoration(
-        suffixIcon: Icon(
-          icon,
-          color: Colors.white,
-        ),
-        labelText: labelText,
-        labelStyle: const TextStyle(color: Colors.white, fontSize: 16),
-        border: const UnderlineInputBorder(
-          borderSide: BorderSide(width: 3, color: Colors.white),
-        ),
-        enabledBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(width: 3, color: Colors.white),
-        ),
-        focusedBorder: const UnderlineInputBorder(
-          borderSide: BorderSide(width: 3, color: Colors.white),
-        )),
-  );
+    required TextEditingController? controller,
+  }) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _isPasswordObscured,
+      builder: (context, isObscured, child) {
+        return TextField(
+          controller: controller,
+          keyboardType: obs ? TextInputType.visiblePassword : TextInputType.text,
+          obscureText: obs ? isObscured : false,
+          style: const TextStyle(color: Colors.white, fontSize: 14),
+          decoration: InputDecoration(
+            suffixIcon: obs
+                ? IconButton(
+                    icon: Icon(
+                      isObscured ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      _isPasswordObscured.value = !isObscured;
+                    },
+                  )
+                : Icon(
+                    icon,
+                    color: Colors.white,
+                  ),
+            labelText: labelText,
+            labelStyle: const TextStyle(color: Colors.white, fontSize: 16),
+            border: const UnderlineInputBorder(
+              borderSide: BorderSide(width: 3, color: Colors.white),
+            ),
+            enabledBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(width: 3, color: Colors.white),
+            ),
+            focusedBorder: const UnderlineInputBorder(
+              borderSide: BorderSide(width: 3, color: Colors.white),
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
