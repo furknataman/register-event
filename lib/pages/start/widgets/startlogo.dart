@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:qr/const/app_text.dart';
 
 class StartPageWidgets extends StatelessWidget {
   const StartPageWidgets({
@@ -11,22 +13,18 @@ class StartPageWidgets extends StatelessWidget {
       child: Column(children: [
         const Text(
           "Welcome To",
-          style: TextStyle(
-              fontWeight: FontWeight.w400,
-              color: Colors.white,
-              fontSize: 45,
-              fontFamily: 'Raleway'),
+          style: TextStyle(fontWeight: FontWeight.w400, color: Colors.white, fontSize: 45, fontFamily: 'Raleway'),
         ),
         const SizedBox(
           height: 10,
         ),
-        Image.asset(
-          "assets/images/atc_icon.png",
-          height: 90,
-          color: Colors.white,
+        SvgPicture.asset(
+          'assets/svg/TOK.svg',
+          height: 100,
+          width: 100,
         ),
         const Text(
-          "Autumn Teachers Conference",
+          ProjectText.appDescription,
           style: TextStyle(color: Colors.white, fontSize: 24, fontFamily: 'Raleway'),
         )
       ]),

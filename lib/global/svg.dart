@@ -6,10 +6,8 @@ Widget elipse(double widthElipse) {
   return SvgPicture.asset(
     assetName,
     width: widthElipse,
-    color: const Color(0xffe43c2f),
   );
 }
-
 
 const String assetName3 = 'assets/svg/Vector.svg';
 

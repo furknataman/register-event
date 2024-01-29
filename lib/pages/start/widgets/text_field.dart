@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/notification/toast_message/toast_message.dart';
 import 'package:qr/pages/route_page/route_page.dart';
 import 'package:qr/services/service.dart';
+
 import '../../../authentication/login_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({
@@ -19,18 +20,15 @@ class LoginForm extends StatelessWidget {
   Future<void> _handleLogin(BuildContext context) async {
     _isLoading.value = true;
 
-    await WebService().login(
-        getGoogle.controllerEmail.text,
-        getGoogle
-            .controllerPassword.text); //.login("furkan.ataman@eyuboglu.k12.tr", "12345");
+    await WebService().login(getGoogle.controllerEmail.text,
+        getGoogle.controllerPassword.text); //.login("furkan.ataman@eyuboglu.k12.tr", "12345");
 
     //
     String? localToken = await getToken();
     _isLoading.value = false;
 
     if (localToken != null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const RoutePage()));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const RoutePage()));
     } else {
       toastMessage(AppLocalizations.of(context)!.loginError);
     }
@@ -66,8 +64,7 @@ class LoginForm extends StatelessWidget {
                         width: 120,
                         height: 46,
                         decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 190, 51, 41),
-                            borderRadius: BorderRadius.all(Radius.circular(30))),
+                            color: Color(0xff485FFF), borderRadius: BorderRadius.all(Radius.circular(30))),
                         child: Text(
                           AppLocalizations.of(context)!.login,
                           style: const TextStyle(fontSize: 20, color: Colors.white),

@@ -3,7 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:qr/notification/local_notification/notification.dart';
 
-void setFiraBase() async {
+void setFireBase() async {
   await Firebase.initializeApp();
   FirebaseMessaging messaging = FirebaseMessaging.instance;
   await FirebaseMessaging.instance.getToken();

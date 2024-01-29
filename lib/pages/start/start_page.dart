@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:qr/global/svg.dart';
 import 'package:qr/pages/start/widgets/startlogo.dart';
 import 'package:qr/pages/start/widgets/text_field.dart';
+
 import '../../authentication/login_service.dart';
 
 class StartPage extends ConsumerWidget {
@@ -12,7 +13,6 @@ class StartPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final getGoogle = ref.watch<GoogleProvider>(googleConfig);
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 72, 72),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
@@ -22,7 +22,7 @@ class StartPage extends ConsumerWidget {
             begin: Alignment.topRight,
             end: Alignment.bottomLeft,
             colors: [
-              Color.fromARGB(255, 255, 72, 72),
+              Color(0xff485FFF),
               Color(0xff0D175F),
             ],
           )),

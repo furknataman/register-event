@@ -8,7 +8,6 @@ import 'package:qr/pages/settings/settings_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
 
-
 class RoutePage extends ConsumerStatefulWidget {
   const RoutePage({super.key});
 
@@ -43,14 +42,9 @@ class _RoutePageState extends ConsumerState<RoutePage> {
               setState(() => _currentIndex = index);
             },
             controller: _pageController,
-            children: const <Widget>[
-              Homepage(),
-              ScannerPage(),
-              MapsPage(),
-              SettingsPage()
-            ]),
+            children: const <Widget>[Homepage(), ScannerPage(), MapsPage(), SettingsPage()]),
         bottomNavigationBar: SizedBox(
-          height: 95,
+          height: 99,
           child: BottomNavigationBar(
               onTap: (index) {
                 setState(() => _currentIndex = index);
