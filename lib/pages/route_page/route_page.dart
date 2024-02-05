@@ -56,8 +56,9 @@ class _RoutePageState extends ConsumerState<RoutePage> {
               type: BottomNavigationBarType.fixed,
               currentIndex: _currentIndex,
               unselectedItemColor: Colors.white,
-              selectedItemColor: Theme.of(context).colorScheme.appColor,
-              selectedIconTheme: const IconThemeData(color: Color(0xff232f60)),
+              selectedIconTheme: IconThemeData(
+                color: Theme.of(context).colorScheme.appColor,
+              ),
               iconSize: 31,
               items: const <BottomNavigationBarItem>[
                 BottomNavigationBarItem(

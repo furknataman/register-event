@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:qr/db/sharedPreferences/token_stroge.dart';
 import 'package:qr/pages/daily_plan/daily_plan.dart';
 import 'package:qr/pages/start/start_page.dart';
 import 'package:qr/services/service.dart';
 import 'package:qr/theme/theme_extends.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -36,15 +37,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             children: [
               Column(
                 children: [
-                  Image.asset(
-                    "assets/images/atc_icon.png",
-                    width: 160,
-                    height: 120,
+                  SvgPicture.asset(
+                    'assets/svg/TOK.svg',
+                    height: 100,
+                    width: 100,
+                    color: Theme.of(context).colorScheme.mainColor,
                   ),
                   Text(
                     AppLocalizations.of(context)!.conferancesName,
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.appColor,
+                      color: Theme.of(context).colorScheme.mainColor,
                       fontSize: 18,
                     ),
                   ),
@@ -57,22 +59,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     data: ((data) {
                       return Column(
                         children: [
-                          Text("${data.name} ${data.surname}",
-                              style: Theme.of(context).textTheme.titleLarge),
+                          Text("${data.name} ${data.surname}", style: Theme.of(context).textTheme.titleLarge),
                           const SizedBox(
                             height: 5,
-                          ),
-                          FittedBox(
-                            child: Text(data.job!,
-                                style: Theme.of(context).textTheme.displaySmall),
                           ),
                           const SizedBox(
                             height: 2,
                           ),
-                          FittedBox(
-                            child: Text(data.school!,
-                                style: Theme.of(context).textTheme.displaySmall),
-                          ),
+                          /* FittedBox(
+                            child: Text(data.school!, style: Theme.of(context).textTheme.displaySmall),
+                          ),*/
                           const SizedBox(
                             height: 2,
                           ),
@@ -89,9 +85,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                                           style: Theme.of(context)
                                               .textTheme
                                               .titleLarge!
-                                              .copyWith(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.w700)),
+                                              .copyWith(fontSize: 16, fontWeight: FontWeight.w700)),
                                     )
                                   : Container(),
                             ],
@@ -109,8 +103,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     children: [
                       InkWell(
                         onTap: () {
-                          Navigator.push(context,
-                              MaterialPageRoute(builder: (context) => DailyPlanPage()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => DailyPlanPage()));
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -160,17 +153,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       InkWell(
                         onTap: () async {
                           logout().then((value) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const StartPage()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => const StartPage()));
                           });
                         },
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(AppLocalizations.of(context)!.logout,
-                                style: Theme.of(context).textTheme.bodyLarge),
+                            Text(AppLocalizations.of(context)!.logout, style: Theme.of(context).textTheme.bodyLarge),
                             Icon(
                               Icons.login,
                               color: Theme.of(context).colorScheme.appColor,
