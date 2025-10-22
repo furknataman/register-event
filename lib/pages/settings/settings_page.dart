@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/db/sharedPreferences/token_stroge.dart';
-import 'package:qr/pages/daily_plan/daily_plan.dart';
-import 'package:qr/pages/start/start_page.dart';
-import 'package:qr/services/service.dart';
-import 'package:qr/theme/theme_extends.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
+import 'package:autumn_conference/pages/daily_plan/daily_plan.dart';
+import 'package:autumn_conference/pages/start/start_page.dart';
+import 'package:autumn_conference/services/service.dart';
+import 'package:autumn_conference/theme/theme_extends.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {

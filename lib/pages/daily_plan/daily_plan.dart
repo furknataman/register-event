@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:qr/db/db_model/time_entry.dart';
-import 'package:qr/theme/theme_extends.dart';
+import 'package:autumn_conference/db/db_model/time_entry.dart';
+import 'package:autumn_conference/theme/theme_extends.dart';
 
 class DailyPlanPage extends StatelessWidget {
   DailyPlanPage({super.key});
 
-  List<TimeEntry> entries = [
+  final List<TimeEntry> entries = [
     TimeEntry(time: "08:30 - 09:15", description: "Welcome"),
     TimeEntry(time: "09:15 - 09:45", description: "Opening"),
     TimeEntry(time: "10:00 - 10:45", description: "Session 1"),

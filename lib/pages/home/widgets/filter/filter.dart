@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:qr/pages/home/widgets/filter/widgets/button.dart';
-import 'package:qr/pages/home/widgets/filter/widgets/show_branch.dart';
-import 'package:qr/pages/home/widgets/filter/widgets/show_picker.dart';
-import 'package:qr/pages/home/widgets/filter/widgets/show_target.dart';
-import 'package:qr/pages/home/widgets/filter/widgets/time_picker.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/widgets/button.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/widgets/show_branch.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/widgets/show_picker.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/widgets/show_target.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/widgets/time_picker.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 void filterDialog(BuildContext context) {
   showModalBottomSheet(

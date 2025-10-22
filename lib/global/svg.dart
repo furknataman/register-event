@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import '../core/theme/app_colors.dart';
 
 const String assetName = 'assets/svg/elipseregister.svg';
 Widget elipse(double widthElipse) {
   return SvgPicture.asset(
     assetName,
     width: widthElipse,
-    color: const Color(0xffe43c2f),
+    colorFilter: const ColorFilter.mode(AppColors.primaryLightBlue, BlendMode.srcIn),
   );
 }
 

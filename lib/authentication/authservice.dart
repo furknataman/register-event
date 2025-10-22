@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:qr/db/sharedPreferences/token_stroge.dart';
-import 'package:qr/pages/start/start_page.dart';
-import 'package:qr/pages/route_page/route_page.dart';
+import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
+import 'package:autumn_conference/pages/start/start_page.dart';
+import 'package:autumn_conference/pages/route_page/route_page.dart';
 
 class AuthService {
   //Determine if the user is authenticated.
@@ -21,7 +21,7 @@ class AuthService {
         });
   }*/
 
-  loginwithApi() {
+  Widget loginwithApi() {
     return FutureBuilder<String?>(
       future: getToken(),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {

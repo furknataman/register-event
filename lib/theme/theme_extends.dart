@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 
 extension CustomColorScheme on ColorScheme {
-  Color get appColor => const Color(0xff8f1910);
+  // Primary brand color
+  Color get appColor => const Color(0xFF4679B1);
   Color get unregister => brightness == Brightness.light
       ? const Color(0xffEB5757)
       : const Color.fromARGB(255, 144, 65, 65);
-  Color get mainColor =>
-      brightness == Brightness.light ? const Color(0xffe43c2f) : const Color(0xff1E1E1E);
+  // Secondary color – white for both modes to match request
+  Color get mainColor => Colors.white;
 
   List<Color> get cardColor => brightness == Brightness.light
       ? [

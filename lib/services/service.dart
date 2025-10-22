@@ -1,14 +1,13 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/db/db_model/presentation_model.dart';
-import 'package:qr/db/db_model/token_response_model.dart';
-import 'package:qr/db/db_model/user_info.dart';
-import 'package:qr/db/sharedPreferences/token_stroge.dart';
-import 'package:qr/main.dart';
-import 'package:qr/notification/toast_message/toast_message.dart';
-import 'package:qr/services/check_internet.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:logger/logger.dart';
+import 'package:autumn_conference/db/db_model/presentation_model.dart';
+import 'package:autumn_conference/db/db_model/token_response_model.dart';
+import 'package:autumn_conference/db/db_model/user_info.dart';
+import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
+import 'package:autumn_conference/main.dart';
+import 'package:autumn_conference/notification/toast_message/toast_message.dart';
+import 'package:autumn_conference/services/check_internet.dart';
 
 class UnauthorizedException extends Interceptor {
   @override
@@ -32,14 +31,24 @@ class UnauthorizedException extends Interceptor {
 }
 
 class WebService {
-  final String baseUrl = "http://atc.eyuboglu.com/api/api/";
+  final String baseUrl = "https://ibdayapi.eyuboglu.k12.tr/api";
   final Dio _dio = Dio();
+  final Logger _logger = Logger(
+    printer: PrettyPrinter(
+      methodCount: 0,
+      errorMethodCount: 5,
+      lineLength: 80,
+      colors: true,
+      printEmojis: true,
+    ),
+  );
+
   WebService() {
     _dio.interceptors.add(UnauthorizedException());
   }
 
   Future<Response> _makeRequest(String endpoint,
-      {Map<String, dynamic>? data, String? token}) async {
+      {Map<String, dynamic>? data, String? token, String method = 'POST'}) async {
     final url = "$baseUrl$endpoint";
 
     final isConnected = await hasInternetConnection();
@@ -50,13 +59,24 @@ class WebService {
         error: 'No internet connection',
       );
     }
-    final response = await _dio.post(
-      url,
-      data: data,
-      options: _commonHeaders(token),
-    );
 
-    return response;
+    try {
+      final response = method == 'GET'
+        ? await _dio.get(
+            url,
+            queryParameters: data,
+            options: token != null ? _commonHeaders(token) : null,
+          )
+        : await _dio.post(
+            url,
+            data: data,
+            options: token != null ? _commonHeaders(token) : null,
+          );
+
+      return response;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   Options _commonHeaders([String? token]) {
@@ -114,15 +134,29 @@ class WebService {
   }
 
   Future<List<ClassModelPresentation>> fetchAllEvents() async {
-    final myToken = await getToken();
-    final response = await _makeRequest("AtcYonetim/MobilSunumlariListele",
-        data: {'token': myToken}, token: myToken);
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Sunum/SunumListele";
+      _logger.i('Fetching events from: $url');
 
-    if (response.statusCode == 200) {
-      final List<dynamic> responseData = response.data;
-      return responseData.map((data) => ClassModelPresentation.fromJson(data)).toList();
-    } else {
-      throw Exception('Failed to load presentations');
+      final response = await _dio.get(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data type: ${response.data.runtimeType}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data;
+        _logger.i('Successfully loaded ${responseData.length} events');
+        return responseData.map((data) => ClassModelPresentation.fromJson(data)).toList();
+      } else {
+        throw Exception('Failed to load presentations: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching events', error: e, stackTrace: stackTrace);
+      rethrow;
     }
   }
 
@@ -153,12 +187,12 @@ class WebService {
   }
 
   Future<bool> attendanceEvent(
-      BuildContext context, int userId, int presentationId) async {
+      int userId, int presentationId, String successMessage) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/SunumYoklamaAl",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
-      toastMessage(AppLocalizations.of(context)!.scanAttendMessage);
+      toastMessage(successMessage);
       return true;
     } else {
       throw Exception('Failed to load presentations');

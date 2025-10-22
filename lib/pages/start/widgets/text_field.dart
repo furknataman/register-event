@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:qr/db/sharedPreferences/token_stroge.dart';
-import 'package:qr/notification/toast_message/toast_message.dart';
-import 'package:qr/pages/route_page/route_page.dart';
-import 'package:qr/services/service.dart';
+import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
+import 'package:autumn_conference/notification/toast_message/toast_message.dart';
+import 'package:autumn_conference/pages/route_page/route_page.dart';
+import 'package:autumn_conference/services/service.dart';
 import '../../../authentication/login_service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({

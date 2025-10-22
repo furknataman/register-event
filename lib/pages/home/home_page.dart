@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:qr/global/widgets/internet_control.dart';
-import 'package:qr/pages/home/widgets/filter/filter.dart';
-import 'package:qr/pages/home/widgets/filter/widgets/skeleton.dart';
-import 'package:qr/services/service.dart';
-import 'package:qr/theme/theme_extends.dart';
+import 'package:autumn_conference/global/widgets/internet_control.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/filter.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/widgets/skeleton.dart';
+import 'package:autumn_conference/services/service.dart';
+import 'package:autumn_conference/theme/theme_extends.dart';
 import 'widgets/events_cart.dart';
 import 'widgets/filter/filter_provider.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 bool isAfter(TimeOfDay first, TimeOfDay second) {
   return first.hour > second.hour ||

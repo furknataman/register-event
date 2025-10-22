@@ -1,51 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/global/svg.dart';
-import 'package:qr/pages/start/widgets/startlogo.dart';
-import 'package:qr/pages/start/widgets/text_field.dart';
-import '../../authentication/login_service.dart';
+import 'package:go_router/go_router.dart';
+import 'package:autumn_conference/global/svg.dart';
+import 'package:autumn_conference/pages/start/widgets/startlogo.dart';
+import '../../core/routing/app_router.dart';
+import '../../core/theme/app_colors.dart';
+import '../../features/auth/presentation/providers/auth_provider.dart';
 
-class StartPage extends ConsumerWidget {
+class StartPage extends ConsumerStatefulWidget {
   const StartPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final getGoogle = ref.watch<GoogleProvider>(googleConfig);
+  ConsumerState<StartPage> createState() => _StartPageState();
+}
+
+class _StartPageState extends ConsumerState<StartPage> {
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthAndNavigate();
+  }
+
+  Future<void> _checkAuthAndNavigate() async {
+    // Wait for auth provider to fully initialize
+    try {
+      final user = await ref.read(authNotifierProvider.future);
+      final isAuthenticated = user != null;
+
+      // Show splash for 2 seconds
+      await Future.delayed(const Duration(seconds: 2));
+
+      if (!mounted) return;
+
+      final route = isAuthenticated ? AppRoutes.home : AppRoutes.login;
+      context.go(route);
+    } catch (e) {
+      // If there's an error, go to login
+      await Future.delayed(const Duration(seconds: 2));
+      if (!mounted) return;
+      context.go(AppRoutes.login);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 255, 72, 72),
-      body: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          height: MediaQuery.of(context).size.height,
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [
-              Color.fromARGB(255, 255, 72, 72),
-              Color(0xff0D175F),
-            ],
-          )),
-          child: Stack(children: [
+      backgroundColor: AppColors.primaryBlue,
+      body: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: AppColors.backgroundGradient,
+        ),
+        child: Stack(
+          children: [
             Positioned(
               bottom: 0,
               right: 0,
               child: elipse(MediaQuery.of(context).size.width),
             ),
-            Center(
+            const Center(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const StartPageWidgets(),
-                  Container(
-                    margin: const EdgeInsets.only(left: 70, right: 70),
-                    height: 250,
-                    child: LoginForm(getGoogle: getGoogle),
+                  StartPageWidgets(),
+                  SizedBox(height: 24),
+                  CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 3,
                   ),
                 ],
               ),
             ),
-          ]),
+          ],
         ),
       ),
     );

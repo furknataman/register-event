@@ -12,57 +12,79 @@ class ClassModelPresentation {
   final String? duration;
   final String? language;
   final String? type;
+  final String? videoUrl;
+  final String? presenterCount;
+  final String? coordinatorName;
+  final String? coordinatorEmail;
+  final String? experience;
+  final String? participantExperience;
+  final String? participantCount;
+  final String? extraInfo;
+  // Legacy fields for backward compatibility
   final DateTime? presentationTime;
   final String? presentationPlace;
   final String? presentationQuota;
   final String? ratingForm;
   final int? remainingQuota;
 
-  ClassModelPresentation(
-      {this.id,
-      this.title,
-      this.description,
-      this.presenter1Name,
-      this.presenter1Email,
-      this.presenter2Name,
-      this.presenter2Email,
-      this.branch,
-      this.audience,
-      this.school,
-      this.duration,
-      this.language,
-      this.type,
-      this.presentationTime,
-      this.presentationPlace,
-      this.ratingForm,
-      this.presentationQuota,
-      this.remainingQuota});
+  ClassModelPresentation({
+    this.id,
+    this.title,
+    this.description,
+    this.presenter1Name,
+    this.presenter1Email,
+    this.presenter2Name,
+    this.presenter2Email,
+    this.branch,
+    this.audience,
+    this.school,
+    this.duration,
+    this.language,
+    this.type,
+    this.videoUrl,
+    this.presenterCount,
+    this.coordinatorName,
+    this.coordinatorEmail,
+    this.experience,
+    this.participantExperience,
+    this.participantCount,
+    this.extraInfo,
+    this.presentationTime,
+    this.presentationPlace,
+    this.presentationQuota,
+    this.ratingForm,
+    this.remainingQuota,
+  });
 
   factory ClassModelPresentation.fromJson(Map<String, dynamic> json) {
-    String timeFromJson = json['presentationTime'] ?? "09:00:00";
-    List<String> timeParts = timeFromJson.split(":");
-    int hour = int.parse(timeParts[0]);
-    int minute = int.parse(timeParts[1]);
-    int second = int.parse(timeParts[2]);
     return ClassModelPresentation(
-      id: json['id'] ?? 0,
-      title: (json['title']),
-      description: json['description'] ?? " ",
-      presenter1Name: json['presenter1Name'] ?? " ",
-      presenter1Email: json['presenter1Email'] ?? " ",
-      presenter2Name: json['presenter2Name'],
-      presenter2Email: json['presenter2Email'],
-      branch: json['branch'] ?? " ",
-      audience: json['audience'] ?? " ",
-      school: json['school'] ?? " ",
-      duration: json['duration'],
-      language: json['language'] ?? " ",
-      type: json['type'] ?? " ",
-      ratingForm: json['evaluationLink'] ?? " ",
-      presentationTime: DateTime(2023, 10, 14, hour, minute, second),
-      presentationPlace: json['presentationPlace'] ?? " ",
-      presentationQuota: json['presentationQuota'] ?? "0",
-      remainingQuota: json['kalanKota'] ?? 0,
+      id: json['id'],
+      title: json['sunumBaslik'],
+      description: json['ozet'],
+      presenter1Name: json['sunucu1AdSoyad'],
+      presenter1Email: json['sunucu1Eposta'],
+      presenter2Name: json['sunucu2AdSoyad'],
+      presenter2Email: json['sunucu2Eposta'],
+      branch: json['ibAlani'],
+      audience: json['dinleyiciKitle'],
+      school: json['kurum'],
+      duration: json['sure'],
+      language: json['sunumDili'],
+      type: json['sunumSekli'],
+      videoUrl: json['videoUrl'],
+      presenterCount: json['sunucuSayisi'],
+      coordinatorName: json['koordinatorAdSoyad'],
+      coordinatorEmail: json['koordinatorEposta'],
+      experience: json['ibDeneyimi'],
+      participantExperience: json['katilimciDeneyim'],
+      participantCount: json['katilimciSayisi'],
+      extraInfo: json['ekBilgi'],
+      // Legacy fields - set to default values
+      presentationTime: DateTime.now().add(const Duration(days: 7)),
+      presentationPlace: json['kurum'] ?? '',
+      presentationQuota: json['katilimciSayisi'] ?? '30',
+      ratingForm: '',
+      remainingQuota: 30,
     );
   }
 }

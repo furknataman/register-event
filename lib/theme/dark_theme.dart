@@ -4,13 +4,11 @@ ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: const Color(0xff1E1E1E),
     fontFamily: "Raleway",
-    primaryColor: const Color(0xdd242424),
+    primaryColor: const Color(0xFF4679B1),
     splashColor: Colors.white,
     cardColor: const Color(0xff242424),
-    floatingActionButtonTheme: const FloatingActionButtonThemeData(
-        backgroundColor: Color(
-      0xff5B64A7,
-    )),
+    floatingActionButtonTheme:
+        const FloatingActionButtonThemeData(backgroundColor: Color(0xFF4679B1)),
     secondaryHeaderColor: const Color(0xffBDBDBD),
     textTheme: const TextTheme(
         displayLarge:

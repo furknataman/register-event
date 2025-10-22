@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/pages/home/widgets/filter/filter_provider.dart';
-import 'package:qr/theme/theme_extends.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/filter_provider.dart';
+import 'package:autumn_conference/theme/theme_extends.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 class FilterBottombar extends ConsumerWidget {
   const FilterBottombar({

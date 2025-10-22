@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/db/sharedPreferences/theme_mode_stroge.dart';
+import 'package:autumn_conference/db/sharedPreferences/theme_mode_stroge.dart';
 
 class DarkModeNotifier extends StateNotifier<bool> {
   DarkModeNotifier() : super(false) {

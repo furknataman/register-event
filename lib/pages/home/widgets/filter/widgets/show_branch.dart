@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:qr/pages/home/widgets/filter/filter_provider.dart';
+import 'package:autumn_conference/pages/home/widgets/filter/filter_provider.dart';
 
 class Branch extends ConsumerWidget {
   const Branch({super.key});

@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 ThemeData lightTheme = ThemeData(
     scaffoldBackgroundColor: Colors.white,
     secondaryHeaderColor: const Color(0xff333333),
-    primaryColor: const Color(0xdd242424),
+    primaryColor: const Color(0xFF4679B1),
     floatingActionButtonTheme:
-        const FloatingActionButtonThemeData(backgroundColor: Color(0xff485FFF)),
+        const FloatingActionButtonThemeData(backgroundColor: Color(0xFF4679B1)),
     fontFamily: "Raleway",
     textTheme: const TextTheme(
         displayLarge:

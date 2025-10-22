@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/global/date_time_converter.dart';
-import 'package:qr/global/widgets/internet_control.dart';
-import 'package:qr/pages/events/widgets/register_button.dart';
-import 'package:qr/pages/events/widgets/skeleton.dart';
-import 'package:qr/pages/events/widgets/speakers_info.dart';
-import 'package:qr/services/service.dart';
-import 'package:qr/theme/theme_extends.dart';
+import 'package:autumn_conference/global/date_time_converter.dart';
+import 'package:autumn_conference/global/widgets/internet_control.dart';
+import 'package:autumn_conference/pages/events/widgets/register_button.dart';
+import 'package:autumn_conference/pages/events/widgets/skeleton.dart';
+import 'package:autumn_conference/pages/events/widgets/speakers_info.dart';
+import 'package:autumn_conference/services/service.dart';
+import 'package:autumn_conference/theme/theme_extends.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../home/widgets/events_cart.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 class EventsPage extends ConsumerStatefulWidget {
   final int? eventId;

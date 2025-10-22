@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lucide_icons/lucide_icons.dart';
-import 'package:qr/db/db_model/presentation_model.dart';
-import 'package:qr/pages/events/event_page.dart';
+import 'package:autumn_conference/db/db_model/presentation_model.dart';
+import 'package:autumn_conference/pages/events/event_page.dart';
 import '../../../global/date_time_converter.dart';
 
 String truncateString(String str, int cutoff) {

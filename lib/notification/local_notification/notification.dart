@@ -53,9 +53,7 @@ class LocalNoticeService {
       body,
       scheduleTime,
       noticeDetail,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-      //androidAllowWhileIdle: true,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
 
@@ -65,10 +63,10 @@ class LocalNoticeService {
 
   Future showNotification(
       {int id = 0, String? title, String? body, String? payLoad}) async {
-    return _localNotificationsPlugin.show(id, title, body, await notificationDetails());
+    return _localNotificationsPlugin.show(id, title, body, notificationDetails());
   }
 
-  notificationDetails() {
+  NotificationDetails notificationDetails() {
     return const NotificationDetails(
         android: AndroidNotificationDetails('channelId', 'channelName',
             importance: Importance.max),

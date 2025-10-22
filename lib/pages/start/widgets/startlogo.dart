@@ -18,16 +18,18 @@ class StartPageWidgets extends StatelessWidget {
               fontFamily: 'Raleway'),
         ),
         const SizedBox(
-          height: 10,
-        ),
-        Image.asset(
-          "assets/images/atc_icon.png",
-          height: 90,
-          color: Colors.white,
+          height: 20,
         ),
         const Text(
-          "Autumn Teachers Conference",
-          style: TextStyle(color: Colors.white, fontSize: 24, fontFamily: 'Raleway'),
+          "18. IB Day",
+          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, fontFamily: 'Raleway'),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        const Text(
+          "Better Together",
+          style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Raleway'),
         )
       ]),
     );

@@ -1,39 +1,46 @@
-import 'package:flutter/cupertino.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class SkelWidget extends StatelessWidget {
-  const SkelWidget({
-    Key? key,
-  }) : super(key: key);
+  const SkelWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonItem(
-            child: Column(
-          children: [
-            SkeletonAvatar(
-              style: SkeletonAvatarStyle(
-                  borderRadius: const BorderRadius.only(
-                      bottomLeft: Radius.circular(10),
-                      bottomRight: Radius.circular(10)),
-                  width: MediaQuery.of(context).size.width,
-                  height: 200),
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: 200,
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
             ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height - 200,
-              width: MediaQuery.of(context).size.width,
-              child: SkeletonParagraph(
-                  style: SkeletonParagraphStyle(
-                      lines: 30,
-                      spacing: 6,
-                      lineStyle: SkeletonLineStyle(
-                        randomLength: true,
-                        height: 10,
-                        borderRadius: BorderRadius.circular(8),
-                        minLength: MediaQuery.of(context).size.width / 2,
-                      ))),
+          ),
+          SizedBox(
+            height: MediaQuery.of(context).size.height - 200,
+            width: MediaQuery.of(context).size.width,
+            child: ListView.builder(
+              itemCount: 30,
+              itemBuilder: (context, index) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0, horizontal: 16.0),
+                child: Container(
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                ),
+              ),
             ),
-          ],
-        ));
+          ),
+        ],
+      ),
+    );
   }
 }

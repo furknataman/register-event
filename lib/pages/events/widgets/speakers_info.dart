@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:qr/db/db_model/presentation_model.dart';
+import 'package:autumn_conference/db/db_model/presentation_model.dart';
 
 Widget speakersInfo(BuildContext context, ClassModelPresentation getEventInfo) {
   return Row(

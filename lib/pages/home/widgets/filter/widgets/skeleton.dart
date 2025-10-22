@@ -1,35 +1,44 @@
-import 'package:flutter/cupertino.dart';
-import 'package:skeletons/skeletons.dart';
+import 'package:flutter/material.dart';  
+import 'package:shimmer/shimmer.dart';
 
 class SkeletonWidget extends StatelessWidget {
-  const SkeletonWidget({
-    Key? key,
-  }) : super(key: key);
+  const SkeletonWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SkeletonItem(
-        child: Column(
-      children: [
-        SkeletonAvatar(
-          style: SkeletonAvatarStyle(
-              width: MediaQuery.of(context).size.width - 20, height: 200),
-        ),
-        SizedBox(
-          height: 200,
-          width: MediaQuery.of(context).size.width - 20,
-          child: SkeletonParagraph(
-              style: SkeletonParagraphStyle(
-                  lines: 3,
-                  spacing: 6,
-                  lineStyle: SkeletonLineStyle(
-                    randomLength: true,
-                    height: 10,
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[300]!,
+      highlightColor: Colors.grey[100]!,
+      child: Column(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width - 20,
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          const SizedBox(height: 8),
+          SizedBox(
+            height: 200,
+            width: MediaQuery.of(context).size.width - 20,
+            child: Column(
+              children: List.generate(3, (index) => Padding(
+                padding: const EdgeInsets.symmetric(vertical: 3.0),
+                child: Container(
+                  height: 10,
+                  width: MediaQuery.of(context).size.width / (index % 2 == 0 ? 1.5 : 2),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
-                    minLength: MediaQuery.of(context).size.width / 2,
-                  ))),
-        ),
-      ],
-    ));
+                  ),
+                ),
+              )),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/services/service.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/services/service.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 Widget internetControl(BuildContext context, WidgetRef ref) {
   return Expanded(

@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:heroicons_flutter/heroicons_flutter.dart';
-import 'package:qr/pages/home/home_page.dart';
-import 'package:qr/pages/maps/maps.dart';
-import 'package:qr/pages/scan/scan.dart';
-import 'package:qr/pages/settings/settings_page.dart';
-import 'package:qr/services/service.dart';
-import 'package:qr/theme/theme_extends.dart';
+import 'package:autumn_conference/pages/home/home_page.dart';
+import 'package:autumn_conference/pages/maps/maps.dart';
+import 'package:autumn_conference/pages/scan/scan.dart';
+import 'package:autumn_conference/pages/settings/settings_page.dart';
+import 'package:autumn_conference/theme/theme_extends.dart';
 
 
 class RoutePage extends ConsumerStatefulWidget {
@@ -23,8 +22,6 @@ class _RoutePageState extends ConsumerState<RoutePage> {
   void initState() {
     super.initState();
     _pageController = PageController();
-    ref.refresh(userDataProvider);
-    ref.refresh(presentationDataProvider);
   }
 
   int _currentIndex = 0;

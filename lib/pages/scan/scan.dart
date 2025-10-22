@@ -1,57 +1,76 @@
 import 'dart:io';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:qr/services/service.dart';
-import 'package:qr/theme/theme_extends.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:autumn_conference/services/service.dart';
+import 'package:autumn_conference/core/theme/app_colors.dart';
+import 'package:mobile_scanner/mobile_scanner.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 class ScannerPage extends ConsumerStatefulWidget {
-  const ScannerPage({Key? key}) : super(key: key);
+  const ScannerPage({super.key});
 
   @override
   ConsumerState<ScannerPage> createState() => _ScannerPageState();
 }
 
 class _ScannerPageState extends ConsumerState<ScannerPage> {
-  Barcode? result;
-  QRViewController? controller;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  BarcodeCapture? result;
+  MobileScannerController controller = MobileScannerController(
+    detectionSpeed: DetectionSpeed.normal,
+    facing: CameraFacing.back,
+    torchEnabled: false,
+  );
   bool isBottomSheetDisplayed = false;
 
   @override
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
+      controller.stop();
     }
-    controller!.resumeCamera();
+    controller.start();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
+      backgroundColor: AppColors.primaryBlue,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.white,
+        title: Text(AppLocalizations.of(context)!.scanqr),
+      ),
       body: Stack(
-        children: <Widget>[
-          SizedBox(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              child: buildQrView(context)),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(top: 80, bottom: 40),
-                child: Text(
-                  textAlign: TextAlign.center,
-                  AppLocalizations.of(context)!.scanqr,
-                  style: Theme.of(context)
-                      .textTheme
-                      .displayLarge!
-                      .copyWith(color: Colors.white),
+        children: [
+          SafeArea(
+            top: false,
+            bottom: true,
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: AppColors.backgroundGradient,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 80),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  child: buildQrView(context),
                 ),
               ),
-            ],
+            ),
+          ),
+          // Black overlay for bottom bar - OUTSIDE SafeArea
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 150,
+            child: Container(
+              color: Colors.black,
+            ),
           ),
         ],
       ),
@@ -59,35 +78,36 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
   }
 
   Widget buildQrView(BuildContext context) {
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 250.0
-        : 350.0;
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: const Color(0xffe43c2f),
-          borderRadius: 30,
-          borderLength: 30,
-          borderWidth: 20,
-          cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => onPermissionSet(context, ctrl, p),
+    return Stack(
+      children: [
+        MobileScanner(
+          controller: controller,
+          onDetect: onBarcodeDetect,
+        ),
+        Center(
+          child: Container(
+            width: 250,
+            height: 250,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.6),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(12),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
-  void onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) async {
-      if (!isBottomSheetDisplayed) {
-        result = scanData;
-        await controller.pauseCamera();
-        isBottomSheetDisplayed = true; 
-        dialogAlert();
-      }
-    });
+  void onBarcodeDetect(BarcodeCapture barcodeCapture) async {
+    if (!isBottomSheetDisplayed && barcodeCapture.barcodes.isNotEmpty) {
+      result = barcodeCapture;
+      await controller.stop();
+      isBottomSheetDisplayed = true; 
+      dialogAlert();
+    }
   }
 
   String? title;
@@ -106,14 +126,14 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
         data: (data) {
           userId = data.id;
 
-          if (result!.code.toString() == "0fCpKyBVgZFsobgYPo6j2w2e0VA1yxLT") {
+          if (result!.barcodes.first.rawValue == "0fCpKyBVgZFsobgYPo6j2w2e0VA1yxLT") {
             eventIdMatchingWithCode = 2023;
             register = true;
             title = AppLocalizations.of(context)!.rollCallTitle;
             body = AppLocalizations.of(context)!.rollCallBody;
           } else {
             for (var event in eventData!) {
-              if (event.id == int.tryParse(result!.code.toString())) {
+              if (event.id == int.tryParse(result!.barcodes.first.rawValue ?? '')) {
                 eventIdMatchingWithCode = event.id;
                 break;
               }
@@ -142,122 +162,156 @@ class _ScannerPageState extends ConsumerState<ScannerPage> {
 
     return showModalBottomSheet(
         context: context,
+        backgroundColor: Colors.transparent,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(
             top: Radius.circular(25.0),
           ),
         ),
         builder: (context) {
-          return Container(
-            height: 277,
-            decoration: BoxDecoration(
-                color: Theme.of(context).scaffoldBackgroundColor,
-                borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(20), topRight: Radius.circular(20))),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 18.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  FractionallySizedBox(
-                    widthFactor: 0.25,
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(
-                        vertical: 12.0,
-                      ),
-                      child: Container(
-                        height: 5.0,
-                        decoration: const BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(2.5)),
-                            color: Color(0xff828282)),
-                      ),
-                    ),
+          return ClipRRect(
+            borderRadius: const BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                height: 277,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.15),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
                   ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(title!, style: Theme.of(context).textTheme.labelLarge),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    width: 1,
                   ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    child: Text(body!, style: Theme.of(context).textTheme.bodyLarge),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      if (register == true)
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Theme.of(context).colorScheme.disable,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 30.0, vertical: 10.0),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30.0)),
+                      FractionallySizedBox(
+                        widthFactor: 0.25,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(
+                            vertical: 12.0,
                           ),
-                          onPressed: () {
-                            isBottomSheetDisplayed = false;
-                            register = false;
-                            Navigator.pop(context);
-                            controller!.resumeCamera();
-                          },
-                          child: Text(AppLocalizations.of(context)!.cancel,
-                              style: Theme.of(context).textTheme.labelLarge),
+                          height: 5.0,
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.all(Radius.circular(2.5)),
+                            color: Colors.white.withValues(alpha: 0.5),
+                          ),
                         ),
-                      const SizedBox(
-                        width: 20,
                       ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Theme.of(context).colorScheme.appColor,
-                          padding:
-                              const EdgeInsets.symmetric(horizontal: 30.0, vertical: 10.0),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30.0)),
-                        ),
-                        onPressed: () async {
-                          isBottomSheetDisplayed = false;
-                          if (register == false) {
-                            Navigator.pop(context);
-                            controller!.resumeCamera();
-                          } else {
-                            attendMessage = true;
-
-                            register = false;
-                            await WebService().attendanceEvent(
-                                context, userId!, eventIdMatchingWithCode!);
-                            controller!.resumeCamera();
-                            ref.invalidate(userDataProvider);
-                            ref.invalidate(presentationDataProvider);
-                            Navigator.pop(context);
-                          }
-                        },
+                      Container(
+                        alignment: Alignment.topLeft,
                         child: Text(
-                          AppLocalizations.of(context)!.ok,
-                          style: const TextStyle(fontWeight: FontWeight.w700),
+                          title!,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      )
+                      ),
+                      Container(
+                        alignment: Alignment.topLeft,
+                        child: Text(
+                          body!,
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.9),
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (register == true)
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.red,
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 30.0, vertical: 12.0),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12.0)),
+                              ),
+                              onPressed: () {
+                                isBottomSheetDisplayed = false;
+                                register = false;
+                                Navigator.pop(context);
+                                controller.start();
+                              },
+                              child: Text(
+                                AppLocalizations.of(context)!.cancel,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                          if (register == true)
+                            const SizedBox(width: 20),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1AB7EA),
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 30.0, vertical: 12.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0)),
+                            ),
+                            onPressed: () async {
+                              final ctx = context;
+                              final navigator = Navigator.of(ctx);
+                              final successMessage = AppLocalizations.of(ctx)!.scanAttendMessage;
+                              isBottomSheetDisplayed = false;
+                              if (register == false) {
+                                navigator.pop();
+                                controller.start();
+                              } else {
+                                attendMessage = true;
+
+                                register = false;
+                                await WebService().attendanceEvent(
+                                    userId!, eventIdMatchingWithCode!, successMessage);
+                                controller.start();
+                                ref.invalidate(userDataProvider);
+                                ref.invalidate(presentationDataProvider);
+                                if (mounted) {
+                                  navigator.pop();
+                                }
+                              }
+                            },
+                            child: Text(
+                              AppLocalizations.of(context)!.ok,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(height: 20),
                     ],
                   ),
-                  const SizedBox(
-                    height: 20,
-                  )
-                ],
+                ),
               ),
             ),
           );
         });
   }
 
-  void onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)!.noPermission)),
-      );
-    }
-  }
 
   @override
   void dispose() {
-    controller?.dispose();
+    controller.dispose();
     super.dispose();
   }
 }
