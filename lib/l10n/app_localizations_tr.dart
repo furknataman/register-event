@@ -171,4 +171,109 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get eventLocation => 'Etkinlik Yeri';
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get userInfo => 'Kullanıcı Bilgileri';
+
+  @override
+  String get changePassword => 'Şifre Değiştir';
+
+  @override
+  String get themeSelection => 'Tema Seçimi';
+
+  @override
+  String get languageSelection => 'Dil Seçimi';
+
+  @override
+  String get noEventsYet => 'Henüz etkinlik yok';
+
+  @override
+  String get searchEvents => 'Etkinlik ara';
+
+  @override
+  String get startSearching => 'Etkinlik aramaya başlayın';
+
+  @override
+  String get noResults => 'Sonuç bulunamadı';
+
+  @override
+  String noResultsFor(Object query) {
+    return '\"$query\" için eşleşen etkinlik bulunamadı';
+  }
+
+  @override
+  String get notifications => 'Bildirimler';
+
+  @override
+  String get noNotifications => 'Henüz bildirim yok';
+
+  @override
+  String get newNotificationsHere => 'Yeni bildirimleriniz burada görünecek';
+
+  @override
+  String get lightTheme => 'Açık Tema';
+
+  @override
+  String get darkTheme => 'Koyu Tema';
+
+  @override
+  String get systemTheme => 'Sistem';
+
+  @override
+  String get turkish => 'Türkçe';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get settings => 'Ayarlar';
+
+  @override
+  String get areYouSure => 'Emin misiniz?';
+
+  @override
+  String get logoutConfirmation => 'Çıkış yapmak istediğinizden emin misiniz?';
+
+  @override
+  String get error => 'Hata';
+
+  @override
+  String get anErrorOccurred => 'Bir hata oluştu';
+
+  @override
+  String get retry => 'Tekrar Dene';
+
+  @override
+  String get loading => 'Yükleniyor';
+
+  @override
+  String themeSelected(Object theme) {
+    return '$theme seçildi';
+  }
+
+  @override
+  String languageSelected(Object language) {
+    return '$language dili seçildi';
+  }
+
+  @override
+  String get searchPlaceholder => 'Etkinlik, öğretmen veya okul ara...';
+
+  @override
+  String get noInstitutionInfo => 'Kurum bilgisi yok';
+
+  @override
+  String get minutes => 'dakika';
+
+  @override
+  String get noTypeInfo => 'Tip bilgisi yok';
+
+  @override
+  String get noBranchInfo => 'Alan bilgisi yok';
+
+  @override
+  String get noTitleInfo => 'Başlık Yok';
 }

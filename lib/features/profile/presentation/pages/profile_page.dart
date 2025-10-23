@@ -6,6 +6,9 @@ import 'package:go_router/go_router.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../l10n/locale_notifier.dart';
+import '../../../../theme/theme_mode.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -20,7 +23,7 @@ class ProfilePage extends ConsumerWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
-        title: const Text('Profile'),
+        title: Text(AppLocalizations.of(context)!.profile),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -29,8 +32,8 @@ class ProfilePage extends ConsumerWidget {
         ],
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
+        decoration: BoxDecoration(
+          gradient: AppColors.getBackgroundGradient(context),
         ),
         child: authState.when(
           data: (user) => user != null
@@ -221,7 +224,7 @@ class _ProfileContent extends ConsumerWidget {
             children: [
               ListTile(
                 leading: const Icon(Icons.schedule, color: Colors.white),
-                title: const Text('Daily Plan', style: TextStyle(color: Colors.white)),
+                title: Text(AppLocalizations.of(context)!.dailySchedule, style: const TextStyle(color: Colors.white)),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
                 onTap: () => context.push(AppRoutes.dailyPlan),
               ),
@@ -236,9 +239,9 @@ class _ProfileContent extends ConsumerWidget {
                     colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                   ),
                 ),
-                title: const Text('Tema Seçimi', style: TextStyle(color: Colors.white)),
+                title: Text(AppLocalizations.of(context)!.themeSelection, style: const TextStyle(color: Colors.white)),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
-                onTap: () => _showThemeSelection(context),
+                onTap: () => _showThemeSelection(context, ref),
               ),
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
               ListTile(
@@ -251,14 +254,14 @@ class _ProfileContent extends ConsumerWidget {
                     colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                   ),
                 ),
-                title: const Text('Dil Seçimi', style: TextStyle(color: Colors.white)),
+                title: Text(AppLocalizations.of(context)!.languageSelection, style: const TextStyle(color: Colors.white)),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
-                onTap: () => _showLanguageSelection(context),
+                onTap: () => _showLanguageSelection(context, ref),
               ),
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
               ListTile(
                 leading: const Icon(Icons.logout, color: Colors.red),
-                title: const Text('Logout', style: TextStyle(color: Colors.red)),
+                title: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
                 onTap: () => _showLogoutDialog(context, ref),
               ),
             ],
@@ -274,12 +277,12 @@ class _ProfileContent extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Logout'),
-        content: const Text('Are you sure you want to logout?'),
+        title: Text(AppLocalizations.of(context)!.logout),
+        content: Text(AppLocalizations.of(context)!.logoutConfirmation),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Cancel'),
+            child: Text(AppLocalizations.of(context)!.cancel),
           ),
           TextButton(
             onPressed: () async {
@@ -290,50 +293,59 @@ class _ProfileContent extends ConsumerWidget {
                 context.go(AppRoutes.home);
               }
             },
-            child: const Text('Logout', style: TextStyle(color: Colors.red)),
+            child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
     );
   }
 
-  void _showThemeSelection(BuildContext context) {
+  void _showThemeSelection(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF1a1a2e),
-        title: const Text('Tema Seçimi', style: TextStyle(color: Colors.white)),
+        title: Text(AppLocalizations.of(context)!.themeSelection, style: const TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Icon(Icons.light_mode, color: Colors.white),
-              title: const Text('Açık Tema', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Açık tema seçildi')),
-                );
+              title: Text(AppLocalizations.of(context)!.lightTheme, style: const TextStyle(color: Colors.white)),
+              onTap: () async {
+                await ref.read(themeModeProvider.notifier).setLight();
+                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context)!.themeSelected(AppLocalizations.of(context)!.lightTheme))),
+                  );
+                }
               },
             ),
             ListTile(
               leading: const Icon(Icons.dark_mode, color: Colors.white),
-              title: const Text('Koyu Tema', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Koyu tema seçildi')),
-                );
+              title: Text(AppLocalizations.of(context)!.darkTheme, style: const TextStyle(color: Colors.white)),
+              onTap: () async {
+                await ref.read(themeModeProvider.notifier).setDark();
+                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context)!.themeSelected(AppLocalizations.of(context)!.darkTheme))),
+                  );
+                }
               },
             ),
             ListTile(
               leading: const Icon(Icons.settings_system_daydream, color: Colors.white),
-              title: const Text('Sistem', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Sistem teması seçildi')),
-                );
+              title: Text(AppLocalizations.of(context)!.systemTheme, style: const TextStyle(color: Colors.white)),
+              onTap: () async {
+                await ref.read(themeModeProvider.notifier).setSystem();
+                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context)!.themeSelected(AppLocalizations.of(context)!.systemTheme))),
+                  );
+                }
               },
             ),
           ],
@@ -342,33 +354,39 @@ class _ProfileContent extends ConsumerWidget {
     );
   }
 
-  void _showLanguageSelection(BuildContext context) {
+  void _showLanguageSelection(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         backgroundColor: const Color(0xFF1a1a2e),
-        title: const Text('Dil Seçimi', style: TextStyle(color: Colors.white)),
+        title: Text(AppLocalizations.of(context)!.languageSelection, style: const TextStyle(color: Colors.white)),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
               leading: const Text('🇹🇷', style: TextStyle(fontSize: 24)),
-              title: const Text('Türkçe', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Türkçe dili seçildi')),
-                );
+              title: Text(AppLocalizations.of(context)!.turkish, style: const TextStyle(color: Colors.white)),
+              onTap: () async {
+                await ref.read(localeProvider.notifier).setTurkish();
+                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context)!.languageSelected(AppLocalizations.of(context)!.turkish))),
+                  );
+                }
               },
             ),
             ListTile(
               leading: const Text('🇬🇧', style: TextStyle(fontSize: 24)),
-              title: const Text('English', style: TextStyle(color: Colors.white)),
-              onTap: () {
-                Navigator.of(context).pop();
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('English language selected')),
-                );
+              title: Text(AppLocalizations.of(context)!.english, style: const TextStyle(color: Colors.white)),
+              onTap: () async {
+                await ref.read(localeProvider.notifier).setEnglish();
+                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text(AppLocalizations.of(context)!.languageSelected('English'))),
+                  );
+                }
               },
             ),
           ],

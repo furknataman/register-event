@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 void showNotificationModal(BuildContext context) {
   showModalBottomSheet(
     context: context,
@@ -63,9 +65,9 @@ class NotificationModal extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        const Text(
-                          'Bildirimler',
-                          style: TextStyle(
+                        Text(
+                          AppLocalizations.of(context)!.notifications,
+                          style: const TextStyle(
                             color: Colors.white,
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -88,7 +90,7 @@ class NotificationModal extends StatelessWidget {
                   ),
                   // Content
                   Expanded(
-                    child: _buildNotificationList(scrollController),
+                    child: _buildNotificationList(context, scrollController),
                   ),
                 ],
               ),
@@ -99,7 +101,7 @@ class NotificationModal extends StatelessWidget {
     );
   }
 
-  Widget _buildNotificationList(ScrollController scrollController) {
+  Widget _buildNotificationList(BuildContext context, ScrollController scrollController) {
     // Mock data - gerçek data gelince burası değişecek
     final notifications = <Map<String, String>>[];
 
@@ -118,9 +120,9 @@ class NotificationModal extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Henüz bildirim yok',
-              style: TextStyle(
+            Text(
+              AppLocalizations.of(context)!.noNotifications,
+              style: const TextStyle(
                 color: Colors.white,
                 fontSize: 18,
                 fontWeight: FontWeight.w600,
@@ -128,7 +130,7 @@ class NotificationModal extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Yeni bildirimleriniz burada görünecek',
+              AppLocalizations.of(context)!.newNotificationsHere,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.7),
                 fontSize: 14,

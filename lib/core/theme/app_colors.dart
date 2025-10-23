@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Colors - Ana renkler
+  // Primary Colors - Ana renkler (Light Mode)
   static const Color primaryBlue = Color(0xFF004B8D);
   static const Color primaryMidBlue = Color(0xFF005A9E);
   static const Color primaryLightBlue = Color(0xFF1AB7EA);
+
+  // Dark Mode Colors
+  static const Color darkPrimaryBlue = Color(0xFF0D1B2A);
+  static const Color darkMidBlue = Color(0xFF1B263B);
+  static const Color darkLightBlue = Color(0xFF415A77);
 
   // Legacy color names (deprecated - use primaryBlue instead)
   static const Color primaryRed = Color(0xFF004B8D); // Now blue
@@ -21,12 +26,26 @@ class AppColors {
     colors: [primaryLightBlue, primaryMidBlue, primaryBlue],
     stops: [0.2, 0.5, 1.0],
   );
-  
+
+  static const LinearGradient backgroundGradientDark = LinearGradient(
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [darkLightBlue, darkMidBlue, darkPrimaryBlue],
+    stops: [0.2, 0.5, 1.0],
+  );
+
   static const LinearGradient buttonGradient = LinearGradient(
     colors: [buttonGradientStart, buttonGradientEnd],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
+
+  // Helper method to get background gradient based on theme
+  static LinearGradient getBackgroundGradient(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark
+        ? backgroundGradientDark
+        : backgroundGradient;
+  }
   
   // Text Colors - Metin renkleri
   static const Color textWhite = Colors.white;

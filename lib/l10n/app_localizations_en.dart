@@ -172,4 +172,109 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get eventLocation => 'Event Location';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get userInfo => 'User Information';
+
+  @override
+  String get changePassword => 'Change Password';
+
+  @override
+  String get themeSelection => 'Theme Selection';
+
+  @override
+  String get languageSelection => 'Language Selection';
+
+  @override
+  String get noEventsYet => 'No events yet';
+
+  @override
+  String get searchEvents => 'Search events';
+
+  @override
+  String get startSearching => 'Start searching for events';
+
+  @override
+  String get noResults => 'No results found';
+
+  @override
+  String noResultsFor(Object query) {
+    return 'No events found matching \"$query\"';
+  }
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get noNotifications => 'No notifications yet';
+
+  @override
+  String get newNotificationsHere => 'Your new notifications will appear here';
+
+  @override
+  String get lightTheme => 'Light Theme';
+
+  @override
+  String get darkTheme => 'Dark Theme';
+
+  @override
+  String get systemTheme => 'System';
+
+  @override
+  String get turkish => 'Türkçe';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get areYouSure => 'Are you sure?';
+
+  @override
+  String get logoutConfirmation => 'Are you sure you want to logout?';
+
+  @override
+  String get error => 'Error';
+
+  @override
+  String get anErrorOccurred => 'An error occurred';
+
+  @override
+  String get retry => 'Retry';
+
+  @override
+  String get loading => 'Loading';
+
+  @override
+  String themeSelected(Object theme) {
+    return '$theme selected';
+  }
+
+  @override
+  String languageSelected(Object language) {
+    return '$language language selected';
+  }
+
+  @override
+  String get searchPlaceholder => 'Search for event, teacher or school...';
+
+  @override
+  String get noInstitutionInfo => 'No institution info';
+
+  @override
+  String get minutes => 'minutes';
+
+  @override
+  String get noTypeInfo => 'No type info';
+
+  @override
+  String get noBranchInfo => 'No branch info';
+
+  @override
+  String get noTitleInfo => 'No Title';
 }

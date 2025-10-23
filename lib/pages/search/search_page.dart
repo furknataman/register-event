@@ -9,6 +9,7 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:autumn_conference/db/db_model/presentation_model.dart';
 import 'package:autumn_conference/services/service.dart';
 import 'package:autumn_conference/core/theme/app_colors.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
 
 // Resim listesi - sırayla kullanılacak
 const List<String> _lessonImages = [
@@ -93,8 +94,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
+        decoration: BoxDecoration(
+          gradient: AppColors.getBackgroundGradient(context),
         ),
         child: SafeArea(
           child: Column(
@@ -124,7 +125,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           fontSize: 16,
                         ),
                         decoration: InputDecoration(
-                          hintText: 'Etkinlik, öğretmen veya okul ara...',
+                          hintText: AppLocalizations.of(context)!.searchPlaceholder,
                           hintStyle: TextStyle(
                             color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 16,
@@ -183,7 +184,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          'Etkinlik aramaya başlayın',
+                          AppLocalizations.of(context)!.startSearching,
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.7),
                             fontSize: 18,
@@ -208,7 +209,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         ),
                         const SizedBox(height: 24),
                         Text(
-                          'Etkinlik aramaya başlayın',
+                          AppLocalizations.of(context)!.startSearching,
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.7),
                             fontSize: 18,
@@ -237,7 +238,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             ),
                             const SizedBox(height: 24),
                             Text(
-                              'Etkinlik aramaya başlayın',
+                              AppLocalizations.of(context)!.startSearching,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.7),
                                 fontSize: 18,
@@ -264,9 +265,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              'Sonuç bulunamadı',
-                              style: TextStyle(
+                            Text(
+                              AppLocalizations.of(context)!.noResults,
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
@@ -274,7 +275,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              '"$_searchQuery" için eşleşen etkinlik bulunamadı',
+                              AppLocalizations.of(context)!.noResultsFor(_searchQuery),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.7),
@@ -400,7 +401,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          presentation.title ?? 'Başlık Yok',
+                          presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 22,
@@ -413,17 +414,17 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         const SizedBox(height: 12),
                         _buildInfoRow(
                           Icons.business,
-                          presentation.school ?? 'Kurum bilgisi yok',
+                          presentation.school ?? AppLocalizations.of(context)!.noInstitutionInfo,
                         ),
                         const SizedBox(height: 8),
                         _buildInfoRow(
                           Icons.timer,
-                          '${presentation.duration ?? '0'} dakika',
+                          '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
                         ),
                         const SizedBox(height: 8),
                         _buildInfoRow(
                           Icons.category,
-                          presentation.type ?? 'Tip bilgisi yok',
+                          presentation.type ?? AppLocalizations.of(context)!.noTypeInfo,
                         ),
                         const SizedBox(height: 12),
                         Container(
@@ -440,7 +441,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             ),
                           ),
                           child: Text(
-                            presentation.branch ?? 'Alan bilgisi yok',
+                            presentation.branch ?? AppLocalizations.of(context)!.noBranchInfo,
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 14,

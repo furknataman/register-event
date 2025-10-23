@@ -11,10 +11,12 @@ import 'core/routing/app_router.dart';
 import 'core/utils/logger.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/l10n.dart';
+import 'l10n/locale_notifier.dart';
 import 'notification/local_notification/notification.dart';
 import 'notification/push_notification/push_notification.dart';
 import 'theme/dark_theme.dart';
 import 'theme/light_theme.dart';
+import 'theme/theme_mode.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -58,20 +60,16 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
+    final themeMode = ref.watch(themeModeProvider);
+    final locale = ref.watch(localeProvider);
 
     return MaterialApp.router(
       // Router configuration
       routerConfig: router,
 
       // Localization
+      locale: locale,
       supportedLocales: L10n9.all,
-      localeResolutionCallback: (locale, supportedLocales) {
-        if (locale?.languageCode == 'tr') {
-          return const Locale('tr', '');
-        } else {
-          return const Locale('en', '');
-        }
-      },
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -86,7 +84,7 @@ class MyApp extends ConsumerWidget {
       // Theme configuration
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
+      themeMode: themeMode,
     );
   }
 }

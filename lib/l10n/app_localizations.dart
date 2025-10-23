@@ -409,6 +409,204 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Event Location'**
   String get eventLocation;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @userInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'User Information'**
+  String get userInfo;
+
+  /// No description provided for @changePassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Change Password'**
+  String get changePassword;
+
+  /// No description provided for @themeSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme Selection'**
+  String get themeSelection;
+
+  /// No description provided for @languageSelection.
+  ///
+  /// In en, this message translates to:
+  /// **'Language Selection'**
+  String get languageSelection;
+
+  /// No description provided for @noEventsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No events yet'**
+  String get noEventsYet;
+
+  /// No description provided for @searchEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Search events'**
+  String get searchEvents;
+
+  /// No description provided for @startSearching.
+  ///
+  /// In en, this message translates to:
+  /// **'Start searching for events'**
+  String get startSearching;
+
+  /// No description provided for @noResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found'**
+  String get noResults;
+
+  /// No description provided for @noResultsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'No events found matching \"{query}\"'**
+  String noResultsFor(Object query);
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @noNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications yet'**
+  String get noNotifications;
+
+  /// No description provided for @newNotificationsHere.
+  ///
+  /// In en, this message translates to:
+  /// **'Your new notifications will appear here'**
+  String get newNotificationsHere;
+
+  /// No description provided for @lightTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Light Theme'**
+  String get lightTheme;
+
+  /// No description provided for @darkTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark Theme'**
+  String get darkTheme;
+
+  /// No description provided for @systemTheme.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get systemTheme;
+
+  /// No description provided for @turkish.
+  ///
+  /// In en, this message translates to:
+  /// **'Türkçe'**
+  String get turkish;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @areYouSure.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure?'**
+  String get areYouSure;
+
+  /// No description provided for @logoutConfirmation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to logout?'**
+  String get logoutConfirmation;
+
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @anErrorOccurred.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred'**
+  String get anErrorOccurred;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
+
+  /// No description provided for @loading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading'**
+  String get loading;
+
+  /// No description provided for @themeSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{theme} selected'**
+  String themeSelected(Object theme);
+
+  /// No description provided for @languageSelected.
+  ///
+  /// In en, this message translates to:
+  /// **'{language} language selected'**
+  String languageSelected(Object language);
+
+  /// No description provided for @searchPlaceholder.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for event, teacher or school...'**
+  String get searchPlaceholder;
+
+  /// No description provided for @noInstitutionInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'No institution info'**
+  String get noInstitutionInfo;
+
+  /// No description provided for @minutes.
+  ///
+  /// In en, this message translates to:
+  /// **'minutes'**
+  String get minutes;
+
+  /// No description provided for @noTypeInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'No type info'**
+  String get noTypeInfo;
+
+  /// No description provided for @noBranchInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'No branch info'**
+  String get noBranchInfo;
+
+  /// No description provided for @noTitleInfo.
+  ///
+  /// In en, this message translates to:
+  /// **'No Title'**
+  String get noTitleInfo;
 }
 
 class _AppLocalizationsDelegate

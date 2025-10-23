@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../services/service.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
 
@@ -50,8 +51,8 @@ class HomePage extends ConsumerWidget {
 
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
+        decoration: BoxDecoration(
+          gradient: AppColors.getBackgroundGradient(context),
         ),
         child: SafeArea(
           child: Column(
@@ -88,9 +89,9 @@ class HomePage extends ConsumerWidget {
                                     width: 1,
                                   ),
                                 ),
-                                child: const Text(
-                                  'Henüz etkinlik yok',
-                                  style: TextStyle(
+                                child: Text(
+                                  AppLocalizations.of(context)!.noEventsYet,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 18,
                                     fontWeight: FontWeight.w600,
@@ -180,8 +181,8 @@ class HomePage extends ConsumerWidget {
                           children: [
                             const Icon(Icons.error_outline, size: 64, color: Colors.white),
                             const SizedBox(height: 16),
-                            const Text('Bir hata oluştu',
-                                style: TextStyle(
+                            Text(AppLocalizations.of(context)!.anErrorOccurred,
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
@@ -209,7 +210,7 @@ class HomePage extends ConsumerWidget {
                                   borderRadius: BorderRadius.circular(12),
                                 ),
                               ),
-                              child: const Text('Tekrar Dene'),
+                              child: Text(AppLocalizations.of(context)!.retry),
                             ),
                           ],
                         ),
@@ -383,7 +384,7 @@ class HomePage extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          presentation.title ?? 'Başlık Yok',
+                          presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
                           style: const TextStyle(
                             color: Colors.black,
                             fontSize: 22,
@@ -395,18 +396,21 @@ class HomePage extends ConsumerWidget {
                         ),
                         const SizedBox(height: 12),
                         _buildInfoRow(
+                          context,
                           Icons.business,
-                          presentation.school ?? 'Kurum bilgisi yok',
+                          presentation.school ?? AppLocalizations.of(context)!.noInstitutionInfo,
                         ),
                         const SizedBox(height: 8),
                         _buildInfoRow(
+                          context,
                           Icons.timer,
-                          '${presentation.duration ?? '0'} dakika',
+                          '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
                         ),
                         const SizedBox(height: 8),
                         _buildInfoRow(
+                          context,
                           Icons.category,
-                          presentation.type ?? 'Tip bilgisi yok',
+                          presentation.type ?? AppLocalizations.of(context)!.noTypeInfo,
                         ),
                         const SizedBox(height: 12),
                         Container(
@@ -423,7 +427,7 @@ class HomePage extends ConsumerWidget {
                             ),
                           ),
                           child: Text(
-                            presentation.branch ?? 'Alan bilgisi yok',
+                            presentation.branch ?? AppLocalizations.of(context)!.noBranchInfo,
                             style: const TextStyle(
                               color: Colors.black,
                               fontSize: 14,
@@ -443,7 +447,7 @@ class HomePage extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(IconData icon, String text) {
+  Widget _buildInfoRow(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
         Icon(icon, size: 18, color: Colors.black87),
