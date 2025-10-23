@@ -53,7 +53,7 @@ class LocalNoticeService {
       body,
       scheduleTime,
       noticeDetail,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
     );
   }
 
