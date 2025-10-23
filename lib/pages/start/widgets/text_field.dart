@@ -1,11 +1,12 @@
+import 'package:autumn_conference/core/routing/app_router.dart';
+import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
+import 'package:autumn_conference/l10n/app_localizations.dart';
+import 'package:autumn_conference/notification/toast_message/toast_message.dart';
+import 'package:autumn_conference/services/service.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
-import 'package:autumn_conference/notification/toast_message/toast_message.dart';
-import 'package:autumn_conference/core/routing/app_router.dart';
-import 'package:autumn_conference/services/service.dart';
+
 import '../../../authentication/login_service.dart';
-import 'package:autumn_conference/l10n/app_localizations.dart';
 
 class LoginForm extends StatelessWidget {
   LoginForm({
@@ -20,10 +21,8 @@ class LoginForm extends StatelessWidget {
   Future<void> _handleLogin(BuildContext context) async {
     _isLoading.value = true;
 
-    await WebService().login(
-        getGoogle.controllerEmail.text,
-        getGoogle
-            .controllerPassword.text); //.login("furkan.ataman@eyuboglu.k12.tr", "12345");
+    await WebService().login(getGoogle.controllerEmail.text,
+        getGoogle.controllerPassword.text); //.login("furkan.ataman@eyuboglu.k12.tr", "12345");
 
     //
     String? localToken = await getToken();
