@@ -14,31 +14,32 @@ class LoginPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final getGoogle = ref.watch<GoogleProvider>(googleConfig);
     
+    final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
+
     return Scaffold(
       backgroundColor: AppColors.primaryBlue,
-      body: SingleChildScrollView(
-        physics: const ClampingScrollPhysics(),
-        child: Container(
-          width: double.infinity,
-          constraints: BoxConstraints(
-            minHeight: MediaQuery.of(context).size.height,
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        width: double.infinity,
+        height: MediaQuery.of(context).size.height,
+        decoration: const BoxDecoration(
+          gradient: AppColors.backgroundGradient,
+        ),
+        child: Stack(children: [
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: elipse(MediaQuery.of(context).size.width),
           ),
-          decoration: const BoxDecoration(
-            gradient: AppColors.backgroundGradient,
-          ),
-          child: Stack(children: [
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: elipse(MediaQuery.of(context).size.width),
-            ),
-            Center(
+          Center(
+            child: SingleChildScrollView(
+              physics: const ClampingScrollPhysics(),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Spacer(flex: 3),
+                  SizedBox(height: keyboardHeight > 0 ? 40 : 60),
                   const StartPageWidgets(),
-                  const Spacer(flex: 4),
+                  SizedBox(height: keyboardHeight > 0 ? 20 : 80),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: SizedBox(
@@ -46,12 +47,12 @@ class LoginPage extends ConsumerWidget {
                       child: ModernLoginForm(getGoogle: getGoogle),
                     ),
                   ),
-                  const Spacer(flex: 1),
+                  SizedBox(height: keyboardHeight > 0 ? 10 : 20),
                 ],
               ),
             ),
-          ]),
-        ),
+          ),
+        ]),
       ),
     );
   }
