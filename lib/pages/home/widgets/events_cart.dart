@@ -1,14 +1,51 @@
-import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
 import 'package:autumn_conference/db/db_model/presentation_model.dart';
 import 'package:autumn_conference/pages/events/event_page.dart';
+import 'package:flutter/material.dart';
+import 'package:lucide_icons/lucide_icons.dart';
+
 import '../../../global/date_time_converter.dart';
 
 String truncateString(String str, int cutoff) {
   return (str.length <= cutoff) ? str : '${str.substring(0, cutoff)}...';
 }
 
-imageName(eventName) {
+// Resim listesi - sırayla kullanılacak
+const List<String> _lessonImages = [
+  'assets/lesson_images/ADMINISTRATION.PNG',
+  'assets/lesson_images/ARTS.PNG',
+  'assets/lesson_images/BIOLOGY.png',
+  'assets/lesson_images/CHEMISTRY.PNG',
+  'assets/lesson_images/EARLY_YEARS.PNG',
+  'assets/lesson_images/ESL.PNG',
+  'assets/lesson_images/FOREIGN LANGUAGES.PNG',
+  'assets/lesson_images/GENERAL_EDUCATION.PNG',
+  'assets/lesson_images/GEOGRAPHY.png',
+  'assets/lesson_images/GUIDANCE.PNG',
+  'assets/lesson_images/HISTORY.PNG',
+  'assets/lesson_images/IB_DP.PNG',
+  'assets/lesson_images/IB_MYP.PNG',
+  'assets/lesson_images/IB_PYP.PNG',
+  'assets/lesson_images/INTERDISCIPLINARY.PNG',
+  'assets/lesson_images/IT.png',
+  'assets/lesson_images/LIBRARY.PNG',
+  'assets/lesson_images/MATH.png',
+  'assets/lesson_images/MUSIC.PNG',
+  'assets/lesson_images/PE.png',
+  'assets/lesson_images/PHILOSOPHY.png',
+  'assets/lesson_images/PHYSICS.png',
+  'assets/lesson_images/SCIENCE.png',
+  'assets/lesson_images/SOCIAL_STUDIES.PNG',
+  'assets/lesson_images/TURKISH.png',
+];
+
+// Event ID'ye göre sırayla resim döndür
+String getImageByEventId(int? eventId) {
+  if (eventId == null) return _lessonImages[0];
+  return _lessonImages[eventId % _lessonImages.length];
+}
+
+// DEPRECATED: Branch'e göre resim seçimi (kullanılmıyor artık)
+String imageName(String? eventName) {
   switch (eventName) {
     case 'Disiplinlerarası / INTERDISCIPLINARY':
       return ("assets/lesson_images/INTERDISCIPLINARY.PNG");
@@ -60,6 +97,8 @@ imageName(eventName) {
       return ("assets/lesson_images/FOREIGN LANGUAGES.PNG");
     case 'Yönetim / MANAGEMENT AND LEADERSHIP':
       return ("assets/lesson_images/ADMINISTRATION.PNG");
+    default:
+      return ("assets/lesson_images/GENERAL_EDUCATION.PNG");
   }
 }
 
@@ -68,14 +107,14 @@ InkWell eventsCart(
   @required ClassModelPresentation? event,
   @required bool? eventCart,
 }) {
-  String name = imageName(event!.branch);
-  //ClassTime time = classConverter(event!.presentationTime, event.duration!);
+  // Event ID'ye göre sırayla resim seç (görsel çeşitlilik için)
+  String name = getImageByEventId(event!.id);
+
   int duration = int.parse(event.duration ?? "0");
   ClassTime time = classConverter(event.presentationTime!, duration);
   return InkWell(
     onTap: () {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => EventsPage(event.id, name)));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => EventsPage(event.id, name)));
     },
     child: Padding(
       padding: const EdgeInsets.only(top: 15),
@@ -84,15 +123,9 @@ InkWell eventsCart(
         fit: StackFit.loose,
         children: [
           Container(
-            decoration: BoxDecoration(
-                boxShadow: const [
-                  BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.15),
-                      blurRadius: 14,
-                      offset: Offset(0, 4))
-                ],
-                color: Theme.of(context).primaryColor,
-                borderRadius: const BorderRadius.all(Radius.circular(13))),
+            decoration: BoxDecoration(boxShadow: const [
+              BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15), blurRadius: 14, offset: Offset(0, 4))
+            ], color: Theme.of(context).primaryColor, borderRadius: const BorderRadius.all(Radius.circular(13))),
             width: MediaQuery.of(context).size.width - 40,
             height: 270,
           ),
@@ -101,8 +134,7 @@ InkWell eventsCart(
             child: Container(
               decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+                  borderRadius: const BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
               width: MediaQuery.of(context).size.width - 40,
               height: 180,
               child: ClipRRect(
@@ -119,9 +151,8 @@ InkWell eventsCart(
                 padding: const EdgeInsets.only(top: 10, left: 13, right: 13, bottom: 13),
                 decoration: BoxDecoration(
                     color: Theme.of(context).cardColor,
-                    borderRadius: const BorderRadius.only(
-                        bottomRight: Radius.circular(10),
-                        bottomLeft: Radius.circular(10))),
+                    borderRadius:
+                        const BorderRadius.only(bottomRight: Radius.circular(10), bottomLeft: Radius.circular(10))),
                 height: 95,
                 width: MediaQuery.of(context).size.width - 40,
                 child: Column(
@@ -156,14 +187,12 @@ InkWell eventsCart(
                                 ? Row(
                                     children: [
                                       Container(
-                                        margin: const EdgeInsets.only(
-                                            left: 6, right: 6, top: 8),
+                                        margin: const EdgeInsets.only(left: 6, right: 6, top: 8),
                                         alignment: Alignment.center,
                                         width: 2,
                                         height: 2,
                                         decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Theme.of(context).secondaryHeaderColor),
+                                            shape: BoxShape.circle, color: Theme.of(context).secondaryHeaderColor),
                                       ),
                                       Text(
                                         event.presenter2Name.toString(),
@@ -200,13 +229,11 @@ InkWell eventsCart(
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                    color: Theme.of(context).cardColor, borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 38,
                 width: 38,
                 child: eventCart!
-                    ? const Icon(LucideIcons.calendarCheck,
-                        size: 28, color: Color(0xffe43c2f))
+                    ? const Icon(LucideIcons.calendarCheck, size: 28, color: Color(0xffe43c2f))
                     : const Icon(LucideIcons.calendar, size: 28, color: Color(0xffBDBDBD)),
               )),
           Positioned(
@@ -215,8 +242,7 @@ InkWell eventsCart(
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                    color: Theme.of(context).cardColor,
-                    borderRadius: const BorderRadius.all(Radius.circular(5))),
+                    color: Theme.of(context).cardColor, borderRadius: const BorderRadius.all(Radius.circular(5))),
                 height: 26,
                 width: 170,
                 child: FittedBox(

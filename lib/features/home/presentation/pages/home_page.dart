@@ -8,6 +8,35 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import '../../../../services/service.dart';
 import '../../../../core/theme/app_colors.dart';
 
+// Resim listesi - sırayla kullanılacak
+const List<String> _lessonImages = [
+  'assets/lesson_images/ADMINISTRATION.PNG',
+  'assets/lesson_images/ARTS.PNG',
+  'assets/lesson_images/BIOLOGY.png',
+  'assets/lesson_images/CHEMISTRY.PNG',
+  'assets/lesson_images/EARLY_YEARS.PNG',
+  'assets/lesson_images/ESL.PNG',
+  'assets/lesson_images/FOREIGN LANGUAGES.PNG',
+  'assets/lesson_images/GENERAL_EDUCATION.PNG',
+  'assets/lesson_images/GEOGRAPHY.png',
+  'assets/lesson_images/GUIDANCE.PNG',
+  'assets/lesson_images/HISTORY.PNG',
+  'assets/lesson_images/IB_DP.PNG',
+  'assets/lesson_images/IB_MYP.PNG',
+  'assets/lesson_images/IB_PYP.PNG',
+  'assets/lesson_images/INTERDISCIPLINARY.PNG',
+  'assets/lesson_images/IT.png',
+  'assets/lesson_images/LIBRARY.PNG',
+  'assets/lesson_images/MATH.png',
+  'assets/lesson_images/MUSIC.PNG',
+  'assets/lesson_images/PE.png',
+  'assets/lesson_images/PHILOSOPHY.png',
+  'assets/lesson_images/PHYSICS.png',
+  'assets/lesson_images/SCIENCE.png',
+  'assets/lesson_images/SOCIAL_STUDIES.PNG',
+  'assets/lesson_images/TURKISH.png',
+];
+
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
@@ -223,28 +252,39 @@ class HomePage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Image section
-                  Container(
-                    height: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(24),
-                        topRight: Radius.circular(24),
-                      ),
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          Colors.white.withValues(alpha: 0.12),
-                          Colors.white.withValues(alpha: 0.22),
-                        ],
-                      ),
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
                     ),
-                    child: Center(
-                      child: Icon(
-                        Icons.event,
-                        size: 80,
-                        color: Colors.white.withValues(alpha: 0.5),
-                      ),
+                    child: Image.asset(
+                      _lessonImages[(presentation.id ?? 0) % _lessonImages.length],
+                      height: 200,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                      errorBuilder: (context, error, stackTrace) {
+                        // Fallback gradient if image fails
+                        return Container(
+                          height: 200,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                Colors.white.withValues(alpha: 0.12),
+                                Colors.white.withValues(alpha: 0.22),
+                              ],
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              Icons.event,
+                              size: 80,
+                              color: Colors.white.withValues(alpha: 0.5),
+                            ),
+                          ),
+                        );
+                      },
                     ),
                   ),
                   // Content section

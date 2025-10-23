@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 // Exact bottom bar composition inspired by the demo layout
-// Left group: Home pill + middle icon; Spacer animates; Right icon.
+// Left group: Home pill + Scan + Search; Spacer animates; Right icon.
 class LiquidBottomNav extends StatelessWidget {
-  final ValueChanged<int> onTap; // 0: home, 1: scan, 2: profile
+  final ValueChanged<int> onTap; // 0: home, 1: scan, 2: search, 3: profile
   final double tabSpacing; // expands on scroll (e.g., 0..150)
   final int currentIndex;
 
@@ -30,7 +30,7 @@ class LiquidBottomNav extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Left group (Home/Scan selection) — demo-like
+              // Left group (Home/Scan/Search selection) — demo-like
               ClipRRect(
                 borderRadius: BorderRadius.circular(40),
                 child: BackdropFilter(
@@ -68,6 +68,19 @@ class LiquidBottomNav extends StatelessWidget {
                             iconAsset: 'assets/svg/scan.svg',
                             padding: const EdgeInsets.all(8),
                           ),
+                        const SizedBox(width: 6),
+                        if (currentIndex == 2)
+                          _GlassPill(
+                            onTap: () => onTap(2),
+                            iconAsset: 'assets/svg/search.svg',
+                            label: 'Search',
+                          )
+                        else
+                          _GlassIcon(
+                            onTap: () => onTap(2),
+                            iconAsset: 'assets/svg/search.svg',
+                            padding: const EdgeInsets.all(8),
+                          ),
                       ],
                     ),
                   ),
@@ -80,16 +93,16 @@ class LiquidBottomNav extends StatelessWidget {
                 child: SizedBox(width: tabSpacing, height: 0),
               ),
               // Right group (Profile selection) — demo-like
-              if (currentIndex == 2)
+              if (currentIndex == 3)
                 _GlassPill(
-                  onTap: () => onTap(2),
+                  onTap: () => onTap(3),
                   iconAsset: 'assets/svg/profile.svg',
                   label: 'Profile',
                   largeIcon: true,
                 )
               else
                 _GlassIcon(
-                  onTap: () => onTap(2),
+                  onTap: () => onTap(3),
                   iconAsset: 'assets/svg/profile.svg',
                   padding: const EdgeInsets.all(12),
                   large: true,

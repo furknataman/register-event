@@ -13,6 +13,7 @@ import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../pages/daily_plan/daily_plan.dart';
 import '../../pages/settings/settings_page.dart';
+import '../../pages/search/search_page.dart';
 // Import existing pages temporarily
 import '../../pages/start/start_page.dart';
 import '../widgets/liquid_bottom_nav.dart';
@@ -24,6 +25,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String profile = '/profile';
   static const String scan = '/scan';
+  static const String search = '/search';
   static const String event = '/event';
   static const String eventDetail = '/event/:id';
   static const String settings = '/settings';
@@ -61,14 +63,19 @@ final routerProvider = Provider<GoRouter>((ref) {
             builder: (context, state) => const HomePage(),
           ),
           GoRoute(
-            path: AppRoutes.profile,
-            name: 'profile',
-            builder: (context, state) => const ProfilePage(),
-          ),
-          GoRoute(
             path: AppRoutes.scan,
             name: 'scan',
             builder: (context, state) => const ScanPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.search,
+            name: 'search',
+            builder: (context, state) => const SearchPage(),
+          ),
+          GoRoute(
+            path: AppRoutes.profile,
+            name: 'profile',
+            builder: (context, state) => const ProfilePage(),
           ),
         ],
       ),
@@ -184,6 +191,9 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
         context.go(AppRoutes.scan);
         break;
       case 2:
+        context.go(AppRoutes.search);
+        break;
+      case 3:
         context.go(AppRoutes.profile);
         break;
     }
@@ -193,7 +203,8 @@ class _AppNavigationShellState extends State<AppNavigationShell> {
     final location = GoRouterState.of(context).matchedLocation;
     if (location.startsWith('/home')) return 0;
     if (location.startsWith('/scan')) return 1;
-    if (location.startsWith('/profile')) return 2;
+    if (location.startsWith('/search')) return 2;
+    if (location.startsWith('/profile')) return 3;
     return 0;
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
 import 'package:autumn_conference/pages/start/start_page.dart';
-import 'package:autumn_conference/pages/route_page/route_page.dart';
+import 'package:autumn_conference/features/home/presentation/pages/home_page.dart';
 
 class AuthService {
   //Determine if the user is authenticated.
@@ -28,7 +28,7 @@ class AuthService {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         } else if (snapshot.data != null) {
-          return const RoutePage();
+          return const HomePage();
         } else {
           return const StartPage();
         }

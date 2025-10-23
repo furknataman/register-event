@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
 import 'package:autumn_conference/notification/toast_message/toast_message.dart';
-import 'package:autumn_conference/pages/route_page/route_page.dart';
+import 'package:autumn_conference/core/routing/app_router.dart';
 import 'package:autumn_conference/services/service.dart';
 import '../../../authentication/login_service.dart';
 import 'package:autumn_conference/l10n/app_localizations.dart';
@@ -29,8 +30,7 @@ class LoginForm extends StatelessWidget {
     _isLoading.value = false;
 
     if (localToken != null) {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const RoutePage()));
+      context.go(AppRoutes.home);
     } else {
       toastMessage(AppLocalizations.of(context)!.loginError);
     }
