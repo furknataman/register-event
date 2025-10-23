@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
+// Import services
+import '../../services/service.dart';
+
 // Import feature pages
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/events/presentation/pages/event_detail_page.dart';
@@ -135,28 +138,39 @@ final routerProvider = Provider<GoRouter>((ref) {
 });
 
 // Navigation Shell for bottom navigation
-class AppNavigationShell extends StatefulWidget {
+class AppNavigationShell extends ConsumerStatefulWidget {
   final Widget child;
 
   const AppNavigationShell({super.key, required this.child});
 
   @override
-  State<AppNavigationShell> createState() => _AppNavigationShellState();
+  ConsumerState<AppNavigationShell> createState() => _AppNavigationShellState();
 }
 
-class _AppNavigationShellState extends State<AppNavigationShell> {
+class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
   double _tabSpacing = 0.0;
 
   @override
   Widget build(BuildContext context) {
+    // Bottom bar reset sinyalini dinle
+    ref.listen(resetBottomBarProvider, (previous, next) {
+      if (mounted) {
+        setState(() => _tabSpacing = 0.0);
+      }
+    });
+
+
     return Scaffold(
       extendBody: true,
       body: NotificationListener<ScrollNotification>(
         onNotification: (notification) {
-          final offset = notification.metrics.pixels;
-          final newSpacing = offset > 100 ? 150.0 : 0.0;
-          if (newSpacing != _tabSpacing) {
-            setState(() => _tabSpacing = newSpacing);
+          // Sadece dikey scroll'u dinle, yatay scroll'u ignore et
+          if (notification.metrics.axis == Axis.vertical) {
+            final offset = notification.metrics.pixels;
+            final newSpacing = offset > 100 ? 150.0 : 0.0;
+            if (newSpacing != _tabSpacing) {
+              setState(() => _tabSpacing = newSpacing);
+            }
           }
           return false;
         },

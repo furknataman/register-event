@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:autumn_conference/db/db_model/presentation_model.dart';
+import 'package:autumn_conference/db/db_model/session_response_model.dart';
 import 'package:autumn_conference/db/db_model/token_response_model.dart';
 import 'package:autumn_conference/db/db_model/user_info.dart';
 import 'package:autumn_conference/db/sharedPreferences/token_stroge.dart';
@@ -198,6 +200,32 @@ class WebService {
       throw Exception('Failed to load presentations');
     }
   }
+
+  Future<SessionResponseModel> fetchSessionPresentations() async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Sunum/SunumKayitGetir";
+      _logger.i('Fetching session presentations from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data type: ${response.data.runtimeType}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully loaded session presentations');
+        return SessionResponseModel.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load session presentations: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching session presentations', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
 }
 
 final webServiceProvider = Provider<WebService>((ref) => WebService());
@@ -210,7 +238,32 @@ final presentationDataProvider = FutureProvider<List<ClassModelPresentation>>((r
   return ref.watch(webServiceProvider).fetchAllEvents();
 });
 
+final sessionPresentationDataProvider = FutureProvider<SessionResponseModel>((ref) async {
+  return ref.watch(webServiceProvider).fetchSessionPresentations();
+});
+
 final eventDetailsProvider =
     FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);
 });
+
+// Seçili kategori için StateProvider
+// 0 = Tümü, 1 = Oturum 1, 2 = Oturum 2, 3 = Oturum 3, 4 = Oturum 4, 5 = Kayıt Olduklarım
+final selectedCategoryProvider = StateProvider<int>((ref) => 0);
+
+// PageController için Provider - Event cards sayfaları için
+final categoryPageControllerProvider = Provider<PageController>((ref) {
+  final controller = PageController(initialPage: 0);
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
+// ScrollController için Provider - Kategori chips listesi için
+final chipScrollControllerProvider = Provider<ScrollController>((ref) {
+  final controller = ScrollController();
+  ref.onDispose(() => controller.dispose());
+  return controller;
+});
+
+// Bottom bar reset için StateProvider
+final resetBottomBarProvider = StateProvider<int>((ref) => 0);
