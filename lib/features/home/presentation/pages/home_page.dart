@@ -1,12 +1,15 @@
 import 'dart:math' as math;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../services/service.dart';
+import '../../../notifications/presentation/pages/notification_page.dart';
 
 // Resim listesi - sırayla kullanılacak
 const List<String> _lessonImages = [
@@ -43,6 +46,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final presentationsAsync = ref.watch(presentationDataProvider);
+    final userDataAsync = ref.watch(userDataProvider);
 
     return Scaffold(
       body: Container(
@@ -50,163 +54,247 @@ class HomePage extends ConsumerWidget {
           gradient: AppColors.backgroundGradient,
         ),
         child: SafeArea(
-          child: presentationsAsync.when(
-            data: (presentations) => RefreshIndicator(
-              color: Colors.white,
-              backgroundColor: const Color(0xFF1a1a2e),
-              onRefresh: () async {
-                ref.invalidate(presentationDataProvider);
-              },
-              child: presentations.isEmpty
-                  ? Center(
-                      child: LiquidGlass(
-                        settings: LiquidGlassSettings(
-                          blur: 6,
-                          ambientStrength: 0.6,
-                          lightAngle: 0.2 * math.pi,
-                          glassColor: Colors.white.withValues(alpha: 0.1),
-                        ),
-                        shape: LiquidRoundedSuperellipse(
-                          borderRadius: const Radius.circular(20),
-                        ),
-                        glassContainsChild: false,
-                        child: Container(
-                          padding: const EdgeInsets.all(24),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.2),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.4),
-                              width: 1,
-                            ),
-                          ),
-                          child: const Text(
-                            'Henüz etkinlik yok',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                    )
-                  : ListView.builder(
-                      padding: const EdgeInsets.all(16),
-                      itemCount: presentations.length,
-                      itemBuilder: (context, index) {
-                        final presentation = presentations[index];
-                        return TweenAnimationBuilder(
-                          duration: Duration(milliseconds: 300 + (index * 100)),
-                          tween: Tween<double>(begin: 0, end: 1),
-                          builder: (context, double value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: Transform.translate(
-                                offset: Offset(0, 50 * (1 - value)),
-                                child: child,
-                              ),
-                            );
-                          },
-                          child: _buildEventCard(
-                            context,
-                            presentation,
-                            index,
-                          ),
-                        );
-                      },
-                    ),
-            ),
-            loading: () => Center(
-              child: LiquidGlass(
-                settings: LiquidGlassSettings(
-                  blur: 6,
-                  ambientStrength: 0.6,
-                  lightAngle: 0.2 * math.pi,
-                  glassColor: Colors.white.withValues(alpha: 0.1),
-                ),
-                shape: LiquidRoundedSuperellipse(
-                  borderRadius: const Radius.circular(20),
-                ),
-                glassContainsChild: false,
-                child: Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.4),
-                      width: 1,
-                    ),
-                  ),
-                  child: const CircularProgressIndicator(
+          child: Column(
+            children: [
+              _buildHeaderBar(context, userDataAsync),
+              Expanded(
+                child: presentationsAsync.when(
+                  data: (presentations) => RefreshIndicator(
                     color: Colors.white,
+                    backgroundColor: const Color(0xFF1a1a2e),
+                    onRefresh: () async {
+                      ref.invalidate(presentationDataProvider);
+                    },
+                    child: presentations.isEmpty
+                        ? Center(
+                            child: LiquidGlass(
+                              settings: LiquidGlassSettings(
+                                blur: 6,
+                                ambientStrength: 0.6,
+                                lightAngle: 0.2 * math.pi,
+                                glassColor: Colors.white.withValues(alpha: 0.1),
+                              ),
+                              shape: LiquidRoundedSuperellipse(
+                                borderRadius: const Radius.circular(20),
+                              ),
+                              glassContainsChild: false,
+                              child: Container(
+                                padding: const EdgeInsets.all(24),
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.4),
+                                    width: 1,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Henüz etkinlik yok',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          )
+                        : ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: presentations.length,
+                            itemBuilder: (context, index) {
+                              final presentation = presentations[index];
+                              return TweenAnimationBuilder(
+                                duration: Duration(milliseconds: 300 + (index * 100)),
+                                tween: Tween<double>(begin: 0, end: 1),
+                                builder: (context, double value, child) {
+                                  return Opacity(
+                                    opacity: value,
+                                    child: Transform.translate(
+                                      offset: Offset(0, 50 * (1 - value)),
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                child: _buildEventCard(
+                                  context,
+                                  presentation,
+                                  index,
+                                ),
+                              );
+                            },
+                          ),
                   ),
-                ),
-              ),
-            ),
-            error: (error, stack) => Center(
-              child: LiquidGlass(
-                settings: LiquidGlassSettings(
-                  blur: 6,
-                  ambientStrength: 0.6,
-                  lightAngle: 0.2 * math.pi,
-                  glassColor: Colors.white.withValues(alpha: 0.1),
-                ),
-                shape: LiquidRoundedSuperellipse(
-                  borderRadius: const Radius.circular(20),
-                ),
-                glassContainsChild: false,
-                child: Container(
-                  padding: const EdgeInsets.all(24),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.4),
-                      width: 1,
+                  loading: () => Center(
+                    child: LiquidGlass(
+                      settings: LiquidGlassSettings(
+                        blur: 6,
+                        ambientStrength: 0.6,
+                        lightAngle: 0.2 * math.pi,
+                        glassColor: Colors.white.withValues(alpha: 0.1),
+                      ),
+                      shape: LiquidRoundedSuperellipse(
+                        borderRadius: const Radius.circular(20),
+                      ),
+                      glassContainsChild: false,
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            width: 1,
+                          ),
+                        ),
+                        child: const CircularProgressIndicator(
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(Icons.error_outline, size: 64, color: Colors.white),
-                      const SizedBox(height: 16),
-                      const Text('Bir hata oluştu',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          )),
-                      const SizedBox(height: 8),
-                      Text(
-                        error.toString(),
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
+                  error: (error, stack) => Center(
+                    child: LiquidGlass(
+                      settings: LiquidGlassSettings(
+                        blur: 6,
+                        ambientStrength: 0.6,
+                        lightAngle: 0.2 * math.pi,
+                        glassColor: Colors.white.withValues(alpha: 0.1),
                       ),
-                      const SizedBox(height: 24),
-                      ElevatedButton(
-                        onPressed: () => ref.invalidate(presentationDataProvider),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.white.withValues(alpha: 0.15),
-                          foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 12,
-                          ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      shape: LiquidRoundedSuperellipse(
+                        borderRadius: const Radius.circular(20),
+                      ),
+                      glassContainsChild: false,
+                      child: Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Colors.white.withValues(alpha: 0.4),
+                            width: 1,
                           ),
                         ),
-                        child: const Text('Tekrar Dene'),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(Icons.error_outline, size: 64, color: Colors.white),
+                            const SizedBox(height: 16),
+                            const Text('Bir hata oluştu',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                            const SizedBox(height: 8),
+                            Text(
+                              error.toString(),
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.8),
+                                fontSize: 14,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 24),
+                            ElevatedButton(
+                              onPressed: () => ref.invalidate(presentationDataProvider),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.white.withValues(alpha: 0.15),
+                                foregroundColor: Colors.white,
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 32,
+                                  vertical: 12,
+                                ),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: const Text('Tekrar Dene'),
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderBar(BuildContext context, AsyncValue<dynamic> userDataAsync) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.25),
+                width: 1.5,
+              ),
+            ),
+            child: Row(
+              children: [
+                // Notification Icon
+                InkWell(
+                  onTap: () {
+                    showNotificationModal(context);
+                  },
+                  borderRadius: BorderRadius.circular(12),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: SvgPicture.asset(
+                      'assets/svg/bell.svg',
+                      width: 24,
+                      height: 24,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                  ),
+                ),
+                const Spacer(),
+                // User Name
+                userDataAsync.when(
+                  data: (user) {
+                    final fullName = '${user.name ?? ''} ${user.surname ?? ''}'.trim();
+                    return Text(
+                      fullName.isEmpty ? 'Kullanıcı' : fullName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                  loading: () => const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  ),
+                  error: (_, __) => const Text(
+                    'Kullanıcı',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
