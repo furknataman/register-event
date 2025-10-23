@@ -190,7 +190,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
               top: false,
               bottom: true,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 80),
+                padding: const EdgeInsets.only(bottom: 60),
                 child: Stack(
         children: [
           // Scanner view
@@ -207,7 +207,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                 borderRadius: 10,
                 borderLength: 30,
                 borderWidth: 10,
-                cutOutSize: 250,
+                cutOutSize: 350,
               ),
             ),
           ),

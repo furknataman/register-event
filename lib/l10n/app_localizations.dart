@@ -607,6 +607,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Title'**
   String get noTitleInfo;
+
+  /// No description provided for @categoryAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get categoryAll;
+
+  /// No description provided for @session.
+  ///
+  /// In en, this message translates to:
+  /// **'Session'**
+  String get session;
+
+  /// No description provided for @session1.
+  ///
+  /// In en, this message translates to:
+  /// **'Session 1'**
+  String get session1;
+
+  /// No description provided for @session2.
+  ///
+  /// In en, this message translates to:
+  /// **'Session 2'**
+  String get session2;
+
+  /// No description provided for @session3.
+  ///
+  /// In en, this message translates to:
+  /// **'Session 3'**
+  String get session3;
+
+  /// No description provided for @session4.
+  ///
+  /// In en, this message translates to:
+  /// **'Session 4'**
+  String get session4;
+
+  /// No description provided for @myRegistrations.
+  ///
+  /// In en, this message translates to:
+  /// **'My Registrations'**
+  String get myRegistrations;
 }
 
 class _AppLocalizationsDelegate

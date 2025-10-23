@@ -276,4 +276,25 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get noTitleInfo => 'Başlık Yok';
+
+  @override
+  String get categoryAll => 'Tümü';
+
+  @override
+  String get session => 'Oturum';
+
+  @override
+  String get session1 => 'Oturum 1';
+
+  @override
+  String get session2 => 'Oturum 2';
+
+  @override
+  String get session3 => 'Oturum 3';
+
+  @override
+  String get session4 => 'Oturum 4';
+
+  @override
+  String get myRegistrations => 'Kayıt Olduklarım';
 }

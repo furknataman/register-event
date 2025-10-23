@@ -95,19 +95,31 @@ class WebService {
   }
 
   Future<ClassModelPresentation?> fetchEventDetails(int id) async {
-    final myToken = await getToken();
-    final response = await _makeRequest("AtcYonetim/MobilSunumDetay",
-        data: {
-          'sunumId': id,
-        },
-        token: myToken);
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Sunum/SunumDetay";
+      _logger.i('Fetching event details for ID: $id from: $url');
 
-    if (response.statusCode == 200) {
-      ClassModelPresentation presentationDetails =
-          ClassModelPresentation.fromJson(response.data);
-      return presentationDetails;
+      final response = await _dio.post(
+        url,
+        data: {'id': id},
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data type: ${response.data.runtimeType}');
+      _logger.d('Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully loaded event details for ID: $id');
+        return ClassModelPresentation.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load event details: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching event details for ID: $id', error: e, stackTrace: stackTrace);
+      rethrow;
     }
-    return null;
   }
 
   Future<String?> login(String email, String password) async {
@@ -242,6 +254,7 @@ final sessionPresentationDataProvider = FutureProvider<SessionResponseModel>((re
   return ref.watch(webServiceProvider).fetchSessionPresentations();
 });
 
+// Event detail provider - Detay endpoint'inden zengin bilgi alıyoruz
 final eventDetailsProvider =
     FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);

@@ -83,5 +83,12 @@
     "minutes": "dakika",
     "noTypeInfo": "Tip bilgisi yok",
     "noBranchInfo": "Alan bilgisi yok",
-    "noTitleInfo": "Başlık Yok"
+    "noTitleInfo": "Başlık Yok",
+    "categoryAll": "Tümü",
+    "session": "Oturum",
+    "session1": "Oturum 1",
+    "session2": "Oturum 2",
+    "session3": "Oturum 3",
+    "session4": "Oturum 4",
+    "myRegistrations": "Kayıt Olduklarım"
 }

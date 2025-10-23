@@ -5,9 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-// Import services
-import '../../services/service.dart';
-
 // Import feature pages
 import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/events/presentation/pages/event_detail_page.dart';
@@ -15,10 +12,12 @@ import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../pages/daily_plan/daily_plan.dart';
-import '../../pages/settings/settings_page.dart';
 import '../../pages/search/search_page.dart';
+import '../../pages/settings/settings_page.dart';
 // Import existing pages temporarily
 import '../../pages/start/start_page.dart';
+// Import services
+import '../../services/service.dart';
 import '../widgets/liquid_bottom_nav.dart';
 
 // Routes
@@ -158,7 +157,6 @@ class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
         setState(() => _tabSpacing = 0.0);
       }
     });
-
 
     return Scaffold(
       extendBody: true,

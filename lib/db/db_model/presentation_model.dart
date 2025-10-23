@@ -20,9 +20,16 @@ class ClassModelPresentation {
   final String? participantExperience;
   final String? participantCount;
   final String? extraInfo;
+  // Detail endpoint specific fields
+  final String? position; // gorev
+  final String? presentationPlace; // sunumYeri
+  final String? time; // saat
+  final int? session; // oturum
+  final int? quota; // kontenjan
+  final int? registrationCount; // kayitSayisi
+  final int? status; // status
   // Legacy fields for backward compatibility
   final DateTime? presentationTime;
-  final String? presentationPlace;
   final String? presentationQuota;
   final String? ratingForm;
   final int? remainingQuota;
@@ -49,8 +56,14 @@ class ClassModelPresentation {
     this.participantExperience,
     this.participantCount,
     this.extraInfo,
-    this.presentationTime,
+    this.position,
     this.presentationPlace,
+    this.time,
+    this.session,
+    this.quota,
+    this.registrationCount,
+    this.status,
+    this.presentationTime,
     this.presentationQuota,
     this.ratingForm,
     this.remainingQuota,
@@ -79,12 +92,19 @@ class ClassModelPresentation {
       participantExperience: json['katilimciDeneyim'],
       participantCount: json['katilimciSayisi'],
       extraInfo: json['ekBilgi'],
+      // Detail endpoint specific fields
+      position: json['gorev'],
+      presentationPlace: json['sunumYeri'],
+      time: json['saat'],
+      session: json['oturum'],
+      quota: json['kontenjan'],
+      registrationCount: json['kayitSayisi'],
+      status: json['status'],
       // Legacy fields - set to default values
       presentationTime: DateTime.now().add(const Duration(days: 7)),
-      presentationPlace: json['kurum'] ?? '',
       presentationQuota: json['katilimciSayisi'] ?? '30',
       ratingForm: '',
-      remainingQuota: 30,
+      remainingQuota: json['kontenjan'] ?? 30,
     );
   }
 }

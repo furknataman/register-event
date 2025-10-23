@@ -83,5 +83,12 @@
     "minutes": "minutes",
     "noTypeInfo": "No type info",
     "noBranchInfo": "No branch info",
-    "noTitleInfo": "No Title"
+    "noTitleInfo": "No Title",
+    "categoryAll": "All",
+    "session": "Session",
+    "session1": "Session 1",
+    "session2": "Session 2",
+    "session3": "Session 3",
+    "session4": "Session 4",
+    "myRegistrations": "My Registrations"
 }

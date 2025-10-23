@@ -277,4 +277,25 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noTitleInfo => 'No Title';
+
+  @override
+  String get categoryAll => 'All';
+
+  @override
+  String get session => 'Session';
+
+  @override
+  String get session1 => 'Session 1';
+
+  @override
+  String get session2 => 'Session 2';
+
+  @override
+  String get session3 => 'Session 3';
+
+  @override
+  String get session4 => 'Session 4';
+
+  @override
+  String get myRegistrations => 'My Registrations';
 }

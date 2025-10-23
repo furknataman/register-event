@@ -8,7 +8,9 @@ import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/utils/localization_helper.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../l10n/locale_notifier.dart';
 import '../../../../services/service.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
 
@@ -183,6 +185,7 @@ class HomePage extends ConsumerWidget {
                                       },
                                       child: _buildEventCard(
                                         context,
+                                        ref,
                                         presentation,
                                         index,
                                         isRegistered,
@@ -297,12 +300,12 @@ class HomePage extends ConsumerWidget {
 
   Widget _buildCategoryChips(BuildContext context, WidgetRef ref, int selectedCategory) {
     final categories = [
-      'Tümü',
-      'Oturum 1',
-      'Oturum 2',
-      'Oturum 3',
-      'Oturum 4',
-      'Kayıt Olduklarım',
+      AppLocalizations.of(context)!.categoryAll,
+      AppLocalizations.of(context)!.session1,
+      AppLocalizations.of(context)!.session2,
+      AppLocalizations.of(context)!.session3,
+      AppLocalizations.of(context)!.session4,
+      AppLocalizations.of(context)!.myRegistrations,
     ];
 
     final pageController = ref.watch(categoryPageControllerProvider);
@@ -472,6 +475,7 @@ class HomePage extends ConsumerWidget {
 
   Widget _buildEventCard(
     BuildContext context,
+    WidgetRef ref,
     dynamic presentation,
     int index,
     bool isRegistered,
@@ -665,7 +669,7 @@ class HomePage extends ConsumerWidget {
                                     ),
                                     const SizedBox(width: 7),
                                     Text(
-                                      'Oturum $sessionNumber',
+                                      '${AppLocalizations.of(context)!.session} $sessionNumber',
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontSize: 14,
@@ -734,7 +738,15 @@ class HomePage extends ConsumerWidget {
                         _buildInfoRow(
                           context,
                           Icons.category,
-                          presentation.type ?? AppLocalizations.of(context)!.noTypeInfo,
+                          getLocalizedText(
+                            presentation.type,
+                            ref.watch(localeProvider).languageCode,
+                          ).isEmpty
+                              ? AppLocalizations.of(context)!.noTypeInfo
+                              : getLocalizedText(
+                                  presentation.type,
+                                  ref.watch(localeProvider).languageCode,
+                                ),
                         ),
                         const SizedBox(height: 12),
                         Container(

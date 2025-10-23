@@ -9,7 +9,9 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:autumn_conference/db/db_model/presentation_model.dart';
 import 'package:autumn_conference/services/service.dart';
 import 'package:autumn_conference/core/theme/app_colors.dart';
+import 'package:autumn_conference/core/utils/localization_helper.dart';
 import 'package:autumn_conference/l10n/app_localizations.dart';
+import 'package:autumn_conference/l10n/locale_notifier.dart';
 
 // Resim listesi - sırayla kullanılacak
 const List<String> _lessonImages = [
@@ -424,7 +426,15 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         const SizedBox(height: 8),
                         _buildInfoRow(
                           Icons.category,
-                          presentation.type ?? AppLocalizations.of(context)!.noTypeInfo,
+                          getLocalizedText(
+                            presentation.type,
+                            ref.watch(localeProvider).languageCode,
+                          ).isEmpty
+                              ? AppLocalizations.of(context)!.noTypeInfo
+                              : getLocalizedText(
+                                  presentation.type,
+                                  ref.watch(localeProvider).languageCode,
+                                ),
                         ),
                         const SizedBox(height: 12),
                         Container(
