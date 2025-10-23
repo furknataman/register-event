@@ -22,11 +22,11 @@ class LiquidBottomNav extends StatelessWidget {
     return SafeArea(
       top: false,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
         child: AnimatedSize(
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
-          alignment: Alignment.center,
+          alignment: Alignment.centerLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -86,11 +86,16 @@ class LiquidBottomNav extends StatelessWidget {
                   ),
                 ),
               ),
-              AnimatedSize(
-                alignment: Alignment.center,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeOut,
-                child: SizedBox(width: tabSpacing, height: 0),
+              Flexible(
+                child: AnimatedSize(
+                  alignment: Alignment.center,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeOut,
+                  child: SizedBox(
+                    width: tabSpacing.clamp(0, MediaQuery.of(context).size.width - 300),
+                    height: 0,
+                  ),
+                ),
               ),
               // Right group (Profile selection) — demo-like
               if (currentIndex == 3)

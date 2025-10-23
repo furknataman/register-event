@@ -331,12 +331,13 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           blur: 0,
           ambientStrength: 0.7,
           lightAngle: 0.3 * math.pi,
-          glassColor: Colors.white.withValues(alpha: 0.08),
+          glassColor: Colors.transparent,
+          chromaticAberration: 0.0,
         ),
         shape: LiquidRoundedSuperellipse(
           borderRadius: const Radius.circular(24),
         ),
-        glassContainsChild: true,
+        glassContainsChild: false,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -354,7 +355,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                 ),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Image section
                   ClipRRect(
@@ -394,7 +395,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   ),
                   // Content section
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.fromLTRB(8, 20, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

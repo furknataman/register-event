@@ -5,8 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
-import '../../../../services/service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../services/service.dart';
 
 // Resim listesi - sırayla kullanılacak
 const List<String> _lessonImages = [
@@ -51,7 +51,7 @@ class HomePage extends ConsumerWidget {
         ),
         child: SafeArea(
           child: presentationsAsync.when(
-                data: (presentations) => RefreshIndicator(
+            data: (presentations) => RefreshIndicator(
               color: Colors.white,
               backgroundColor: const Color(0xFF1a1a2e),
               onRefresh: () async {
@@ -69,7 +69,7 @@ class HomePage extends ConsumerWidget {
                         shape: LiquidRoundedSuperellipse(
                           borderRadius: const Radius.circular(20),
                         ),
-                        glassContainsChild: true,
+                        glassContainsChild: false,
                         child: Container(
                           padding: const EdgeInsets.all(24),
                           decoration: BoxDecoration(
@@ -128,7 +128,7 @@ class HomePage extends ConsumerWidget {
                 shape: LiquidRoundedSuperellipse(
                   borderRadius: const Radius.circular(20),
                 ),
-                glassContainsChild: true,
+                glassContainsChild: false,
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -156,7 +156,7 @@ class HomePage extends ConsumerWidget {
                 shape: LiquidRoundedSuperellipse(
                   borderRadius: const Radius.circular(20),
                 ),
-                glassContainsChild: true,
+                glassContainsChild: false,
                 child: Container(
                   padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
@@ -208,7 +208,7 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
             ),
-            ),
+          ),
         ),
       ),
     );
@@ -226,12 +226,13 @@ class HomePage extends ConsumerWidget {
           blur: 0,
           ambientStrength: 0.7,
           lightAngle: 0.3 * math.pi,
-          glassColor: Colors.white.withValues(alpha: 0.08),
+          glassColor: Colors.transparent,
+          chromaticAberration: 0.0,
         ),
         shape: LiquidRoundedSuperellipse(
           borderRadius: const Radius.circular(24),
         ),
-        glassContainsChild: true,
+        glassContainsChild: false,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -249,7 +250,7 @@ class HomePage extends ConsumerWidget {
                 ),
               ),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   // Image section
                   ClipRRect(
@@ -289,7 +290,7 @@ class HomePage extends ConsumerWidget {
                   ),
                   // Content section
                   Padding(
-                    padding: const EdgeInsets.all(20),
+                    padding: const EdgeInsets.fromLTRB(8, 20, 20, 20),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
