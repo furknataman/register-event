@@ -55,7 +55,8 @@ class EventDetailPage extends ConsumerWidget {
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
 
     // Dark mode kontrolü
-    final themeMode = ref.watch(themeModeProvider);
+    final themeModeAsync = ref.watch(themeModeProvider);
+    final themeMode = themeModeAsync.value ?? ThemeMode.system;
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
          MediaQuery.of(context).platformBrightness == Brightness.dark);
@@ -385,7 +386,8 @@ class EventDetailPage extends ConsumerWidget {
           );
         },
         loading: () {
-          final themeMode = ref.watch(themeModeProvider);
+          final themeModeAsync = ref.watch(themeModeProvider);
+          final themeMode = themeModeAsync.value ?? ThemeMode.system;
           final isDarkLoading = themeMode == ThemeMode.dark ||
               (themeMode == ThemeMode.system &&
                MediaQuery.of(context).platformBrightness == Brightness.dark);
@@ -414,7 +416,8 @@ class EventDetailPage extends ConsumerWidget {
           );
         },
         error: (error, stack) {
-          final themeMode = ref.watch(themeModeProvider);
+          final themeModeAsync = ref.watch(themeModeProvider);
+          final themeMode = themeModeAsync.value ?? ThemeMode.system;
           final isDarkError = themeMode == ThemeMode.dark ||
               (themeMode == ThemeMode.system &&
                MediaQuery.of(context).platformBrightness == Brightness.dark);
@@ -484,7 +487,8 @@ class EventDetailPage extends ConsumerWidget {
     String value,
   ) {
     // Dark mode kontrolü
-    final themeMode = ref.watch(themeModeProvider);
+    final themeModeAsync = ref.watch(themeModeProvider);
+    final themeMode = themeModeAsync.value ?? ThemeMode.system;
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
          MediaQuery.of(context).platformBrightness == Brightness.dark);
@@ -560,7 +564,8 @@ class EventDetailPage extends ConsumerWidget {
     String? position,
   ) {
     // Dark mode kontrolü
-    final themeMode = ref.watch(themeModeProvider);
+    final themeModeAsync = ref.watch(themeModeProvider);
+    final themeMode = themeModeAsync.value ?? ThemeMode.system;
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
          MediaQuery.of(context).platformBrightness == Brightness.dark);

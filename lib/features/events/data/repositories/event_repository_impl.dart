@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:injectable/injectable.dart';
 
 import '../../../../core/errors/failures.dart';
 import '../../../../core/errors/exceptions.dart';
@@ -9,7 +8,6 @@ import '../datasources/event_remote_datasource.dart';
 import '../datasources/event_local_datasource.dart';
 import '../models/event_model.dart';
 
-@LazySingleton(as: EventRepository)
 class EventRepositoryImpl implements EventRepository {
   final EventRemoteDataSource _remoteDataSource;
   final EventLocalDataSource _localDataSource;

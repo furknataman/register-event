@@ -1,14 +1,38 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../../core/dependency_injection/injection.dart';
+import '../../../../core/storage/secure_storage.dart';
 import '../../domain/entities/event.dart';
 import '../../domain/repositories/event_repository.dart';
+import '../../data/repositories/event_repository_impl.dart';
+import '../../data/datasources/event_remote_datasource.dart';
+import '../../data/datasources/event_local_datasource.dart';
+import '../../../auth/presentation/providers/auth_provider.dart';
 
 part 'event_provider.g.dart';
 
+// Secure storage provider
+final secureStorageProvider = Provider<SecureStorage>((ref) {
+  return SecureStorage();
+});
+
+// Event DataSource providers
+final eventRemoteDataSourceProvider = Provider<EventRemoteDataSource>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  final secureStorage = ref.watch(secureStorageProvider);
+  return EventRemoteDataSourceImpl(apiClient, secureStorage);
+});
+
+final eventLocalDataSourceProvider = Provider<EventLocalDataSource>((ref) {
+  final logger = ref.watch(loggerProvider);
+  return EventLocalDataSourceImpl(logger);
+});
+
 // Event repository provider
 final eventRepositoryProvider = Provider<EventRepository>((ref) {
-  return getIt<EventRepository>();
+  final remoteDataSource = ref.watch(eventRemoteDataSourceProvider);
+  final localDataSource = ref.watch(eventLocalDataSourceProvider);
+  return EventRepositoryImpl(remoteDataSource, localDataSource);
 });
 
 // All events provider

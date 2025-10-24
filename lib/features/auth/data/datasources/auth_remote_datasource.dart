@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
 
 import '../../../../core/network/api_client.dart';
 import '../../../../core/constants/app_constants.dart';
@@ -22,7 +21,6 @@ abstract class AuthRemoteDataSource {
   Future<AuthResponse> refreshToken(String refreshToken);
 }
 
-@LazySingleton(as: AuthRemoteDataSource)
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final ApiClient _apiClient;
   final AppLogger _logger;

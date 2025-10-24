@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:autumn_conference/core/data/local/theme_mode_stroge.dart';
 
-class ThemeModeNotifier extends StateNotifier<ThemeMode> {
-  ThemeModeNotifier() : super(ThemeMode.system) {
-    _loadTheme();
-  }
+part 'theme_mode.g.dart';
 
-  Future<void> _loadTheme() async {
+@riverpod
+class ThemeModeNotifier extends _$ThemeModeNotifier {
+  @override
+  Future<ThemeMode> build() async {
     final savedTheme = await getThemeMode();
-    if (savedTheme != null) {
-      state = savedTheme;
-    }
+    return savedTheme ?? ThemeMode.system;
   }
 
   Future<void> setThemeMode(ThemeMode mode) async {
     await saveThemeMode(mode);
-    state = mode;
+    state = AsyncValue.data(mode);
   }
 
   Future<void> setLight() async {
@@ -29,34 +27,5 @@ class ThemeModeNotifier extends StateNotifier<ThemeMode> {
 
   Future<void> setSystem() async {
     await setThemeMode(ThemeMode.system);
-  }
-}
-
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>(
-  (ref) => ThemeModeNotifier(),
-);
-
-// Backward compatibility - deprecated
-@Deprecated('Use themeModeProvider instead')
-final darkModeProvider = StateNotifierProvider<DarkModeNotifier, bool>(
-  (ref) => DarkModeNotifier(),
-);
-
-// Backward compatibility class - deprecated
-@Deprecated('Use ThemeModeNotifier instead')
-class DarkModeNotifier extends StateNotifier<bool> {
-  DarkModeNotifier() : super(false) {
-    _loadTheme();
-  }
-
-  Future<void> _loadTheme() async {
-    final themeData = await getThemeData();
-    final isDarkMode = themeData ?? false;
-    state = isDarkMode;
-  }
-
-  Future<void> toggle() async {
-    await setThemeData(!state);
-    state = !state;
   }
 }

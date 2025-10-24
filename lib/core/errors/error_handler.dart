@@ -1,11 +1,9 @@
 import 'package:flutter/foundation.dart';
-import 'package:injectable/injectable.dart';
 
 import '../utils/logger.dart';
 import 'failures.dart';
 import 'exceptions.dart';
 
-@lazySingleton
 class ErrorHandler {
   final AppLogger _logger;
 

@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
 
 import '../../../../core/network/api_client.dart';
 import '../../../../core/errors/exceptions.dart';
@@ -16,7 +15,6 @@ abstract class EventRemoteDataSource {
   Future<List<EventModel>> getUserAttendedEvents(int userId);
 }
 
-@LazySingleton(as: EventRemoteDataSource)
 class EventRemoteDataSourceImpl implements EventRemoteDataSource {
   final ApiClient _apiClient;
   final SecureStorage _secureStorage;

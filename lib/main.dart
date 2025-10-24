@@ -7,16 +7,16 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'core/dependency_injection/injection.dart';
+import 'core/notifications/local/notification.dart';
+import 'core/notifications/push/push_notification.dart';
 import 'core/routing/app_router.dart';
+import 'core/theme/dark_theme.dart';
+import 'core/theme/light_theme.dart';
+import 'core/theme/theme_mode.dart';
 import 'core/utils/logger.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/l10n.dart';
 import 'l10n/locale_notifier.dart';
-import 'core/notifications/local/notification.dart';
-import 'core/notifications/push/push_notification.dart';
-import 'core/theme/dark_theme.dart';
-import 'core/theme/light_theme.dart';
-import 'core/theme/theme_mode.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
@@ -60,8 +60,20 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
-    final themeMode = ref.watch(themeModeProvider);
-    final locale = ref.watch(localeProvider);
+    final themeModeAsync = ref.watch(themeModeProvider);
+    final localeAsync = ref.watch(localeProvider);
+
+    // Show loading screen while theme and locale are loading
+    if (themeModeAsync.isLoading || localeAsync.isLoading) {
+      return const MaterialApp(
+        home: Scaffold(
+          body: Center(child: CircularProgressIndicator()),
+        ),
+      );
+    }
+
+    final themeMode = themeModeAsync.value ?? ThemeMode.system;
+    final locale = localeAsync.value ?? const Locale('tr');
 
     return MaterialApp.router(
       // Router configuration

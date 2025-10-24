@@ -92,6 +92,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   @override
   Widget build(BuildContext context) {
     final eventData = ref.watch(presentationDataProvider);
+    final localeAsync = ref.watch(localeProvider);
+    final languageCode = localeAsync.value?.languageCode ?? 'tr';
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -308,7 +310,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               ),
                             );
                           },
-                          child: _buildEventCard(context, presentation, index),
+                          child: _buildEventCard(context, presentation, index, languageCode),
                         );
                       },
                     );
@@ -326,6 +328,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     BuildContext context,
     dynamic presentation,
     int index,
+    String languageCode,
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -423,12 +426,12 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           Icons.category,
                           getLocalizedText(
                             presentation.type,
-                            ref.watch(localeProvider).languageCode,
+                            languageCode,
                           ).isEmpty
                               ? AppLocalizations.of(context)!.noTypeInfo
                               : getLocalizedText(
                                   presentation.type,
-                                  ref.watch(localeProvider).languageCode,
+                                  languageCode,
                                 ),
                         ),
                         const SizedBox(height: 12),

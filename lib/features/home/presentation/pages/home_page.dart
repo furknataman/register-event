@@ -51,6 +51,8 @@ class HomePage extends ConsumerWidget {
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
     final userDataAsync = ref.watch(userDataProvider);
     final selectedCategory = ref.watch(selectedCategoryProvider);
+    final localeAsync = ref.watch(localeProvider);
+    final languageCode = localeAsync.value?.languageCode ?? 'tr';
 
     return Scaffold(
       body: Container(
@@ -81,10 +83,10 @@ class HomePage extends ConsumerWidget {
                       controller: pageController,
                       itemCount: allCategories.length,
                       onPageChanged: (index) {
-                        ref.read(selectedCategoryProvider.notifier).state = index;
+                        ref.read(selectedCategoryProvider.notifier).set(index);
 
                         // Bottom bar'ı üste döndür
-                        ref.read(resetBottomBarProvider.notifier).state++;
+                        ref.read(resetBottomBarProvider.notifier).increment();
 
                         // Aktif chip'i görünür yap
                         final scrollController = ref.read(chipScrollControllerProvider);
@@ -189,6 +191,7 @@ class HomePage extends ConsumerWidget {
                                         presentation,
                                         index,
                                         isRegistered,
+                                        languageCode,
                                         sessionNumber,
                                       ),
                                     );
@@ -479,6 +482,7 @@ class HomePage extends ConsumerWidget {
     dynamic presentation,
     int index,
     bool isRegistered,
+    String languageCode,
     int? sessionNumber,
   ) {
     return Container(
@@ -735,12 +739,12 @@ class HomePage extends ConsumerWidget {
                           Icons.category,
                           getLocalizedText(
                             presentation.type,
-                            ref.watch(localeProvider).languageCode,
+                            languageCode,
                           ).isEmpty
                               ? AppLocalizations.of(context)!.noTypeInfo
                               : getLocalizedText(
                                   presentation.type,
-                                  ref.watch(localeProvider).languageCode,
+                                  languageCode,
                                 ),
                         ),
                         const SizedBox(height: 12),

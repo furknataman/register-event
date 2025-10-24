@@ -1,12 +1,10 @@
 import 'package:dio/dio.dart';
-import 'package:injectable/injectable.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 
 import '../constants/app_constants.dart';
 import '../errors/exceptions.dart';
 
-@injectable
 class ApiClient {
   final Dio _dio;
   final FlutterSecureStorage _secureStorage;

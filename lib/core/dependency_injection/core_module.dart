@@ -1,13 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:injectable/injectable.dart';
 import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-@module
 abstract class CoreModule {
-  @lazySingleton
-  Dio get dio {
+    Dio get dio {
     final dio = Dio();
     dio.options.connectTimeout = const Duration(seconds: 30);
     dio.options.receiveTimeout = const Duration(seconds: 30);
@@ -15,8 +12,7 @@ abstract class CoreModule {
     return dio;
   }
 
-  @lazySingleton
-  FlutterSecureStorage get secureStorage => const FlutterSecureStorage(
+    FlutterSecureStorage get secureStorage => const FlutterSecureStorage(
     aOptions: AndroidOptions(
       encryptedSharedPreferences: true,
     ),
@@ -25,12 +21,9 @@ abstract class CoreModule {
     ),
   );
 
-  @preResolve
-  @lazySingleton
-  Future<SharedPreferences> get sharedPreferences => SharedPreferences.getInstance();
+    Future<SharedPreferences> get sharedPreferences => SharedPreferences.getInstance();
 
-  @lazySingleton
-  Logger get logger => Logger(
+    Logger get logger => Logger(
     printer: PrettyPrinter(
       methodCount: 2,
       errorMethodCount: 8,

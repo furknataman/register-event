@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/user.dart';
@@ -20,7 +19,6 @@ abstract class AuthLocalDataSource {
   Future<void> clearRefreshToken();
 }
 
-@LazySingleton(as: AuthLocalDataSource)
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   static const String _userKey = 'user_data';
   static const String _refreshTokenKey = 'refresh_token';

@@ -1,5 +1,4 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
-import 'package:injectable/injectable.dart';
 
 abstract class NetworkInfo {
   Future<bool> get isConnected;
@@ -7,7 +6,6 @@ abstract class NetworkInfo {
   Future<ConnectivityResult> get connectionType;
 }
 
-@LazySingleton(as: NetworkInfo)
 class NetworkInfoImpl implements NetworkInfo {
   final Connectivity _connectivity;
 
@@ -80,8 +78,6 @@ enum ConnectionQuality {
 }
 
 // Connectivity module registration
-@module
 abstract class ConnectivityModule {
-  @lazySingleton
-  Connectivity get connectivity => Connectivity();
+    Connectivity get connectivity => Connectivity();
 }

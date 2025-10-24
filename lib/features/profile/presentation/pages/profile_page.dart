@@ -341,8 +341,7 @@ class _ProfileContent extends ConsumerWidget {
               Navigator.of(context).pop();
               await ref.read(authNotifierProvider.notifier).logout();
               if (context.mounted) {
-                // Temporarily disable login flow; return to home instead
-                context.go(AppRoutes.home);
+                context.go(AppRoutes.login);
               }
             },
             child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),

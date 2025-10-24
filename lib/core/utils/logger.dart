@@ -1,7 +1,5 @@
 import 'package:logger/logger.dart';
-import 'package:injectable/injectable.dart';
 
-@lazySingleton
 class AppLogger {
   late final Logger _logger;
 

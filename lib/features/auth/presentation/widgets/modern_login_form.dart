@@ -7,51 +7,58 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
 import '../../../../core/routing/app_router.dart';
-import '../../../../core/auth/services/login_service.dart';
+import '../../../../core/utils/logger.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class ModernLoginForm extends ConsumerStatefulWidget {
-  final GoogleProvider getGoogle;
-
-  const ModernLoginForm({
-    super.key,
-    required this.getGoogle,
-  });
+  const ModernLoginForm({super.key});
 
   @override
   ConsumerState<ModernLoginForm> createState() => _ModernLoginFormState();
 }
 
 class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   final ValueNotifier<bool> _isPasswordObscured = ValueNotifier<bool>(true);
   final ValueNotifier<bool> _isFormValid = ValueNotifier<bool>(false);
   bool _isLoading = false;
+  final AppLogger _logger = AppLogger();
 
   @override
   void initState() {
     super.initState();
     // Add listeners to text controllers to validate form
-    widget.getGoogle.controllerEmail.addListener(_validateForm);
-    widget.getGoogle.controllerPassword.addListener(_validateForm);
+    _emailController.addListener(_validateForm);
+    _passwordController.addListener(_validateForm);
     // Initial validation
     _validateForm();
   }
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _isPasswordObscured.dispose();
+    _isFormValid.dispose();
+    super.dispose();
+  }
+
   void _validateForm() {
-    final emailText = widget.getGoogle.controllerEmail.text.trim();
-    final passwordText = widget.getGoogle.controllerPassword.text;
-    
+    final emailText = _emailController.text.trim();
+    final passwordText = _passwordController.text;
+
     _isFormValid.value = emailText.isNotEmpty && passwordText.isNotEmpty;
   }
 
   Future<void> _handleLogin(BuildContext context) async {
     // Minimum 3 karakter kontrolü
-    if (widget.getGoogle.controllerEmail.text.length < 3) {
+    if (_emailController.text.length < 3) {
       _showErrorMessage(context, 'Email must be at least 3 characters');
       return;
     }
-    
-    if (widget.getGoogle.controllerPassword.text.length < 3) {
+
+    if (_passwordController.text.length < 3) {
       _showErrorMessage(context, 'Password must be at least 3 characters');
       return;
     }
@@ -62,8 +69,8 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
 
     try {
       final success = await ref.read(authNotifierProvider.notifier).login(
-        widget.getGoogle.controllerEmail.text.trim(),
-        widget.getGoogle.controllerPassword.text,
+        _emailController.text.trim(),
+        _passwordController.text,
       );
 
       if (success && mounted) {
@@ -88,12 +95,8 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
   }
 
   void _showErrorMessage(BuildContext context, String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: Colors.red,
-      ),
-    );
+    // Log error instead of showing SnackBar
+    _logger.error('Login error: $message');
   }
 
   @override
@@ -107,7 +110,7 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
             return _LiquidGlassTextField(
               labelText: AppLocalizations.of(context)!.email,
               iconPath: 'assets/svg/envelope.svg',
-              controller: widget.getGoogle.controllerEmail,
+              controller: _emailController,
             );
           },
         ),
@@ -119,7 +122,7 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
               labelText: AppLocalizations.of(context)!.password,
               iconPath: 'assets/svg/lock.svg',
               isPassword: true,
-              controller: widget.getGoogle.controllerPassword,
+              controller: _passwordController,
               isObscured: isObscured,
               onVisibilityToggle: () {
                 _isPasswordObscured.value = !isObscured;
@@ -143,17 +146,6 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
     );
   }
 
-  @override
-  void dispose() {
-    // Remove listeners
-    widget.getGoogle.controllerEmail.removeListener(_validateForm);
-    widget.getGoogle.controllerPassword.removeListener(_validateForm);
-
-    // Dispose ValueNotifiers
-    _isPasswordObscured.dispose();
-    _isFormValid.dispose();
-    super.dispose();
-  }
 }
 
 // Liquid Glass TextField Widget

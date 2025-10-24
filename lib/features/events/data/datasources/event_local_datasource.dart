@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/utils/logger.dart';
@@ -13,7 +12,6 @@ abstract class EventLocalDataSource {
   Future<void> clearCache();
 }
 
-@LazySingleton(as: EventLocalDataSource)
 class EventLocalDataSourceImpl implements EventLocalDataSource {
   final AppLogger _logger;
   static const String _eventsKey = 'cached_events';

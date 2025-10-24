@@ -1,23 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../core/data/local/locale_storage.dart';
 
-class LocaleNotifier extends StateNotifier<Locale> {
-  LocaleNotifier() : super(const Locale('tr')) {
-    _loadLocale();
-  }
+part 'locale_notifier.g.dart';
 
-  Future<void> _loadLocale() async {
+@riverpod
+class LocaleNotifier extends _$LocaleNotifier {
+  @override
+  Future<Locale> build() async {
     final savedLocale = await getLocale();
-    if (savedLocale != null) {
-      state = Locale(savedLocale);
-    }
+    return Locale(savedLocale ?? 'tr');
   }
 
   Future<void> setLocale(String languageCode) async {
     await saveLocale(languageCode);
-    state = Locale(languageCode);
+    state = AsyncValue.data(Locale(languageCode));
   }
 
   Future<void> setTurkish() async {
@@ -28,7 +26,3 @@ class LocaleNotifier extends StateNotifier<Locale> {
     await setLocale('en');
   }
 }
-
-final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>(
-  (ref) => LocaleNotifier(),
-);

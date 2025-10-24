@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:logger/logger.dart';
 import 'package:autumn_conference/core/data/models/presentation_model.dart';
 import 'package:autumn_conference/core/data/models/session_response_model.dart';
@@ -9,6 +10,8 @@ import 'package:autumn_conference/core/data/models/user_info.dart';
 import 'package:autumn_conference/core/data/local/token_stroge.dart';
 import 'package:autumn_conference/main.dart';
 import 'package:autumn_conference/core/notifications/toast/toast_message.dart';
+
+part 'service.g.dart';
 
 class UnauthorizedException extends Interceptor {
   @override
@@ -250,9 +253,15 @@ final eventDetailsProvider =
   return ref.watch(webServiceProvider).fetchEventDetails(id);
 });
 
-// Seçili kategori için StateProvider
+// Seçili kategori için Notifier
 // 0 = Tümü, 1 = Oturum 1, 2 = Oturum 2, 3 = Oturum 3, 4 = Oturum 4, 5 = Kayıt Olduklarım
-final selectedCategoryProvider = StateProvider<int>((ref) => 0);
+@riverpod
+class SelectedCategory extends _$SelectedCategory {
+  @override
+  int build() => 0;
+
+  void set(int value) => state = value;
+}
 
 // PageController için Provider - Event cards sayfaları için
 final categoryPageControllerProvider = Provider<PageController>((ref) {
@@ -268,5 +277,11 @@ final chipScrollControllerProvider = Provider<ScrollController>((ref) {
   return controller;
 });
 
-// Bottom bar reset için StateProvider
-final resetBottomBarProvider = StateProvider<int>((ref) => 0);
+// Bottom bar reset için Notifier
+@riverpod
+class ResetBottomBar extends _$ResetBottomBar {
+  @override
+  int build() => 0;
+
+  void increment() => state++;
+}

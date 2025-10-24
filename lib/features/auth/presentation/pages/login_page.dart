@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/svg.dart';
 import '../../../splash/presentation/widgets/splash_logo.dart';
-import '../../../../core/auth/services/login_service.dart';
 import '../widgets/modern_login_form.dart';
 
 class LoginPage extends ConsumerWidget {
@@ -12,8 +11,6 @@ class LoginPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final getGoogle = ref.watch<GoogleProvider>(googleConfig);
-    
     final keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
 
     return Scaffold(
@@ -40,11 +37,11 @@ class LoginPage extends ConsumerWidget {
                   SizedBox(height: keyboardHeight > 0 ? 40 : 60),
                   const SplashLogo(),
                   SizedBox(height: keyboardHeight > 0 ? 20 : 80),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 32),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 32),
                     child: SizedBox(
                       height: 320,
-                      child: ModernLoginForm(getGoogle: getGoogle),
+                      child: ModernLoginForm(),
                     ),
                   ),
                   SizedBox(height: keyboardHeight > 0 ? 10 : 20),
