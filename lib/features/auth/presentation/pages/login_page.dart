@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/theme/app_colors.dart';
-import '../../../../global/svg.dart';
-import '../../../../pages/start/widgets/startlogo.dart';
-import '../../../../authentication/login_service.dart';
+import '../../../../core/utils/svg.dart';
+import '../../../splash/presentation/widgets/splash_logo.dart';
+import '../../../../core/auth/services/login_service.dart';
 import '../widgets/modern_login_form.dart';
 
 class LoginPage extends ConsumerWidget {
@@ -38,7 +38,7 @@ class LoginPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: keyboardHeight > 0 ? 40 : 60),
-                  const StartPageWidgets(),
+                  const SplashLogo(),
                   SizedBox(height: keyboardHeight > 0 ? 20 : 80),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),

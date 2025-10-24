@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../db/sharedPreferences/locale_storage.dart';
+import '../core/data/local/locale_storage.dart';
 
 class LocaleNotifier extends StateNotifier<Locale> {
   LocaleNotifier() : super(const Locale('tr')) {

@@ -12,11 +12,11 @@ import 'core/utils/logger.dart';
 import 'l10n/app_localizations.dart';
 import 'l10n/l10n.dart';
 import 'l10n/locale_notifier.dart';
-import 'notification/local_notification/notification.dart';
-import 'notification/push_notification/push_notification.dart';
-import 'theme/dark_theme.dart';
-import 'theme/light_theme.dart';
-import 'theme/theme_mode.dart';
+import 'core/notifications/local/notification.dart';
+import 'core/notifications/push/push_notification.dart';
+import 'core/theme/dark_theme.dart';
+import 'core/theme/light_theme.dart';
+import 'core/theme/theme_mode.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 

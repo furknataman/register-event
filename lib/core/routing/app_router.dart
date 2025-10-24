@@ -11,13 +11,11 @@ import '../../features/events/presentation/pages/event_detail_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
 import '../../features/scan/presentation/pages/scan_page.dart';
-import '../../pages/daily_plan/daily_plan.dart';
-import '../../pages/search/search_page.dart';
-import '../../pages/settings/settings_page.dart';
-// Import existing pages temporarily
-import '../../pages/start/start_page.dart';
+import '../../features/splash/presentation/pages/splash_page.dart';
+import '../../features/search/presentation/pages/search_page.dart';
+import '../../features/schedule/presentation/pages/schedule_page.dart';
 // Import services
-import '../../services/service.dart';
+import '../../core/services/api/service.dart';
 import '../widgets/liquid_bottom_nav.dart';
 
 // Routes
@@ -30,8 +28,7 @@ class AppRoutes {
   static const String search = '/search';
   static const String event = '/event';
   static const String eventDetail = '/event/:id';
-  static const String settings = '/settings';
-  static const String dailyPlan = '/daily-plan';
+  static const String schedule = '/schedule';
 }
 
 final routerProvider = Provider<GoRouter>((ref) {
@@ -39,11 +36,11 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: AppRoutes.splash,
     debugLogDiagnostics: true,
     routes: [
-      // Splash/Start Route
+      // Splash Route
       GoRoute(
         path: AppRoutes.splash,
         name: 'splash',
-        builder: (context, state) => const StartPage(),
+        builder: (context, state) => const SplashPage(),
       ),
 
       // Auth Routes
@@ -92,18 +89,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         },
       ),
 
-      // Settings Routes
+      // Schedule Route
       GoRoute(
-        path: AppRoutes.settings,
-        name: 'settings',
-        builder: (context, state) => const SettingsPage(),
-      ),
-
-      // Daily Plan Route
-      GoRoute(
-        path: AppRoutes.dailyPlan,
-        name: 'dailyPlan',
-        builder: (context, state) => DailyPlanPage(),
+        path: AppRoutes.schedule,
+        name: 'schedule',
+        builder: (context, state) => SchedulePage(),
       ),
     ],
 

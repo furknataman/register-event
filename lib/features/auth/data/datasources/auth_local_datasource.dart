@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../domain/entities/user.dart';
 import '../models/auth_response.dart';
-import '../../../../db/sharedPreferences/token_stroge.dart' as token_storage;
+import '../../../../core/data/local/token_stroge.dart' as token_storage;
 
 abstract class AuthLocalDataSource {
   Future<void> saveUser(AuthResponse authResponse);

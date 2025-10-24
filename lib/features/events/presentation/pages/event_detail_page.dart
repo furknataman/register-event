@@ -7,10 +7,10 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/localization_helper.dart';
-import '../../../../db/db_model/presentation_model.dart';
+import '../../../../core/data/models/presentation_model.dart';
 import '../../../../l10n/app_localizations.dart';
-import '../../../../services/service.dart';
-import '../../../../theme/theme_mode.dart';
+import '../../../../core/services/api/service.dart';
+import '../../../../core/theme/theme_mode.dart';
 
 // Resim listesi - home page ile aynı
 const List<String> _lessonImages = [

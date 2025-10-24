@@ -7,7 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../providers/auth_provider.dart';
 import '../../../../core/routing/app_router.dart';
-import '../../../../authentication/login_service.dart';
+import '../../../../core/auth/services/login_service.dart';
 import '../../../../l10n/app_localizations.dart';
 
 class ModernLoginForm extends ConsumerStatefulWidget {

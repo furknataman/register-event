@@ -8,7 +8,7 @@ import '../../../../core/routing/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
-import '../../../../theme/theme_mode.dart';
+import '../../../../core/theme/theme_mode.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -230,7 +230,7 @@ class _ProfileContent extends ConsumerWidget {
                 ),
                 title: Text(AppLocalizations.of(context)!.dailySchedule, style: const TextStyle(color: Colors.white)),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
-                onTap: () => context.push(AppRoutes.dailyPlan),
+                onTap: () => context.push(AppRoutes.schedule),
               ),
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
               ListTile(

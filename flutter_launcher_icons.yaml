@@ -4,7 +4,10 @@ dev_dependencies:
 flutter_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/images/atc.png"
+  image_path: "assets/images/ib_day_logo.png"
+  remove_alpha_ios: true
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/images/ib_day_logo.png"
   min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: false

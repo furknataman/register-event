@@ -11,7 +11,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/localization_helper.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
-import '../../../../services/service.dart';
+import '../../../../core/services/api/service.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
 
 // Resim listesi - sırayla kullanılacak
