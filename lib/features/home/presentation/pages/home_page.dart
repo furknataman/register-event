@@ -699,12 +699,7 @@ class HomePage extends ConsumerWidget {
                       children: [
                         Text(
                           presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 22,
-                            fontWeight: FontWeight.bold,
-                            height: 1.3,
-                          ),
+                          style: AppTextStyles.cardTitle(context),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -786,16 +781,12 @@ class HomePage extends ConsumerWidget {
   Widget _buildInfoRow(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: Colors.black87),
+        Icon(icon, size: 18, color: AppTextStyles.getSecondaryTextColor(context)),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              color: Colors.black87,
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-            ),
+            style: AppTextStyles.cardSubtitle(context),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

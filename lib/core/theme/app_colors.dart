@@ -118,4 +118,42 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
     color: AppColors.textWhite,
   );
+
+  // Theme-aware text colors
+  static Color getTextColor(BuildContext context, {double opacity = 1.0}) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return isDark
+        ? Colors.white.withValues(alpha: opacity)
+        : Colors.black.withValues(alpha: opacity);
+  }
+
+  static Color getSecondaryTextColor(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return isDark
+        ? Colors.white.withValues(alpha: 0.7)
+        : Colors.black87;
+  }
+
+  // Card Text Styles - Theme aware
+  static TextStyle cardTitle(BuildContext context) => TextStyle(
+    color: getTextColor(context),
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    height: 1.3,
+  );
+
+  static TextStyle cardSubtitle(BuildContext context) => TextStyle(
+    color: getSecondaryTextColor(context),
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  static TextStyle profileInfoTitle(BuildContext context) => TextStyle(
+    color: getTextColor(context),
+    fontWeight: FontWeight.w500,
+  );
+
+  static TextStyle profileInfoSubtitle(BuildContext context) => TextStyle(
+    color: getSecondaryTextColor(context),
+  );
 }

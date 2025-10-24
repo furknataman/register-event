@@ -165,8 +165,8 @@ class EventDetailPage extends ConsumerWidget {
                         // Title
                         Text(
                           presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: AppTextStyles.getTextColor(context),
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
                             height: 1.3,
@@ -256,8 +256,8 @@ class EventDetailPage extends ConsumerWidget {
                         if (presentation.presenter1Name != null) ...[
                           Text(
                             AppLocalizations.of(context)!.speakers,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppTextStyles.getTextColor(context),
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
@@ -287,8 +287,8 @@ class EventDetailPage extends ConsumerWidget {
                         if (presentation.description != null) ...[
                           Text(
                             AppLocalizations.of(context)!.description,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppTextStyles.getTextColor(context),
                               fontWeight: FontWeight.bold,
                               fontSize: 18,
                             ),
@@ -322,7 +322,7 @@ class EventDetailPage extends ConsumerWidget {
                               child: Text(
                                 presentation.description!,
                                 style: TextStyle(
-                                  color: Colors.white.withValues(alpha: 0.95),
+                                  color: AppTextStyles.getTextColor(context, opacity: 0.95),
                                   height: 1.6,
                                   fontSize: 15,
                                 ),
@@ -529,8 +529,8 @@ class EventDetailPage extends ConsumerWidget {
                 iconPath,
                 width: 18,
                 height: 18,
-                colorFilter: const ColorFilter.mode(
-                  Colors.white,
+                colorFilter: ColorFilter.mode(
+                  AppTextStyles.getTextColor(context),
                   BlendMode.srcIn,
                 ),
               ),
@@ -539,8 +539,8 @@ class EventDetailPage extends ConsumerWidget {
             Expanded(
               child: Text(
                 value,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppTextStyles.getTextColor(context),
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
@@ -606,8 +606,8 @@ class EventDetailPage extends ConsumerWidget {
           ),
           title: Text(
             name,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppTextStyles.getTextColor(context),
               fontWeight: FontWeight.w600,
               fontSize: 16,
             ),
@@ -620,7 +620,7 @@ class EventDetailPage extends ConsumerWidget {
                 Text(
                   position,
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.85),
+                    color: AppTextStyles.getTextColor(context, opacity: 0.85),
                     fontSize: 13,
                     fontWeight: FontWeight.w500,
                   ),
@@ -631,7 +631,7 @@ class EventDetailPage extends ConsumerWidget {
                 Text(
                   email,
                   style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.7),
+                    color: AppTextStyles.getSecondaryTextColor(context),
                     fontSize: 12,
                   ),
                 ),

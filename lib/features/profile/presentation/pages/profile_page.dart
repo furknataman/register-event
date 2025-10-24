@@ -24,12 +24,6 @@ class ProfilePage extends ConsumerWidget {
         elevation: 0,
         foregroundColor: Colors.white,
         title: Text(AppLocalizations.of(context)!.profile),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () => context.push(AppRoutes.settings),
-          ),
-        ],
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -150,25 +144,25 @@ class _ProfileContent extends ConsumerWidget {
         const SizedBox(height: 12),
 
         _ProfileInfoCard(
-          icon: Icons.email,
+          iconPath: 'assets/svg/envelope.svg',
           title: 'Email',
           value: user.email ?? 'Not provided',
         ),
         if (user.phone != null)
           _ProfileInfoCard(
-            icon: Icons.phone,
+            iconPath: 'assets/svg/phone.svg',
             title: 'Phone',
             value: user.phone!,
           ),
         if (user.school != null)
           _ProfileInfoCard(
-            icon: Icons.school,
+            iconPath: 'assets/svg/school.svg',
             title: 'School',
             value: user.school!,
           ),
         if (user.branch != null)
           _ProfileInfoCard(
-            icon: Icons.work,
+            iconPath: 'assets/svg/briefcase.svg',
             title: 'Branch',
             value: user.branch!,
           ),
@@ -223,20 +217,32 @@ class _ProfileContent extends ConsumerWidget {
           child: Column(
             children: [
               ListTile(
-                leading: const Icon(Icons.schedule, color: Colors.white),
+                leading: SizedBox(
+                  width: 24,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/svg/calendar.svg',
+                      width: 20,
+                      height: 20,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    ),
+                  ),
+                ),
                 title: Text(AppLocalizations.of(context)!.dailySchedule, style: const TextStyle(color: Colors.white)),
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
                 onTap: () => context.push(AppRoutes.dailyPlan),
               ),
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
               ListTile(
-                leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SvgPicture.asset(
-                    'assets/svg/moon.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                leading: SizedBox(
+                  width: 24,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/svg/moon.svg',
+                      width: 20,
+                      height: 20,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    ),
                   ),
                 ),
                 title: Text(AppLocalizations.of(context)!.themeSelection, style: const TextStyle(color: Colors.white)),
@@ -245,13 +251,15 @@ class _ProfileContent extends ConsumerWidget {
               ),
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
               ListTile(
-                leading: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SvgPicture.asset(
-                    'assets/svg/language.svg',
-                    width: 24,
-                    height: 24,
-                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                leading: SizedBox(
+                  width: 24,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/svg/globe.svg',
+                      width: 20,
+                      height: 20,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    ),
                   ),
                 ),
                 title: Text(AppLocalizations.of(context)!.languageSelection, style: const TextStyle(color: Colors.white)),
@@ -260,7 +268,17 @@ class _ProfileContent extends ConsumerWidget {
               ),
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
               ListTile(
-                leading: const Icon(Icons.logout, color: Colors.red),
+                leading: SizedBox(
+                  width: 24,
+                  child: Center(
+                    child: SvgPicture.asset(
+                      'assets/svg/arrow-right-from-bracket.svg',
+                      width: 20,
+                      height: 20,
+                      colorFilter: const ColorFilter.mode(Colors.red, BlendMode.srcIn),
+                    ),
+                  ),
+                ),
                 title: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
                 onTap: () => _showLogoutDialog(context, ref),
               ),
@@ -315,11 +333,6 @@ class _ProfileContent extends ConsumerWidget {
               onTap: () async {
                 await ref.read(themeModeProvider.notifier).setLight();
                 if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.themeSelected(AppLocalizations.of(context)!.lightTheme))),
-                  );
-                }
               },
             ),
             ListTile(
@@ -328,11 +341,6 @@ class _ProfileContent extends ConsumerWidget {
               onTap: () async {
                 await ref.read(themeModeProvider.notifier).setDark();
                 if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.themeSelected(AppLocalizations.of(context)!.darkTheme))),
-                  );
-                }
               },
             ),
             ListTile(
@@ -341,11 +349,6 @@ class _ProfileContent extends ConsumerWidget {
               onTap: () async {
                 await ref.read(themeModeProvider.notifier).setSystem();
                 if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.themeSelected(AppLocalizations.of(context)!.systemTheme))),
-                  );
-                }
               },
             ),
           ],
@@ -369,11 +372,6 @@ class _ProfileContent extends ConsumerWidget {
               onTap: () async {
                 await ref.read(localeProvider.notifier).setTurkish();
                 if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.languageSelected(AppLocalizations.of(context)!.turkish))),
-                  );
-                }
               },
             ),
             ListTile(
@@ -382,11 +380,6 @@ class _ProfileContent extends ConsumerWidget {
               onTap: () async {
                 await ref.read(localeProvider.notifier).setEnglish();
                 if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(AppLocalizations.of(context)!.languageSelected('English'))),
-                  );
-                }
               },
             ),
           ],
@@ -433,12 +426,12 @@ class _NotLoggedInContent extends StatelessWidget {
 }
 
 class _ProfileInfoCard extends StatelessWidget {
-  final IconData icon;
+  final String iconPath;
   final String title;
   final String value;
 
   const _ProfileInfoCard({
-    required this.icon,
+    required this.iconPath,
     required this.title,
     required this.value,
   });
@@ -456,9 +449,22 @@ class _ProfileInfoCard extends StatelessWidget {
         ),
       ),
       child: ListTile(
-        leading: Icon(icon, color: Colors.white),
-        title: Text(title, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
-        subtitle: Text(value, style: TextStyle(color: Colors.white.withValues(alpha: 0.8))),
+        leading: SizedBox(
+          width: 28,
+          child: Center(
+            child: SvgPicture.asset(
+              iconPath,
+              width: 24,
+              height: 24,
+              colorFilter: ColorFilter.mode(
+                AppTextStyles.getTextColor(context),
+                BlendMode.srcIn,
+              ),
+            ),
+          ),
+        ),
+        title: Text(title, style: AppTextStyles.profileInfoTitle(context)),
+        subtitle: Text(value, style: AppTextStyles.profileInfoSubtitle(context)),
       ),
     );
   }
