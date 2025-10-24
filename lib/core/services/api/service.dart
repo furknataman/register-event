@@ -9,7 +9,6 @@ import 'package:autumn_conference/core/data/models/user_info.dart';
 import 'package:autumn_conference/core/data/local/token_stroge.dart';
 import 'package:autumn_conference/main.dart';
 import 'package:autumn_conference/core/notifications/toast/toast_message.dart';
-import 'package:autumn_conference/core/services/network/check_internet.dart';
 
 class UnauthorizedException extends Interceptor {
   @override
@@ -52,15 +51,6 @@ class WebService {
   Future<Response> _makeRequest(String endpoint,
       {Map<String, dynamic>? data, String? token, String method = 'POST'}) async {
     final url = "$baseUrl$endpoint";
-
-    final isConnected = await hasInternetConnection();
-    if (!isConnected) {
-      toastMessage("No internet connection");
-      throw DioException(
-        requestOptions: RequestOptions(path: ''),
-        error: 'No internet connection',
-      );
-    }
 
     try {
       final response = method == 'GET'
