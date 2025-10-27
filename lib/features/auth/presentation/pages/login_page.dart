@@ -5,6 +5,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/svg.dart';
 import '../../../splash/presentation/widgets/splash_logo.dart';
 import '../widgets/modern_login_form.dart';
+import '../../../../core/animations/spring_animations.dart';
 
 class LoginPage extends ConsumerWidget {
   const LoginPage({super.key});
@@ -35,14 +36,43 @@ class LoginPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   SizedBox(height: keyboardHeight > 0 ? 40 : 60),
-                  const SplashLogo(),
+                  // Logo with subtle spring bounce
+                  SpringAnimatedBuilder(
+                    duration: SpringAnimations.slow,
+                    curve: SpringAnimations.bouncySpring,
+                    builder: (context, animation) {
+                      return ScaleTransition(
+                        scale: Tween<double>(begin: 0.9, end: 1.0).animate(animation),
+                        child: FadeTransition(
+                          opacity: animation,
+                          child: const SplashLogo(),
+                        ),
+                      );
+                    },
+                  ),
                   SizedBox(height: keyboardHeight > 0 ? 20 : 80),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 32),
-                    child: SizedBox(
-                      height: 320,
-                      child: ModernLoginForm(),
-                    ),
+                  // Form with spring slide up
+                  SpringAnimatedBuilder(
+                    duration: SpringAnimations.standard,
+                    curve: SpringAnimations.standardSpring,
+                    builder: (context, animation) {
+                      return FadeTransition(
+                        opacity: animation,
+                        child: SlideTransition(
+                          position: Tween<Offset>(
+                            begin: const Offset(0, 0.05),
+                            end: Offset.zero,
+                          ).animate(animation),
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 32),
+                            child: SizedBox(
+                              height: 320,
+                              child: ModernLoginForm(),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                   ),
                   SizedBox(height: keyboardHeight > 0 ? 10 : 20),
                 ],

@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../animations/spring_animations.dart';
+
 // Exact bottom bar composition inspired by the demo layout
 // Left group: Home pill + Scan + Search; Spacer animates; Right icon.
 class LiquidBottomNav extends StatelessWidget {
@@ -24,8 +26,8 @@ class LiquidBottomNav extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12),
         child: AnimatedSize(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
+          duration: SpringAnimations.standard,
+          curve: SpringAnimations.standardSpring,
           alignment: Alignment.centerLeft,
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -89,8 +91,8 @@ class LiquidBottomNav extends StatelessWidget {
               Flexible(
                 child: AnimatedSize(
                   alignment: Alignment.center,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeOut,
+                  duration: SpringAnimations.standard,
+                  curve: SpringAnimations.standardSpring,
                   child: SizedBox(
                     width: tabSpacing.clamp(0, MediaQuery.of(context).size.width - 300),
                     height: 0,
@@ -136,7 +138,7 @@ class _SvgIcon extends StatelessWidget {
   }
 }
 
-class _GlassPill extends StatelessWidget {
+class _GlassPill extends StatefulWidget {
   final VoidCallback onTap;
   final String iconAsset;
   final String label;
@@ -150,10 +152,22 @@ class _GlassPill extends StatelessWidget {
   });
 
   @override
+  State<_GlassPill> createState() => _GlassPillState();
+}
+
+class _GlassPillState extends State<_GlassPill> with SpringButtonMixin {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
+      onTap: widget.onTap,
+      onTapDown: onTapDown,
+      onTapUp: (details) {
+        onTapUp(details);
+        widget.onTap();
+      },
+      onTapCancel: onTapCancel,
+      child: buildPressAnimation(
+        child: ClipRRect(
         borderRadius: BorderRadius.circular(40),
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
@@ -165,10 +179,10 @@ class _GlassPill extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             child: Row(
               children: [
-                _SvgIcon(iconAsset, size: largeIcon ? 32 : 28),
+                _SvgIcon(widget.iconAsset, size: widget.largeIcon ? 32 : 28),
                 const SizedBox(width: 6),
                 Text(
-                  label,
+                  widget.label,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
@@ -179,12 +193,13 @@ class _GlassPill extends StatelessWidget {
             ),
           ),
         ),
+          ),
       ),
     );
   }
 }
 
-class _GlassIcon extends StatelessWidget {
+class _GlassIcon extends StatefulWidget {
   final VoidCallback onTap;
   final String iconAsset;
   final EdgeInsets padding;
@@ -198,20 +213,32 @@ class _GlassIcon extends StatelessWidget {
   });
 
   @override
+  State<_GlassIcon> createState() => _GlassIconState();
+}
+
+class _GlassIconState extends State<_GlassIcon> with SpringButtonMixin {
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(40),
+      onTapDown: onTapDown,
+      onTapUp: (details) {
+        onTapUp(details);
+        widget.onTap();
+      },
+      onTapCancel: onTapCancel,
+      child: buildPressAnimation(
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(40),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              padding: widget.padding,
+              child: _SvgIcon(widget.iconAsset, size: widget.large ? 32 : 28),
             ),
-            padding: padding,
-            child: _SvgIcon(iconAsset, size: large ? 32 : 28),
           ),
         ),
       ),

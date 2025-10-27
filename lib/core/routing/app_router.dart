@@ -1,8 +1,5 @@
-// import 'dart:ui'; // no longer needed after custom liquid nav
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 // Import feature pages
@@ -17,6 +14,8 @@ import '../../features/schedule/presentation/pages/schedule_page.dart';
 // Import services
 import '../../core/services/api/service.dart';
 import '../widgets/liquid_bottom_nav.dart';
+// Import page transitions
+import 'custom_page_transitions.dart';
 
 // Routes
 class AppRoutes {
@@ -43,11 +42,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const SplashPage(),
       ),
 
-      // Auth Routes
+      // Auth Routes - Fade transition for login
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
-        builder: (context, state) => const LoginPage(),
+        pageBuilder: (context, state) => CustomPageTransitions.fadeTransition(
+          child: const LoginPage(),
+          state: state,
+        ),
       ),
 
       // Main App Routes with Shell Navigation
@@ -79,21 +81,28 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // Event Routes
+      // Event Routes - Fade + Scale transition for detail page
       GoRoute(
         path: '/event/:id',
         name: 'eventDetail',
-        builder: (context, state) {
+        pageBuilder: (context, state) {
           final eventId = state.pathParameters['id']!;
-          return EventDetailPage(eventId: eventId);
+          return CustomPageTransitions.fadeScaleTransition(
+            child: EventDetailPage(eventId: eventId),
+            state: state,
+          );
         },
       ),
 
-      // Schedule Route
+      // Schedule Route - Slide transition for schedule
       GoRoute(
         path: AppRoutes.schedule,
         name: 'schedule',
-        builder: (context, state) => SchedulePage(),
+        pageBuilder: (context, state) => CustomPageTransitions.slideTransition(
+          child: SchedulePage(),
+          state: state,
+          direction: AxisDirection.up,
+        ),
       ),
     ],
 

@@ -13,6 +13,7 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
 import '../../../../core/services/api/service.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
+import '../../../../core/animations/spring_animations.dart';
 
 // Resim listesi - sırayla kullanılacak
 const List<String> _lessonImages = [
@@ -98,8 +99,8 @@ class HomePage extends ConsumerWidget {
 
                           scrollController.animateTo(
                             targetScroll.clamp(0.0, scrollController.position.maxScrollExtent),
-                            duration: const Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
+                            duration: SpringAnimations.standard,
+                            curve: SpringAnimations.standardSpring,
                           );
                         }
                       },
@@ -173,26 +174,20 @@ class HomePage extends ConsumerWidget {
                                       sessionNumber = 4;
                                     }
 
-                                    return TweenAnimationBuilder(
-                                      duration: Duration(milliseconds: 300 + (index * 100)),
-                                      tween: Tween<double>(begin: 0, end: 1),
-                                      builder: (context, double value, child) {
-                                        return Opacity(
-                                          opacity: value,
-                                          child: Transform.translate(
-                                            offset: Offset(0, 50 * (1 - value)),
-                                            child: child,
-                                          ),
-                                        );
-                                      },
-                                      child: _buildEventCard(
-                                        context,
-                                        ref,
-                                        presentation,
-                                        index,
-                                        isRegistered,
-                                        languageCode,
-                                        sessionNumber,
+                                    // Spring list item animation
+                                    return SpringListItem(
+                                      index: index,
+                                      delay: Duration(milliseconds: index * 60),
+                                      child: RepaintBoundary(
+                                        child: _buildEventCard(
+                                          context,
+                                          ref,
+                                          presentation,
+                                          index,
+                                          isRegistered,
+                                          languageCode,
+                                          sessionNumber,
+                                        ),
                                       ),
                                     );
                                   },
@@ -329,16 +324,16 @@ class HomePage extends ConsumerWidget {
             padding: const EdgeInsets.only(right: 10),
             child: GestureDetector(
               onTap: () {
-                // PageView'ı o sayfaya kaydır
+                // PageView'ı spring animasyonla kaydır
                 pageController.animateToPage(
                   index,
-                  duration: const Duration(milliseconds: 300),
-                  curve: Curves.easeInOut,
+                  duration: SpringAnimations.standard,
+                  curve: SpringAnimations.standardSpring,
                 );
               },
               child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeOutCubic,
+                duration: SpringAnimations.fast,
+                curve: SpringAnimations.gentleSpring,
                 padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
                 decoration: BoxDecoration(
                   gradient: isSelected
@@ -371,8 +366,8 @@ class HomePage extends ConsumerWidget {
                 ),
                 child: Center(
                   child: AnimatedDefaultTextStyle(
-                    duration: const Duration(milliseconds: 250),
-                    curve: Curves.easeOutCubic,
+                    duration: SpringAnimations.fast,
+                    curve: SpringAnimations.gentleSpring,
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,

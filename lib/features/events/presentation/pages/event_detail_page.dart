@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
@@ -40,6 +41,34 @@ const List<String> _lessonImages = [
   'assets/lesson_images/SOCIAL_STUDIES.PNG',
   'assets/lesson_images/TURKISH.png',
 ];
+
+// Platform-specific glass effect wrapper
+// Android'de LiquidGlass performans sorunu yaratıyor, basit Container kullan
+Widget _buildGlassEffect({
+  required Widget child,
+  required bool isDark,
+}) {
+  if (Platform.isAndroid) {
+    // Android: Basit container, daha performanslı
+    return child;
+  }
+
+  // iOS: LiquidGlass efekti
+  return LiquidGlass(
+    settings: LiquidGlassSettings(
+      blur: 0,
+      ambientStrength: 0.7,
+      lightAngle: 0.3 * math.pi,
+      glassColor: Colors.transparent,
+      chromaticAberration: 0.0,
+    ),
+    shape: LiquidRoundedSuperellipse(
+      borderRadius: const Radius.circular(16),
+    ),
+    glassContainsChild: false,
+    child: child,
+  );
+}
 
 class EventDetailPage extends ConsumerWidget {
   final String eventId;
@@ -101,61 +130,64 @@ class EventDetailPage extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Header image with overlay
-                  Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          bottomLeft: Radius.circular(24),
-                          bottomRight: Radius.circular(24),
-                        ),
-                        child: Image.asset(
-                          _lessonImages[(presentation.id ?? 0) % _lessonImages.length],
-                          height: 300,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return Container(
-                              height: 300,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.white.withValues(alpha: 0.12),
-                                    Colors.white.withValues(alpha: 0.22),
-                                  ],
+                  RepaintBoundary(
+                    child: Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            bottomLeft: Radius.circular(24),
+                            bottomRight: Radius.circular(24),
+                          ),
+                          child: Image.asset(
+                            _lessonImages[(presentation.id ?? 0) % _lessonImages.length],
+                            height: 300,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                            cacheHeight: 600,
+                            errorBuilder: (context, error, stackTrace) {
+                              return Container(
+                                height: 300,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.white.withValues(alpha: 0.12),
+                                      Colors.white.withValues(alpha: 0.22),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.event,
-                                  size: 80,
-                                  color: Colors.white.withValues(alpha: 0.5),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.event,
+                                    size: 80,
+                                    color: Colors.white.withValues(alpha: 0.5),
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.only(
-                              bottomLeft: Radius.circular(24),
-                              bottomRight: Radius.circular(24),
-                            ),
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black.withValues(alpha: 0.2),
-                                Colors.black.withValues(alpha: 0.5),
-                              ],
+                        Positioned.fill(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(24),
+                                bottomRight: Radius.circular(24),
+                              ),
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withValues(alpha: 0.2),
+                                  Colors.black.withValues(alpha: 0.5),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
 
                   Padding(
@@ -176,19 +208,20 @@ class EventDetailPage extends ConsumerWidget {
                         const SizedBox(height: 20),
 
                         // Info cards - Grid layout
-                        Wrap(
-                          spacing: 12,
-                          runSpacing: 12,
-                          children: [
+                        RepaintBoundary(
+                          child: Wrap(
+                            spacing: 12,
+                            runSpacing: 12,
+                            children: [
                             if (presentation.presentationPlace != null)
                               SizedBox(
                                 width: (MediaQuery.of(context).size.width - 56) / 2,
                                 child: _buildInfoCard(
                                   context,
-                                  ref,
                                   'assets/svg/location-dot.svg',
                                   'Sunum Yeri',
                                   presentation.presentationPlace!,
+                                  isDark,
                                 ),
                               ),
                             if (presentation.time != null)
@@ -196,10 +229,10 @@ class EventDetailPage extends ConsumerWidget {
                                 width: (MediaQuery.of(context).size.width - 56) / 2,
                                 child: _buildInfoCard(
                                   context,
-                                  ref,
                                   'assets/svg/clock.svg',
                                   'Sunum Saati',
                                   presentation.time!,
+                                  isDark,
                                 ),
                               ),
                             if (presentation.session != null)
@@ -207,10 +240,10 @@ class EventDetailPage extends ConsumerWidget {
                                 width: (MediaQuery.of(context).size.width - 56) / 2,
                                 child: _buildInfoCard(
                                   context,
-                                  ref,
                                   'assets/svg/calendar.svg',
                                   'Oturum',
                                   '${AppLocalizations.of(context)!.session} ${presentation.session}',
+                                  isDark,
                                 ),
                               ),
                             if (presentation.quota != null && presentation.registrationCount != null)
@@ -218,10 +251,10 @@ class EventDetailPage extends ConsumerWidget {
                                 width: (MediaQuery.of(context).size.width - 56) / 2,
                                 child: _buildInfoCard(
                                   context,
-                                  ref,
                                   'assets/svg/users.svg',
                                   'Kontenjan',
                                   '${presentation.registrationCount}/${presentation.quota}',
+                                  isDark,
                                 ),
                               ),
                             if (presentation.duration != null)
@@ -229,10 +262,10 @@ class EventDetailPage extends ConsumerWidget {
                                 width: (MediaQuery.of(context).size.width - 56) / 2,
                                 child: _buildInfoCard(
                                   context,
-                                  ref,
                                   'assets/svg/hourglass.svg',
                                   'Süre',
                                   '${presentation.duration} ${AppLocalizations.of(context)!.minutes}',
+                                  isDark,
                                 ),
                               ),
                             if (presentation.language != null)
@@ -240,16 +273,17 @@ class EventDetailPage extends ConsumerWidget {
                                 width: (MediaQuery.of(context).size.width - 56) / 2,
                                 child: _buildInfoCard(
                                   context,
-                                  ref,
                                   'assets/svg/globe.svg',
                                   'Dil',
                                   getLocalizedText(
                                     presentation.language,
                                     Localizations.localeOf(context).languageCode,
                                   ),
+                                  isDark,
                                 ),
                               ),
-                          ],
+                            ],
+                          ),
                         ),
                         const SizedBox(height: 20),
 
@@ -266,19 +300,19 @@ class EventDetailPage extends ConsumerWidget {
                           const SizedBox(height: 12),
                           _buildPresenterCard(
                             context,
-                            ref,
                             presentation.presenter1Name!,
                             presentation.presenter1Email,
                             presentation.position,
+                            isDark,
                           ),
                           if (presentation.presenter2Name != null) ...[
                             const SizedBox(height: 12),
                             _buildPresenterCard(
                               context,
-                              ref,
                               presentation.presenter2Name!,
                               presentation.presenter2Email,
                               null, // position sadece ilk sunucu için var
+                              isDark,
                             ),
                           ],
                           const SizedBox(height: 20),
@@ -295,18 +329,8 @@ class EventDetailPage extends ConsumerWidget {
                             ),
                           ),
                           const SizedBox(height: 12),
-                          LiquidGlass(
-                            settings: LiquidGlassSettings(
-                              blur: 0,
-                              ambientStrength: 0.7,
-                              lightAngle: 0.3 * math.pi,
-                              glassColor: Colors.transparent,
-                              chromaticAberration: 0.0,
-                            ),
-                            shape: LiquidRoundedSuperellipse(
-                              borderRadius: const Radius.circular(16),
-                            ),
-                            glassContainsChild: false,
+                          _buildGlassEffect(
+                            isDark: isDark,
                             child: Container(
                               padding: const EdgeInsets.all(18),
                               decoration: BoxDecoration(
@@ -343,16 +367,18 @@ class EventDetailPage extends ConsumerWidget {
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(16),
-                      child: SafeArea(
-                        top: false,
-                        child: _buildRegisterButton(
-                          context,
-                          ref,
-                          presentation,
-                          isRegistered,
-                          isDark,
+                    child: RepaintBoundary(
+                      child: Container(
+                        padding: const EdgeInsets.all(16),
+                        child: SafeArea(
+                          top: false,
+                          child: _buildRegisterButton(
+                            context,
+                            ref,
+                            presentation,
+                            isRegistered,
+                            isDark,
+                          ),
                         ),
                       ),
                     ),
@@ -481,30 +507,13 @@ class EventDetailPage extends ConsumerWidget {
 
   Widget _buildInfoCard(
     BuildContext context,
-    WidgetRef ref,
     String iconPath,
     String label,
     String value,
+    bool isDark,
   ) {
-    // Dark mode kontrolü
-    final themeModeAsync = ref.watch(themeModeProvider);
-    final themeMode = themeModeAsync.value ?? ThemeMode.system;
-    final isDark = themeMode == ThemeMode.dark ||
-        (themeMode == ThemeMode.system &&
-         MediaQuery.of(context).platformBrightness == Brightness.dark);
-
-    return LiquidGlass(
-      settings: LiquidGlassSettings(
-        blur: 0,
-        ambientStrength: 0.7,
-        lightAngle: 0.3 * math.pi,
-        glassColor: Colors.transparent,
-        chromaticAberration: 0.0,
-      ),
-      shape: LiquidRoundedSuperellipse(
-        borderRadius: const Radius.circular(16),
-      ),
-      glassContainsChild: false,
+    return _buildGlassEffect(
+      isDark: isDark,
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -558,30 +567,13 @@ class EventDetailPage extends ConsumerWidget {
 
   Widget _buildPresenterCard(
     BuildContext context,
-    WidgetRef ref,
     String name,
     String? email,
     String? position,
+    bool isDark,
   ) {
-    // Dark mode kontrolü
-    final themeModeAsync = ref.watch(themeModeProvider);
-    final themeMode = themeModeAsync.value ?? ThemeMode.system;
-    final isDark = themeMode == ThemeMode.dark ||
-        (themeMode == ThemeMode.system &&
-         MediaQuery.of(context).platformBrightness == Brightness.dark);
-
-    return LiquidGlass(
-      settings: LiquidGlassSettings(
-        blur: 0,
-        ambientStrength: 0.7,
-        lightAngle: 0.3 * math.pi,
-        glassColor: Colors.transparent,
-        chromaticAberration: 0.0,
-      ),
-      shape: LiquidRoundedSuperellipse(
-        borderRadius: const Radius.circular(16),
-      ),
-      glassContainsChild: false,
+    return _buildGlassEffect(
+      isDark: isDark,
       child: Container(
         decoration: BoxDecoration(
           color: isDark
@@ -655,18 +647,8 @@ class EventDetailPage extends ConsumerWidget {
     bool isRegistered,
     bool isDark,
   ) {
-    return LiquidGlass(
-      settings: LiquidGlassSettings(
-        blur: 0,
-        ambientStrength: 0.7,
-        lightAngle: 0.3 * math.pi,
-        glassColor: Colors.transparent,
-        chromaticAberration: 0.0,
-      ),
-      shape: LiquidRoundedSuperellipse(
-        borderRadius: const Radius.circular(16),
-      ),
-      glassContainsChild: false,
+    return _buildGlassEffect(
+      isDark: isDark,
       child: Material(
         color: Colors.transparent,
         child: InkWell(

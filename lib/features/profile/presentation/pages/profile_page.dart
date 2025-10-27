@@ -9,6 +9,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
 import '../../../../core/theme/theme_mode.dart';
+import '../../../../core/widgets/settings_bottom_sheet.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -325,100 +326,92 @@ class _ProfileContent extends ConsumerWidget {
     );
   }
 
-  void _showLogoutDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+  void _showLogoutDialog(BuildContext context, WidgetRef ref) async {
+    final result = await showLiquidGlassLogoutDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.logout),
-        content: Text(AppLocalizations.of(context)!.logoutConfirmation),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.cancel),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.of(context).pop();
-              await ref.read(authNotifierProvider.notifier).logout();
-              if (context.mounted) {
-                context.go(AppRoutes.login);
-              }
-            },
-            child: Text(AppLocalizations.of(context)!.logout, style: const TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      title: AppLocalizations.of(context)!.logout,
+      message: AppLocalizations.of(context)!.logoutConfirmation,
+      cancelText: AppLocalizations.of(context)!.cancel,
+      confirmText: AppLocalizations.of(context)!.logout,
     );
+
+    if (result == true) {
+      await ref.read(authNotifierProvider.notifier).logout();
+      if (context.mounted) {
+        context.go(AppRoutes.login);
+      }
+    }
   }
 
-  void _showThemeSelection(BuildContext context, WidgetRef ref) {
-    showDialog(
+  void _showThemeSelection(BuildContext context, WidgetRef ref) async {
+    final currentThemeAsync = ref.read(themeModeProvider);
+    final currentTheme = currentThemeAsync.value ?? ThemeMode.system;
+
+    final result = await showLiquidGlassBottomSheet<ThemeMode>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: const Color(0xFF1a1a2e),
-        title: Text(AppLocalizations.of(context)!.themeSelection, style: const TextStyle(color: Colors.white)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Icon(Icons.light_mode, color: Colors.white),
-              title: Text(AppLocalizations.of(context)!.lightTheme, style: const TextStyle(color: Colors.white)),
-              onTap: () async {
-                await ref.read(themeModeProvider.notifier).setLight();
-                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.dark_mode, color: Colors.white),
-              title: Text(AppLocalizations.of(context)!.darkTheme, style: const TextStyle(color: Colors.white)),
-              onTap: () async {
-                await ref.read(themeModeProvider.notifier).setDark();
-                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.settings_system_daydream, color: Colors.white),
-              title: Text(AppLocalizations.of(context)!.systemTheme, style: const TextStyle(color: Colors.white)),
-              onTap: () async {
-                await ref.read(themeModeProvider.notifier).setSystem();
-                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
+      title: AppLocalizations.of(context)!.themeSelection,
+      currentValue: currentTheme,
+      options: [
+        LiquidGlassOption(
+          value: ThemeMode.light,
+          label: AppLocalizations.of(context)!.lightTheme,
+          iconPath: 'assets/svg/sun.svg',
         ),
-      ),
+        LiquidGlassOption(
+          value: ThemeMode.dark,
+          label: AppLocalizations.of(context)!.darkTheme,
+          iconPath: 'assets/svg/moon.svg',
+        ),
+        LiquidGlassOption(
+          value: ThemeMode.system,
+          label: AppLocalizations.of(context)!.systemTheme,
+          iconPath: 'assets/svg/circle-half-stroke.svg',
+        ),
+      ],
     );
+
+    if (result != null) {
+      switch (result) {
+        case ThemeMode.light:
+          await ref.read(themeModeProvider.notifier).setLight();
+        case ThemeMode.dark:
+          await ref.read(themeModeProvider.notifier).setDark();
+        case ThemeMode.system:
+          await ref.read(themeModeProvider.notifier).setSystem();
+      }
+    }
   }
 
-  void _showLanguageSelection(BuildContext context, WidgetRef ref) {
-    showDialog(
+  void _showLanguageSelection(BuildContext context, WidgetRef ref) async {
+    final currentLocaleAsync = ref.read(localeProvider);
+    final currentLocale = currentLocaleAsync.value;
+    final currentLanguage = currentLocale?.languageCode ?? 'tr';
+
+    final result = await showLiquidGlassBottomSheet<String>(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        backgroundColor: const Color(0xFF1a1a2e),
-        title: Text(AppLocalizations.of(context)!.languageSelection, style: const TextStyle(color: Colors.white)),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            ListTile(
-              leading: const Text('🇹🇷', style: TextStyle(fontSize: 24)),
-              title: Text(AppLocalizations.of(context)!.turkish, style: const TextStyle(color: Colors.white)),
-              onTap: () async {
-                await ref.read(localeProvider.notifier).setTurkish();
-                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-              },
-            ),
-            ListTile(
-              leading: const Text('🇬🇧', style: TextStyle(fontSize: 24)),
-              title: Text(AppLocalizations.of(context)!.english, style: const TextStyle(color: Colors.white)),
-              onTap: () async {
-                await ref.read(localeProvider.notifier).setEnglish();
-                if (dialogContext.mounted) Navigator.of(dialogContext).pop();
-              },
-            ),
-          ],
+      title: AppLocalizations.of(context)!.languageSelection,
+      currentValue: currentLanguage,
+      options: [
+        LiquidGlassOption(
+          value: 'tr',
+          label: AppLocalizations.of(context)!.turkish,
+          emoji: '🇹🇷',
         ),
-      ),
+        LiquidGlassOption(
+          value: 'en',
+          label: AppLocalizations.of(context)!.english,
+          emoji: '🇬🇧',
+        ),
+      ],
     );
+
+    if (result != null) {
+      if (result == 'tr') {
+        await ref.read(localeProvider.notifier).setTurkish();
+      } else if (result == 'en') {
+        await ref.read(localeProvider.notifier).setEnglish();
+      }
+    }
   }
 }
 
