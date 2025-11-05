@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 
 class ScanPage extends ConsumerStatefulWidget {
   const ScanPage({super.key});
@@ -46,9 +47,9 @@ class _ScanPageState extends ConsumerState<ScanPage> {
       await _processQRCode(qrData);
     } catch (e) {
       if (mounted) {
-        _showErrorDialog('Error processing QR code: $e');
+        _showErrorDialog(AppLocalizations.of(context)!.qrCodeProcessFailed);
       }
-    } finally {
+    } finally{
       if (mounted) {
         setState(() {
           isProcessing = false;

@@ -39,12 +39,9 @@ class WebService {
   final String baseUrl = "https://ibdayapi.eyuboglu.k12.tr/api";
   final Dio _dio = Dio();
   final Logger _logger = Logger(
-    printer: PrettyPrinter(
-      methodCount: 0,
-      errorMethodCount: 5,
-      lineLength: 80,
-      colors: true,
-      printEmojis: true,
+    printer: SimplePrinter(
+      colors: false,
+      printTime: false,
     ),
   );
 
@@ -96,7 +93,7 @@ class WebService {
 
       final response = await _dio.post(
         url,
-        data: {'id': id},
+        data: {'id': id, 'katilimciId': 0},
         options: myToken != null ? _commonHeaders(myToken) : null,
       );
 
@@ -196,7 +193,7 @@ class WebService {
 
   Future<bool?> registerEvent(int userId, int presentationId) async {
     final myToken = await getToken();
-    final response = await _makeRequest("AtcYonetim/SunumKayitEkle",
+    final response = await _makeRequest("Sunum/SunumKayitEkle",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
       if (response.data['basarili'] == true) {
@@ -211,7 +208,7 @@ class WebService {
 
   Future<bool> removeEvent(int userId, int presentationId) async {
     final myToken = await getToken();
-    final response = await _makeRequest("AtcYonetim/SunumKayitSil",
+    final response = await _makeRequest("Sunum/SunumKayitSil",
         data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
       return true;

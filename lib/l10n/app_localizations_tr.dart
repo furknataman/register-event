@@ -284,17 +284,71 @@ class AppLocalizationsTr extends AppLocalizations {
   String get session => 'Oturum';
 
   @override
-  String get session1 => 'Oturum 1';
+  String get session1 => '1. Oturum';
 
   @override
-  String get session2 => 'Oturum 2';
+  String get session2 => '2. Oturum';
 
   @override
-  String get session3 => 'Oturum 3';
+  String get session3 => '3. Oturum';
 
   @override
-  String get session4 => 'Oturum 4';
+  String get session4 => '4. Oturum';
 
   @override
   String get myRegistrations => 'Kayıt Olduklarım';
+
+  @override
+  String get eventInfoLoadFailed => 'Etkinlik bilgileri yüklenemedi';
+
+  @override
+  String get operationFailed => 'İşlem başarısız oldu';
+
+  @override
+  String get userInfoFetchFailed => 'Kullanıcı bilgisi alınamadı';
+
+  @override
+  String get userInfoNotFound => 'Kullanıcı bilgisi bulunamadı';
+
+  @override
+  String get userInfoLoading => 'Kullanıcı bilgisi yükleniyor...';
+
+  @override
+  String get unregistrationSuccess => 'Kayıt iptal edildi';
+
+  @override
+  String get registrationSuccess => 'Kayıt başarılı';
+
+  @override
+  String get processing => 'İşlem yapılıyor...';
+
+  @override
+  String get presentationPlace => 'Sunum Yeri';
+
+  @override
+  String get presentationTime => 'Sunum Saati';
+
+  @override
+  String get quota => 'Kontenjan';
+
+  @override
+  String get duration => 'Süre';
+
+  @override
+  String get language => 'Dil';
+
+  @override
+  String get scheduleLoadFailed => 'Program yüklenemedi';
+
+  @override
+  String get qrCodeProcessFailed => 'QR kod işlenemedi';
+
+  @override
+  String get profileLoadFailed => 'Profil yüklenemedi';
+
+  @override
+  String get eventsLoadFailed => 'Etkinlikler yüklenemedi';
+
+  @override
+  String get loginFailed => 'Giriş başarısız oldu';
 }

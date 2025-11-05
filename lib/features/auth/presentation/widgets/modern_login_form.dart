@@ -83,7 +83,7 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
       }
     } catch (e) {
       if (mounted) {
-        _showErrorMessage(context, 'Login failed: $e');
+        _showErrorMessage(context, AppLocalizations.of(context)!.loginFailed);
       }
     } finally {
       if (mounted) {

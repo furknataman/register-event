@@ -40,7 +40,7 @@ class ProfilePage extends ConsumerWidget {
               children: [
                 const Icon(Icons.error_outline, size: 64, color: Colors.white),
                 const SizedBox(height: 16),
-                Text('Error: $error', style: const TextStyle(color: Colors.white)),
+                Text(AppLocalizations.of(context)!.profileLoadFailed, style: const TextStyle(color: Colors.white)),
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => ref.refresh(userProfileProvider),

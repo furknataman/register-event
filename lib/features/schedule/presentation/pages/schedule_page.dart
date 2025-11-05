@@ -73,7 +73,7 @@ class SchedulePage extends ConsumerWidget {
                   const Icon(Icons.error_outline, size: 64, color: Colors.white),
                   const SizedBox(height: 16),
                   Text(
-                    'Error: $error',
+                    AppLocalizations.of(context)!.scheduleLoadFailed,
                     style: const TextStyle(color: Colors.white),
                     textAlign: TextAlign.center,
                   ),

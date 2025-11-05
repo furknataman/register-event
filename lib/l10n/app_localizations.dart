@@ -623,25 +623,25 @@ abstract class AppLocalizations {
   /// No description provided for @session1.
   ///
   /// In en, this message translates to:
-  /// **'Session 1'**
+  /// **'1. Session'**
   String get session1;
 
   /// No description provided for @session2.
   ///
   /// In en, this message translates to:
-  /// **'Session 2'**
+  /// **'2. Session'**
   String get session2;
 
   /// No description provided for @session3.
   ///
   /// In en, this message translates to:
-  /// **'Session 3'**
+  /// **'3. Session'**
   String get session3;
 
   /// No description provided for @session4.
   ///
   /// In en, this message translates to:
-  /// **'Session 4'**
+  /// **'4. Session'**
   String get session4;
 
   /// No description provided for @myRegistrations.
@@ -649,6 +649,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My Registrations'**
   String get myRegistrations;
+
+  /// No description provided for @eventInfoLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Event information could not be loaded'**
+  String get eventInfoLoadFailed;
+
+  /// No description provided for @operationFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Operation failed'**
+  String get operationFailed;
+
+  /// No description provided for @userInfoFetchFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'User information could not be fetched'**
+  String get userInfoFetchFailed;
+
+  /// No description provided for @userInfoNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'User information not found'**
+  String get userInfoNotFound;
+
+  /// No description provided for @userInfoLoading.
+  ///
+  /// In en, this message translates to:
+  /// **'Loading user information...'**
+  String get userInfoLoading;
+
+  /// No description provided for @unregistrationSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration cancelled'**
+  String get unregistrationSuccess;
+
+  /// No description provided for @registrationSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Registration successful'**
+  String get registrationSuccess;
+
+  /// No description provided for @processing.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing...'**
+  String get processing;
+
+  /// No description provided for @presentationPlace.
+  ///
+  /// In en, this message translates to:
+  /// **'Presentation Place'**
+  String get presentationPlace;
+
+  /// No description provided for @presentationTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Presentation Time'**
+  String get presentationTime;
+
+  /// No description provided for @quota.
+  ///
+  /// In en, this message translates to:
+  /// **'Quota'**
+  String get quota;
+
+  /// No description provided for @duration.
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @scheduleLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule could not be loaded'**
+  String get scheduleLoadFailed;
+
+  /// No description provided for @qrCodeProcessFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'QR code could not be processed'**
+  String get qrCodeProcessFailed;
+
+  /// No description provided for @profileLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile could not be loaded'**
+  String get profileLoadFailed;
+
+  /// No description provided for @eventsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Events could not be loaded'**
+  String get eventsLoadFailed;
+
+  /// No description provided for @loginFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Login failed'**
+  String get loginFailed;
 }
 
 class _AppLocalizationsDelegate

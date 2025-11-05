@@ -13,6 +13,8 @@ import '../../../../core/data/models/presentation_model.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/services/api/service.dart';
 import '../../../../core/theme/theme_mode.dart';
+import '../../../../core/notifications/toast/toast_message.dart';
+import '../../../../core/widgets/gradient_button.dart';
 
 // Platform-specific glass effect wrapper
 // Android'de LiquidGlass performans sorunu yaratıyor, basit Container kullan
@@ -65,12 +67,6 @@ class EventDetailPage extends ConsumerWidget {
     return Scaffold(
       extendBodyBehindAppBar: true,
       backgroundColor: AppColors.primaryBlue,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        foregroundColor: Colors.white,
-        title: Text(AppLocalizations.of(context)!.description),
-      ),
       body: eventAsync.when(
         data: (presentation) {
           if (presentation == null) {
@@ -96,77 +92,27 @@ class EventDetailPage extends ConsumerWidget {
                           ? AppColors.backgroundGradientDark
                           : AppColors.backgroundGradient,
                     ),
-                    child: SingleChildScrollView(
+                    child: CustomScrollView(
               physics: const ClampingScrollPhysics(),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Header image with overlay
-                  RepaintBoundary(
-                    child: Stack(
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            bottomLeft: Radius.circular(24),
-                            bottomRight: Radius.circular(24),
-                          ),
-                          child: Image.asset(
-                            ImageHelper.getImageForBranch(presentation.branch),
-                            height: 300,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
-                            cacheHeight: 600,
-                            errorBuilder: (context, error, stackTrace) {
-                              return Container(
-                                height: 300,
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
-                                    colors: [
-                                      Colors.white.withValues(alpha: 0.12),
-                                      Colors.white.withValues(alpha: 0.22),
-                                    ],
-                                  ),
-                                ),
-                                child: Center(
-                                  child: Icon(
-                                    Icons.event,
-                                    size: 80,
-                                    color: Colors.white.withValues(alpha: 0.5),
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ),
-                        Positioned.fill(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(
-                                bottomLeft: Radius.circular(24),
-                                bottomRight: Radius.circular(24),
-                              ),
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black.withValues(alpha: 0.2),
-                                  Colors.black.withValues(alpha: 0.5),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+              slivers: [
+                  // Header image with custom persistent header
+                  SliverPersistentHeader(
+                    pinned: true,
+                    delegate: _EventHeaderDelegate(
+                      minHeight: 56,
+                      maxHeight: 240,
+                      imagePath: ImageHelper.getImageForBranch(presentation.branch),
+                      isDark: isDark,
                     ),
                   ),
 
-                  Padding(
+                  SliverPadding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
+                    sliver: SliverList(
+                      delegate: SliverChildListDelegate([
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                         // Title
                         Text(
                           presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
@@ -191,7 +137,7 @@ class EventDetailPage extends ConsumerWidget {
                                 child: _buildInfoCard(
                                   context,
                                   'assets/svg/location-dot.svg',
-                                  'Sunum Yeri',
+                                  AppLocalizations.of(context)!.presentationPlace,
                                   presentation.presentationPlace!,
                                   isDark,
                                 ),
@@ -202,7 +148,7 @@ class EventDetailPage extends ConsumerWidget {
                                 child: _buildInfoCard(
                                   context,
                                   'assets/svg/clock.svg',
-                                  'Sunum Saati',
+                                  AppLocalizations.of(context)!.presentationTime,
                                   presentation.time!,
                                   isDark,
                                 ),
@@ -224,7 +170,7 @@ class EventDetailPage extends ConsumerWidget {
                                 child: _buildInfoCard(
                                   context,
                                   'assets/svg/users.svg',
-                                  'Kontenjan',
+                                  AppLocalizations.of(context)!.quota,
                                   '${presentation.registrationCount}/${presentation.quota}',
                                   isDark,
                                 ),
@@ -235,7 +181,7 @@ class EventDetailPage extends ConsumerWidget {
                                 child: _buildInfoCard(
                                   context,
                                   'assets/svg/hourglass.svg',
-                                  'Süre',
+                                  AppLocalizations.of(context)!.duration,
                                   '${presentation.duration} ${AppLocalizations.of(context)!.minutes}',
                                   isDark,
                                 ),
@@ -246,7 +192,7 @@ class EventDetailPage extends ConsumerWidget {
                                 child: _buildInfoCard(
                                   context,
                                   'assets/svg/globe.svg',
-                                  'Dil',
+                                  AppLocalizations.of(context)!.language,
                                   getLocalizedText(
                                     presentation.language,
                                     Localizations.localeOf(context).languageCode,
@@ -292,15 +238,6 @@ class EventDetailPage extends ConsumerWidget {
 
                         // Description
                         if (presentation.description != null) ...[
-                          Text(
-                            AppLocalizations.of(context)!.description,
-                            style: TextStyle(
-                              color: AppTextStyles.getTextColor(context),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
                           _buildGlassEffect(
                             isDark: isDark,
                             child: Container(
@@ -326,14 +263,15 @@ class EventDetailPage extends ConsumerWidget {
                               ),
                             ),
                           ),
-                        ],
-                      ],
+                          ],
+                          ],
+                        ),
+                      ]),
                     ),
                   ),
                 ],
               ),
             ),
-                  ),
                   // Register button at bottom
                   Positioned(
                     left: 0,
@@ -444,7 +382,7 @@ class EventDetailPage extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 32),
                     child: Text(
-                      error.toString(),
+                      AppLocalizations.of(context)!.eventInfoLoadFailed,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.8),
                         fontSize: 14,
@@ -619,79 +557,183 @@ class EventDetailPage extends ConsumerWidget {
     bool isRegistered,
     bool isDark,
   ) {
-    return _buildGlassEffect(
-      isDark: isDark,
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: () async {
-            final userAsync = ref.read(userDataProvider);
-            await userAsync.when(
-              data: (user) async {
-                if (user.id == null || presentation.id == null) return;
+    final isLoadingNotifier = ValueNotifier<bool>(false);
 
-                try {
-                  if (isRegistered) {
-                    // Unregister
-                    await ref.read(webServiceProvider).removeEvent(user.id!, presentation.id!);
-                  } else {
-                    // Register
-                    await ref.read(webServiceProvider).registerEvent(user.id!, presentation.id!);
-                  }
-                  // Refresh data
-                  ref.invalidate(sessionPresentationDataProvider);
-                  ref.invalidate(eventDetailsProvider(int.parse(eventId)));
-                } catch (e) {
-                  // Show error if needed
-                }
+    return ValueListenableBuilder<bool>(
+      valueListenable: isLoadingNotifier,
+      builder: (context, isLoading, _) {
+        return _buildGlassEffect(
+          isDark: isDark,
+          child: GradientButton(
+            text: isLoading
+                ? AppLocalizations.of(context)!.processing
+                : isRegistered
+                    ? AppLocalizations.of(context)!.unregister
+                    : AppLocalizations.of(context)!.register,
+            isLoading: isLoading,
+            gradientColors: isRegistered
+                ? [
+                    const Color(0xFFe53935),  // Kırmızı
+                    const Color(0xFFc62828),  // Koyu kırmızı
+                  ]
+                : null,  // Default mor-mavi
+            icon: isLoading
+                ? null
+                : SvgPicture.asset(
+                    isRegistered
+                        ? 'assets/svg/bookmark-slash.svg'
+                        : 'assets/svg/bookmark.svg',
+                    width: 20,
+                    height: 20,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+            onPressed: () async {
+              isLoadingNotifier.value = true;
+
+              try {
+                final userAsync = ref.read(userProfileProvider);
+                await userAsync.when(
+                  data: (user) async {
+                    if (user.id == null || presentation.id == null) {
+                      toastMessage(AppLocalizations.of(context)!.userInfoNotFound);
+                      return;
+                    }
+
+                    try {
+                      if (isRegistered) {
+                        // Unregister
+                        await ref.read(webServiceProvider).removeEvent(user.id!, presentation.id!);
+                        toastMessage(AppLocalizations.of(context)!.unregistrationSuccess);
+                      } else {
+                        // Register
+                        await ref.read(webServiceProvider).registerEvent(user.id!, presentation.id!);
+                        toastMessage(AppLocalizations.of(context)!.registrationSuccess);
+                      }
+                      // Refresh data
+                      ref.invalidate(sessionPresentationDataProvider);
+                      ref.invalidate(eventDetailsProvider(int.parse(eventId)));
+                    } catch (e) {
+                      toastMessage(AppLocalizations.of(context)!.operationFailed);
+                    }
+                  },
+                  loading: () {
+                    toastMessage(AppLocalizations.of(context)!.userInfoLoading);
+                  },
+                  error: (error, _) {
+                    toastMessage(AppLocalizations.of(context)!.userInfoFetchFailed);
+                  },
+                );
+              } finally {
+                isLoadingNotifier.value = false;
+              }
+            },
+          ),
+        );
+      },
+    );
+  }
+}
+
+// Custom SliverPersistentHeader delegate for event header image
+class _EventHeaderDelegate extends SliverPersistentHeaderDelegate {
+  final double minHeight;
+  final double maxHeight;
+  final String imagePath;
+  final bool isDark;
+
+  _EventHeaderDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.imagePath,
+    required this.isDark,
+  });
+
+  @override
+  double get minExtent => minHeight;
+
+  @override
+  double get maxExtent => maxHeight;
+
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    final progress = shrinkOffset / maxExtent;
+
+    return SizedBox(
+      height: maxExtent,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // Background color
+          Container(
+            color: isDark ? const Color(0xFF1a1a2e) : const Color(0xFF004B8D),
+          ),
+          // Image
+          RepaintBoundary(
+            child: Image.asset(
+              imagePath,
+              fit: BoxFit.cover,
+              alignment: Alignment.center,
+              width: double.infinity,
+              height: double.infinity,
+              cacheHeight: 480,
+              errorBuilder: (context, error, stackTrace) {
+                return Container(
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Colors.white.withValues(alpha: 0.12),
+                        Colors.white.withValues(alpha: 0.22),
+                      ],
+                    ),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.event,
+                      size: 80,
+                      color: Colors.white.withValues(alpha: 0.5),
+                    ),
+                  ),
+                );
               },
-              loading: () {},
-              error: (_, __) {},
-            );
-          },
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.15)
-                  : Colors.white.withValues(alpha: 0.25),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.3)
-                    : Colors.white.withValues(alpha: 0.4),
-                width: 1,
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  'assets/svg/bookmark.svg',
-                  width: 20,
-                  height: 20,
-                  colorFilter: const ColorFilter.mode(
-                    Colors.white,
-                    BlendMode.srcIn,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Text(
-                  isRegistered
-                      ? AppLocalizations.of(context)!.unregister
-                      : AppLocalizations.of(context)!.register,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
             ),
           ),
-        ),
+          // Gradient overlay
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withValues(alpha: 0.2 + (progress * 0.3)),
+                  Colors.black.withValues(alpha: 0.5 + (progress * 0.3)),
+                ],
+              ),
+            ),
+          ),
+          // Back button
+          Positioned(
+            top: MediaQuery.of(context).padding.top,
+            left: 0,
+            child: IconButton(
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  @override
+  bool shouldRebuild(_EventHeaderDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        imagePath != oldDelegate.imagePath ||
+        isDark != oldDelegate.isDark;
   }
 }

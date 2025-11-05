@@ -16,11 +16,48 @@ import '../../../../core/services/api/service.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
 import '../../../../core/animations/spring_animations.dart';
 
-class HomePage extends ConsumerWidget {
+class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends ConsumerState<HomePage> {
+  bool _isHeaderVisible = true;
+  double _lastScrollOffset = 0.0;
+  static const double _scrollThreshold = 10.0;
+  static const double _headerHeight = 76.0;
+  static const double _chipsHeight = 66.0; // 52 (height) + 12 (top) + 2 (bottom)
+
+  bool _handleScrollNotification(ScrollNotification notification) {
+    // SADECE DİKEY SCROLL'U DİNLE - PageView'daki yatay scroll'u ignore et
+    if (notification.metrics.axis != Axis.vertical) {
+      return false;
+    }
+
+    if (notification is ScrollUpdateNotification) {
+      final currentOffset = notification.metrics.pixels;
+      final delta = currentOffset - _lastScrollOffset;
+
+      // Minimum threshold check to avoid jittery behavior
+      if (delta.abs() > _scrollThreshold) {
+        // Scrolling down - hide header
+        if (delta > 0 && _isHeaderVisible && currentOffset > 50) {
+          setState(() => _isHeaderVisible = false);
+        }
+        // Scrolling up - show header
+        else if (delta < 0 && !_isHeaderVisible) {
+          setState(() => _isHeaderVisible = true);
+        }
+        _lastScrollOffset = currentOffset;
+      }
+    }
+    return false;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
     final userDataAsync = ref.watch(userProfileProvider);
     final selectedCategory = ref.watch(selectedCategoryProvider);
@@ -33,29 +70,41 @@ class HomePage extends ConsumerWidget {
           gradient: AppColors.getBackgroundGradient(context),
         ),
         child: SafeArea(
-          child: Column(
-            children: [
-              _buildHeaderBar(context, userDataAsync),
-              _buildCategoryChips(context, ref, selectedCategory),
-              Expanded(
-                child: sessionDataAsync.when(
+          child: NotificationListener<ScrollNotification>(
+            onNotification: _handleScrollNotification,
+            child: Stack(
+              children: [
+                // Full-screen scroll view with padding
+                Positioned.fill(
+                  child: AnimatedPadding(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    padding: EdgeInsets.only(
+                      top: _isHeaderVisible ? (_headerHeight + _chipsHeight) : 0,
+                    ),
+                    child: sessionDataAsync.when(
                   data: (sessionData) {
                     final pageController = ref.watch(categoryPageControllerProvider);
 
                     // Tüm kategorilerin sunumlarını liste olarak hazırla
                     final allCategories = [
                       sessionData.getAllPresentations(),
+                      sessionData.getRegisteredPresentations(),
                       sessionData.oturum1,
                       sessionData.oturum2,
                       sessionData.oturum3,
                       sessionData.oturum4,
-                      sessionData.getRegisteredPresentations(),
                     ];
 
                     return PageView.builder(
                       controller: pageController,
                       itemCount: allCategories.length,
                       onPageChanged: (index) {
+                        // PageView geçişinde header'ı göster
+                        if (!_isHeaderVisible) {
+                          setState(() => _isHeaderVisible = true);
+                        }
+
                         ref.read(selectedCategoryProvider.notifier).set(index);
 
                         // Bottom bar'ı üste döndür
@@ -231,7 +280,7 @@ class HomePage extends ConsumerWidget {
                                 )),
                             const SizedBox(height: 8),
                             Text(
-                              error.toString(),
+                              AppLocalizations.of(context)!.eventsLoadFailed,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.8),
                                 fontSize: 14,
@@ -260,8 +309,42 @@ class HomePage extends ConsumerWidget {
                     ),
                   ),
                 ),
-              ),
-            ],
+                  ),
+                ),
+                // Header overlay
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: AnimatedSlide(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -1.5),
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 200),
+                      opacity: _isHeaderVisible ? 1.0 : 0.0,
+                      child: _buildHeaderBar(context, userDataAsync),
+                    ),
+                  ),
+                ),
+                // Chips overlay
+                Positioned(
+                  top: _headerHeight,
+                  left: 0,
+                  right: 0,
+                  child: AnimatedSlide(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeInOut,
+                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -2),
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 200),
+                      opacity: _isHeaderVisible ? 1.0 : 0.0,
+                      child: _buildCategoryChips(context, ref, selectedCategory),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -271,19 +354,19 @@ class HomePage extends ConsumerWidget {
   Widget _buildCategoryChips(BuildContext context, WidgetRef ref, int selectedCategory) {
     final categories = [
       AppLocalizations.of(context)!.categoryAll,
+      AppLocalizations.of(context)!.myRegistrations,
       AppLocalizations.of(context)!.session1,
       AppLocalizations.of(context)!.session2,
       AppLocalizations.of(context)!.session3,
       AppLocalizations.of(context)!.session4,
-      AppLocalizations.of(context)!.myRegistrations,
     ];
 
     final pageController = ref.watch(categoryPageControllerProvider);
     final scrollController = ref.watch(chipScrollControllerProvider);
 
     return Container(
-      height: 50,
-      margin: const EdgeInsets.only(top: 4, bottom: 12),
+      height: 52,
+      margin: const EdgeInsets.only(top: 12, bottom: 2),
       child: ListView.builder(
         controller: scrollController,
         scrollDirection: Axis.horizontal,
@@ -293,7 +376,7 @@ class HomePage extends ConsumerWidget {
         itemBuilder: (context, index) {
           final isSelected = selectedCategory == index;
           return Padding(
-            padding: const EdgeInsets.only(right: 10),
+            padding: const EdgeInsets.only(right: 4),
             child: GestureDetector(
               onTap: () {
                 // PageView'ı spring animasyonla kaydır
@@ -306,7 +389,7 @@ class HomePage extends ConsumerWidget {
               child: AnimatedContainer(
                 duration: SpringAnimations.fast,
                 curve: SpringAnimations.gentleSpring,
-                padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 decoration: BoxDecoration(
                   gradient: isSelected
                       ? const LinearGradient(
@@ -713,29 +796,6 @@ class HomePage extends ConsumerWidget {
                                   presentation.type,
                                   languageCode,
                                 ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.22),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.38),
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            presentation.branch ?? AppLocalizations.of(context)!.noBranchInfo,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                         ),
                       ],
                     ),

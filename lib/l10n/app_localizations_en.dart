@@ -285,17 +285,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get session => 'Session';
 
   @override
-  String get session1 => 'Session 1';
+  String get session1 => '1. Session';
 
   @override
-  String get session2 => 'Session 2';
+  String get session2 => '2. Session';
 
   @override
-  String get session3 => 'Session 3';
+  String get session3 => '3. Session';
 
   @override
-  String get session4 => 'Session 4';
+  String get session4 => '4. Session';
 
   @override
   String get myRegistrations => 'My Registrations';
+
+  @override
+  String get eventInfoLoadFailed => 'Event information could not be loaded';
+
+  @override
+  String get operationFailed => 'Operation failed';
+
+  @override
+  String get userInfoFetchFailed => 'User information could not be fetched';
+
+  @override
+  String get userInfoNotFound => 'User information not found';
+
+  @override
+  String get userInfoLoading => 'Loading user information...';
+
+  @override
+  String get unregistrationSuccess => 'Registration cancelled';
+
+  @override
+  String get registrationSuccess => 'Registration successful';
+
+  @override
+  String get processing => 'Processing...';
+
+  @override
+  String get presentationPlace => 'Presentation Place';
+
+  @override
+  String get presentationTime => 'Presentation Time';
+
+  @override
+  String get quota => 'Quota';
+
+  @override
+  String get duration => 'Duration';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get scheduleLoadFailed => 'Schedule could not be loaded';
+
+  @override
+  String get qrCodeProcessFailed => 'QR code could not be processed';
+
+  @override
+  String get profileLoadFailed => 'Profile could not be loaded';
+
+  @override
+  String get eventsLoadFailed => 'Events could not be loaded';
+
+  @override
+  String get loginFailed => 'Login failed';
 }
