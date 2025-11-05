@@ -9,40 +9,12 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/localization_helper.dart';
+import '../../../../core/utils/image_helper.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
 import '../../../../core/services/api/service.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
 import '../../../../core/animations/spring_animations.dart';
-
-// Resim listesi - sırayla kullanılacak
-const List<String> _lessonImages = [
-  'assets/lesson_images/ADMINISTRATION.PNG',
-  'assets/lesson_images/ARTS.PNG',
-  'assets/lesson_images/BIOLOGY.png',
-  'assets/lesson_images/CHEMISTRY.PNG',
-  'assets/lesson_images/EARLY_YEARS.PNG',
-  'assets/lesson_images/ESL.PNG',
-  'assets/lesson_images/FOREIGN LANGUAGES.PNG',
-  'assets/lesson_images/GENERAL_EDUCATION.PNG',
-  'assets/lesson_images/GEOGRAPHY.png',
-  'assets/lesson_images/GUIDANCE.PNG',
-  'assets/lesson_images/HISTORY.PNG',
-  'assets/lesson_images/IB_DP.PNG',
-  'assets/lesson_images/IB_MYP.PNG',
-  'assets/lesson_images/IB_PYP.PNG',
-  'assets/lesson_images/INTERDISCIPLINARY.PNG',
-  'assets/lesson_images/IT.png',
-  'assets/lesson_images/LIBRARY.PNG',
-  'assets/lesson_images/MATH.png',
-  'assets/lesson_images/MUSIC.PNG',
-  'assets/lesson_images/PE.png',
-  'assets/lesson_images/PHILOSOPHY.png',
-  'assets/lesson_images/PHYSICS.png',
-  'assets/lesson_images/SCIENCE.png',
-  'assets/lesson_images/SOCIAL_STUDIES.PNG',
-  'assets/lesson_images/TURKISH.png',
-];
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -50,7 +22,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
-    final userDataAsync = ref.watch(userDataProvider);
+    final userDataAsync = ref.watch(userProfileProvider);
     final selectedCategory = ref.watch(selectedCategoryProvider);
     final localeAsync = ref.watch(localeProvider);
     final languageCode = localeAsync.value?.languageCode ?? 'tr';
@@ -436,9 +408,9 @@ class HomePage extends ConsumerWidget {
                 // User Name
                 userDataAsync.when(
                   data: (user) {
-                    final fullName = '${user.name ?? ''} ${user.surname ?? ''}'.trim();
+                    final userName = user.name?.trim() ?? '';
                     return Text(
-                      fullName.isEmpty ? 'Kullanıcı' : fullName,
+                      userName.isEmpty ? 'Kullanıcı' : userName,
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -522,14 +494,14 @@ class HomePage extends ConsumerWidget {
                           topRight: Radius.circular(24),
                         ),
                         child: Image.asset(
-                          _lessonImages[(presentation.id ?? 0) % _lessonImages.length],
-                          height: 200,
+                          ImageHelper.getImageForBranch(presentation.branch),
+                          height: 220,
                           width: double.infinity,
                           fit: BoxFit.cover,
                           errorBuilder: (context, error, stackTrace) {
                             // Fallback gradient if image fails
                             return Container(
-                              height: 200,
+                              height: 220,
                               decoration: BoxDecoration(
                                 gradient: LinearGradient(
                                   begin: Alignment.topLeft,

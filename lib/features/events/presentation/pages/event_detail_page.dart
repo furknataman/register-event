@@ -8,39 +8,11 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/localization_helper.dart';
+import '../../../../core/utils/image_helper.dart';
 import '../../../../core/data/models/presentation_model.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/services/api/service.dart';
 import '../../../../core/theme/theme_mode.dart';
-
-// Resim listesi - home page ile aynı
-const List<String> _lessonImages = [
-  'assets/lesson_images/ADMINISTRATION.PNG',
-  'assets/lesson_images/ARTS.PNG',
-  'assets/lesson_images/BIOLOGY.png',
-  'assets/lesson_images/CHEMISTRY.PNG',
-  'assets/lesson_images/EARLY_YEARS.PNG',
-  'assets/lesson_images/ESL.PNG',
-  'assets/lesson_images/FOREIGN LANGUAGES.PNG',
-  'assets/lesson_images/GENERAL_EDUCATION.PNG',
-  'assets/lesson_images/GEOGRAPHY.png',
-  'assets/lesson_images/GUIDANCE.PNG',
-  'assets/lesson_images/HISTORY.PNG',
-  'assets/lesson_images/IB_DP.PNG',
-  'assets/lesson_images/IB_MYP.PNG',
-  'assets/lesson_images/IB_PYP.PNG',
-  'assets/lesson_images/INTERDISCIPLINARY.PNG',
-  'assets/lesson_images/IT.png',
-  'assets/lesson_images/LIBRARY.PNG',
-  'assets/lesson_images/MATH.png',
-  'assets/lesson_images/MUSIC.PNG',
-  'assets/lesson_images/PE.png',
-  'assets/lesson_images/PHILOSOPHY.png',
-  'assets/lesson_images/PHYSICS.png',
-  'assets/lesson_images/SCIENCE.png',
-  'assets/lesson_images/SOCIAL_STUDIES.PNG',
-  'assets/lesson_images/TURKISH.png',
-];
 
 // Platform-specific glass effect wrapper
 // Android'de LiquidGlass performans sorunu yaratıyor, basit Container kullan
@@ -139,7 +111,7 @@ class EventDetailPage extends ConsumerWidget {
                             bottomRight: Radius.circular(24),
                           ),
                           child: Image.asset(
-                            _lessonImages[(presentation.id ?? 0) % _lessonImages.length],
+                            ImageHelper.getImageForBranch(presentation.branch),
                             height: 300,
                             width: double.infinity,
                             fit: BoxFit.cover,

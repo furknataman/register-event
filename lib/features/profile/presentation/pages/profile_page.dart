@@ -10,13 +10,14 @@ import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
 import '../../../../core/theme/theme_mode.dart';
 import '../../../../core/widgets/settings_bottom_sheet.dart';
+import '../../../../core/services/api/service.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authNotifierProvider);
+    final authState = ref.watch(userProfileProvider);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -31,9 +32,7 @@ class ProfilePage extends ConsumerWidget {
           gradient: AppColors.getBackgroundGradient(context),
         ),
         child: authState.when(
-          data: (user) => user != null
-              ? _ProfileContent(user: user)
-              : const _NotLoggedInContent(),
+          data: (user) => _ProfileContent(user: user),
           loading: () => const Center(child: CircularProgressIndicator(color: Colors.white)),
           error: (error, stack) => Center(
             child: Column(
@@ -44,7 +43,7 @@ class ProfilePage extends ConsumerWidget {
                 Text('Error: $error', style: const TextStyle(color: Colors.white)),
                 const SizedBox(height: 16),
                 ElevatedButton(
-                  onPressed: () => ref.refresh(authNotifierProvider),
+                  onPressed: () => ref.refresh(userProfileProvider),
                   child: const Text('Retry'),
                 ),
               ],
@@ -99,7 +98,7 @@ class _ProfileContent extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        user.name ?? 'Unknown User',
+                        '${user.name ?? ''} ${user.surname ?? ''}'.trim(),
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -114,10 +113,10 @@ class _ProfileContent extends ConsumerWidget {
                           color: Colors.white.withValues(alpha: 0.8),
                         ),
                       ),
-                      if (user.school != null) ...[
+                      if (user.job != null && user.job!.isNotEmpty) ...[
                         const SizedBox(height: 4),
                         Text(
-                          user.school!,
+                          user.job!,
                           style: TextStyle(
                             fontSize: 12,
                             color: Colors.white.withValues(alpha: 0.8),
@@ -149,23 +148,29 @@ class _ProfileContent extends ConsumerWidget {
           title: 'Email',
           value: user.email ?? 'Not provided',
         ),
-        if (user.phone != null)
+        if (user.telephone != null && user.telephone != '0' && user.telephone!.isNotEmpty)
           _ProfileInfoCard(
             iconPath: 'assets/svg/phone.svg',
             title: 'Phone',
-            value: user.phone!,
+            value: user.telephone!,
           ),
-        if (user.school != null)
+        if (user.school != null && user.school!.isNotEmpty)
           _ProfileInfoCard(
             iconPath: 'assets/svg/school.svg',
             title: 'School',
             value: user.school!,
           ),
-        if (user.branch != null)
+        if (user.job != null && user.job!.isNotEmpty)
           _ProfileInfoCard(
             iconPath: 'assets/svg/briefcase.svg',
-            title: 'Branch',
-            value: user.branch!,
+            title: 'Job Title',
+            value: user.job!,
+          ),
+        if (user.ekBilgi != null && user.ekBilgi!.isNotEmpty)
+          _ProfileInfoCard(
+            iconPath: 'assets/svg/circle-info.svg',
+            title: 'Additional Info',
+            value: user.ekBilgi!,
           ),
         
         const SizedBox(height: 24),
@@ -187,7 +192,7 @@ class _ProfileContent extends ConsumerWidget {
               child: _StatCard(
                 icon: Icons.event,
                 title: 'Registered Events',
-                value: '${user.registeredEventIds?.length ?? 0}',
+                value: '${user.registeredEventId?.length ?? 0}',
                 color: Colors.blue,
               ),
             ),
@@ -196,7 +201,7 @@ class _ProfileContent extends ConsumerWidget {
               child: _StatCard(
                 icon: Icons.check_circle,
                 title: 'Attended Events',
-                value: '${user.attendedEventIds?.length ?? 0}',
+                value: '${user.attendedToEventId?.length ?? 0}',
                 color: Colors.green,
               ),
             ),
@@ -412,42 +417,6 @@ class _ProfileContent extends ConsumerWidget {
         await ref.read(localeProvider.notifier).setEnglish();
       }
     }
-  }
-}
-
-class _NotLoggedInContent extends StatelessWidget {
-  const _NotLoggedInContent();
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.person_off, size: 64, color: Colors.white.withValues(alpha: 0.6)),
-          const SizedBox(height: 16),
-          const Text(
-            'Not logged in',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Please log in to view your profile',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.white.withValues(alpha: 0.8),
-            ),
-          ),
-          const SizedBox(height: 24),
-          // Login disabled for now to keep bottom bar visible in shell
-          const SizedBox.shrink(),
-        ],
-      ),
-    );
   }
 }
 

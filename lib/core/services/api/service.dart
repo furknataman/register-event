@@ -10,6 +10,7 @@ import 'package:autumn_conference/core/data/models/user_info.dart';
 import 'package:autumn_conference/core/data/local/token_stroge.dart';
 import 'package:autumn_conference/main.dart';
 import 'package:autumn_conference/core/notifications/toast/toast_message.dart';
+import 'package:autumn_conference/features/schedule/data/models/program_model.dart';
 
 part 'service.g.dart';
 
@@ -167,6 +168,32 @@ class WebService {
     }
   }
 
+  Future<InfoUser> fetchUserProfile() async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Login/KatilimciBilgiGetir";
+      _logger.i('Fetching user profile from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully loaded user profile');
+        return InfoUser.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load user profile: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching user profile', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
   Future<bool?> registerEvent(int userId, int presentationId) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/SunumKayitEkle",
@@ -231,6 +258,33 @@ class WebService {
       rethrow;
     }
   }
+
+  Future<List<ProgramModel>> fetchProgramFlow() async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Sunum/ProgramAkisi";
+      _logger.i('Fetching program flow from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data type: ${response.data.runtimeType}');
+
+      if (response.statusCode == 200) {
+        final List<dynamic> responseData = response.data;
+        _logger.i('Successfully loaded ${responseData.length} program entries');
+        return responseData.map((data) => ProgramModel.fromJson(data)).toList();
+      } else {
+        throw Exception('Failed to load program flow: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching program flow', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
 }
 
 final webServiceProvider = Provider<WebService>((ref) => WebService());
@@ -239,12 +293,20 @@ final userDataProvider = FutureProvider<InfoUser>((ref) async {
   return ref.watch(webServiceProvider).fetchUser();
 });
 
+final userProfileProvider = FutureProvider<InfoUser>((ref) async {
+  return ref.watch(webServiceProvider).fetchUserProfile();
+});
+
 final presentationDataProvider = FutureProvider<List<ClassModelPresentation>>((ref) async {
   return ref.watch(webServiceProvider).fetchAllEvents();
 });
 
 final sessionPresentationDataProvider = FutureProvider<SessionResponseModel>((ref) async {
   return ref.watch(webServiceProvider).fetchSessionPresentations();
+});
+
+final programFlowProvider = FutureProvider<List<ProgramModel>>((ref) async {
+  return ref.watch(webServiceProvider).fetchProgramFlow();
 });
 
 // Event detail provider - Detay endpoint'inden zengin bilgi alıyoruz

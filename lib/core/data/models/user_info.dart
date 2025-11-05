@@ -11,6 +11,8 @@ class InfoUser {
   final String? job;
   final String? generalForm;
   final bool? generalRollCall;
+  final String? ekBilgi;
+  final bool? kvkk;
   final List<int>? registeredEventId;
   final List<DateTime>? registeredEventTime;
   final List<int>? attendedToEventId;
@@ -26,6 +28,8 @@ class InfoUser {
       this.generalRollCall,
       this.job,
       this.generalForm,
+      this.ekBilgi,
+      this.kvkk,
       this.registeredEventId,
       this.registeredEventTime,
       this.attendedToEventId});
@@ -39,15 +43,17 @@ class InfoUser {
 
     return InfoUser(
       id: json['id'] ?? 0,
-      name: json['name'] ?? " ",
+      name: json['ad'] ?? json['name'] ?? " ",
       generalForm: json['anketLinki'],
-      surname: json['surname'] ?? " ",
-      email: json['email'] ?? " ",
-      generalRollCall: json['genelYoklama'] ?? false,
-      password: json['password'] ?? " ",
-      telephone: json['telephone'] ?? " ",
-      school: json['school'] ?? " ",
-      job: json['job'] ?? " ",
+      surname: json['soyad'] ?? json['surname'] ?? " ",
+      email: json['eposta'] ?? json['email'] ?? " ",
+      generalRollCall: json['yoklama'] ?? json['genelYoklama'] ?? false,
+      password: json['sifre'] ?? json['password'] ?? " ",
+      telephone: json['telefon'] ?? json['telephone'] ?? " ",
+      school: json['okul'] ?? json['school'] ?? " ",
+      job: json['unvan'] ?? json['job'] ?? " ",
+      ekBilgi: json['ekBilgi'],
+      kvkk: json['kvkk'],
       registeredEventId: (json['kayitOlduguSunumId'] != null)
           ? List<int>.from(json['kayitOlduguSunumId'])
           : null,

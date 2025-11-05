@@ -1,72 +1,226 @@
+import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import '../../domain/models/time_entry.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/services/api/service.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../../l10n/locale_notifier.dart';
+import '../../../../core/animations/spring_animations.dart';
 
-class SchedulePage extends StatelessWidget {
-  SchedulePage({super.key});
+class SchedulePage extends ConsumerWidget {
+  const SchedulePage({super.key});
 
-  final List<TimeEntry> entries = [
-    TimeEntry(time: "08:30 - 09:15", description: "Welcome"),
-    TimeEntry(time: "09:15 - 09:45", description: "Opening"),
-    TimeEntry(time: "10:00 - 10:45", description: "Session 1"),
-    TimeEntry(time: "10:00 - 11:30", description: "Session 1 - 90 Min."),
-    TimeEntry(time: "11:00 - 11:45", description: "Session 2"),
-    TimeEntry(time: "11:30 - 14:00", description: "Lunch"),
-    TimeEntry(time: "13:00 - 13:45", description: "Session 3"),
-    TimeEntry(time: "13:00 - 14:30", description: "Session 3 - 90 Min."),
-    TimeEntry(time: "14:00 - 14:45", description: "Session 4"),
-    TimeEntry(time: "15:00 - 15:45", description: "Session 5"),
-  ];
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final programFlowAsync = ref.watch(programFlowProvider);
+    final localeAsync = ref.watch(localeProvider);
+    final languageCode = localeAsync.value?.languageCode ?? 'tr';
+
+    return Scaffold(
+      extendBodyBehindAppBar: true,
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        foregroundColor: Colors.white,
+        title: Text(AppLocalizations.of(context)!.dailySchedule),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: AppColors.getBackgroundGradient(context),
+        ),
+        child: SafeArea(
+          child: programFlowAsync.when(
+            data: (programList) {
+              if (programList.isEmpty) {
+                return _buildEmptyState(context);
+              }
+
+              return RefreshIndicator(
+                color: Colors.white,
+                backgroundColor: const Color(0xFF1a1a2e),
+                onRefresh: () async {
+                  ref.invalidate(programFlowProvider);
+                },
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: programList.length,
+                  itemBuilder: (context, index) {
+                    final program = programList[index];
+
+                    return SpringListItem(
+                      index: index,
+                      child: _ProgramCard(
+                        program: program,
+                        languageCode: languageCode,
+                        index: index,
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+            loading: () => const Center(
+              child: CircularProgressIndicator(color: Colors.white),
+            ),
+            error: (error, stack) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.white),
+                  const SizedBox(height: 16),
+                  Text(
+                    'Error: $error',
+                    style: const TextStyle(color: Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => ref.refresh(programFlowProvider),
+                    child: const Text('Retry'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(24),
+        child: LiquidGlass(
+          settings: LiquidGlassSettings(
+            blur: 6,
+            ambientStrength: 0.6,
+            lightAngle: 0.2 * math.pi,
+            glassColor: Colors.white.withValues(alpha: 0.1),
+          ),
+          shape: LiquidRoundedSuperellipse(
+            borderRadius: const Radius.circular(20),
+          ),
+          glassContainsChild: false,
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.2),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.4),
+                width: 1,
+              ),
+            ),
+            child: Text(
+              AppLocalizations.of(context)!.noEventsYet,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ProgramCard extends StatelessWidget {
+  final dynamic program;
+  final String languageCode;
+  final int index;
+
+  const _ProgramCard({
+    required this.program,
+    required this.languageCode,
+    required this.index,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final primaryColor = isDark ? AppColors.darkPrimaryBlue : const Color(0xff8f1910);
-    final secondaryColor = isDark ? AppColors.darkMidBlue : const Color(0xffa1392a);
+    final localizedProgram = program.getLocalizedProgram(languageCode);
+    final timeRange = program.getTimeRange();
 
-    return Scaffold(
-        backgroundColor: primaryColor,
-        appBar: AppBar(
-          backgroundColor: primaryColor,
-          iconTheme: const IconThemeData(color: Colors.white),
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                itemCount: entries.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    color: index % 2 == 0 ? primaryColor : secondaryColor,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: 160,
-                          height: 50,
-                          child: Text(
-                            entries[index].time,
-                            style: const TextStyle(
-                                fontSize: 19,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white),
-                          ),
-                        ),
-                        Text(
-                          entries[index].description,
-                          style: const TextStyle(
-                              fontSize: 18,
-                              color: Colors.white,
-                              fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: Colors.white.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: Colors.white.withValues(alpha: 0.25),
+                width: 1.5,
               ),
             ),
-          ],
-        ));
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Time Badge
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(
+                        Icons.access_time,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        timeRange,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                // Program Description
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        localizedProgram,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
