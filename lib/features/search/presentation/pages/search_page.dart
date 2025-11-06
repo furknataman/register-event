@@ -53,11 +53,15 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       final presenter1 = (event.presenter1Name ?? '').toLowerCase();
       final presenter2 = (event.presenter2Name ?? '').toLowerCase();
       final school = (event.school ?? '').toLowerCase();
+      final type = (event.type ?? '').toLowerCase();
+      final branch = (event.branch ?? '').toLowerCase();
 
       return title.contains(_searchQuery) ||
              presenter1.contains(_searchQuery) ||
              presenter2.contains(_searchQuery) ||
-             school.contains(_searchQuery);
+             school.contains(_searchQuery) ||
+             type.contains(_searchQuery) ||
+             branch.contains(_searchQuery);
     }).toList();
   }
 

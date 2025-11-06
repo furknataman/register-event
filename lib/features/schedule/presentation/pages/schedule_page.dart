@@ -145,7 +145,6 @@ class _ProgramCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizedProgram = program.getLocalizedProgram(languageCode);
-    final timeRange = program.getTimeRange();
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -166,12 +165,12 @@ class _ProgramCard extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Time Badge
+                // Time Badge - Kompakt versiyon
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                   decoration: BoxDecoration(
                     color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                     border: Border.all(
                       color: Colors.white.withValues(alpha: 0.3),
                       width: 1,
@@ -183,29 +182,42 @@ class _ProgramCard extends StatelessWidget {
                       const Icon(
                         Icons.access_time,
                         color: Colors.white,
-                        size: 20,
+                        size: 22,
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        timeRange,
+                        program.baslangicSaati.substring(0, 5),
                         style: const TextStyle(
                           color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
                         ),
-                        textAlign: TextAlign.center,
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(vertical: 2),
+                        width: 22,
+                        height: 1,
+                        color: Colors.white.withValues(alpha: 0.5),
+                      ),
+                      Text(
+                        program.bitisSaati.substring(0, 5),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 16),
+                const SizedBox(width: 12),
                 // Program Description
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        localizedProgram,
+                        localizedProgram.replaceAll('\\n', '\n'),
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,

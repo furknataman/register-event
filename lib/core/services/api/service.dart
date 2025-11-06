@@ -51,7 +51,7 @@ class WebService {
 
   Future<Response> _makeRequest(String endpoint,
       {Map<String, dynamic>? data, String? token, String method = 'POST'}) async {
-    final url = "$baseUrl$endpoint";
+    final url = "$baseUrl/$endpoint";
 
     try {
       final response = method == 'GET'
@@ -93,7 +93,7 @@ class WebService {
 
       final response = await _dio.post(
         url,
-        data: {'id': id, 'katilimciId': 0},
+        data: {'sunumId': id},
         options: myToken != null ? _commonHeaders(myToken) : null,
       );
 
@@ -192,28 +192,63 @@ class WebService {
   }
 
   Future<bool?> registerEvent(int userId, int presentationId) async {
-    final myToken = await getToken();
-    final response = await _makeRequest("Sunum/SunumKayitEkle",
-        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
-    if (response.statusCode == 200) {
-      if (response.data['basarili'] == true) {
-        return true;
-      }
+    try {
+      _logger.i('🔵 REGISTER EVENT CALLED - userId: $userId, presentationId: $presentationId');
+      final myToken = await getToken();
+      _logger.i('🔵 Token retrieved: ${myToken != null ? "✓" : "✗"}');
 
-      throw Exception('Failed to load presentations');
-    } else {
-      throw Exception('Failed to load presentations');
+      final response = await _makeRequest("Sunum/SunumKayitEkle",
+          data: {"sunumId": presentationId}, token: myToken);
+
+      _logger.i('🔵 Response status: ${response.statusCode}');
+      _logger.i('🔵 Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        if (response.data['sonuc'] == 1) {
+          _logger.i('✅ Successfully registered for event. Message: ${response.data['mesaj']}');
+          return true;
+        }
+
+        _logger.e('❌ Registration failed - sonuc != 1. Data: ${response.data}');
+        throw Exception('Failed to register: ${response.data['mesaj']}');
+      } else {
+        _logger.e('❌ Registration failed - status: ${response.statusCode}');
+        throw Exception('Failed to register: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('❌ REGISTER EVENT ERROR', error: e, stackTrace: stackTrace);
+      rethrow;
     }
   }
 
   Future<bool> removeEvent(int userId, int presentationId) async {
-    final myToken = await getToken();
-    final response = await _makeRequest("Sunum/SunumKayitSil",
-        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
-    if (response.statusCode == 200) {
-      return true;
-    } else {
-      throw Exception('Failed to load presentations');
+    try {
+      _logger.i('🔴 REMOVE EVENT CALLED - userId: $userId, presentationId: $presentationId');
+      final myToken = await getToken();
+      _logger.i('🔴 Token retrieved: ${myToken != null ? "✓" : "✗"}');
+
+      final response = await _makeRequest("Sunum/SunumKayitSil",
+          data: {"sunumId": presentationId}, token: myToken);
+
+      _logger.i('🔴 Response status: ${response.statusCode}');
+      _logger.i('🔴 Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        // API başarılı response'da 'sonuc' field'ı dönmüyor, sadece 'mesaj' var
+        // Eğer 'mesaj' varsa başarılı demektir
+        if (response.data['mesaj'] != null && response.data['mesaj'].toString().isNotEmpty) {
+          _logger.i('✅ Successfully removed from event. Message: ${response.data['mesaj']}');
+          return true;
+        }
+        _logger.e('❌ Remove failed - no message in response. Data: ${response.data}');
+        throw Exception('Failed to remove: No message in response');
+      } else {
+        _logger.e('❌ Remove failed - status: ${response.statusCode}');
+        throw Exception('Failed to remove: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('❌ REMOVE EVENT ERROR', error: e, stackTrace: stackTrace);
+      rethrow;
     }
   }
 
@@ -221,12 +256,16 @@ class WebService {
       int userId, int presentationId, String successMessage) async {
     final myToken = await getToken();
     final response = await _makeRequest("AtcYonetim/SunumYoklamaAl",
-        data: {'katilimciId': userId, "sunumId": presentationId}, token: myToken);
+        data: {"sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
-      toastMessage(successMessage);
-      return true;
+      if (response.data['sonuc'] == 1) {
+        toastMessage(successMessage);
+        _logger.i('Attendance marked successfully. Message: ${response.data['mesaj']}');
+        return true;
+      }
+      throw Exception('Failed to mark attendance: ${response.data['mesaj']}');
     } else {
-      throw Exception('Failed to load presentations');
+      throw Exception('Failed to mark attendance: ${response.statusCode}');
     }
   }
 

@@ -42,7 +42,7 @@ class InfoUser {
     }
 
     return InfoUser(
-      id: json['id'] ?? 0,
+      id: json['id'],
       name: json['ad'] ?? json['name'] ?? " ",
       generalForm: json['anketLinki'],
       surname: json['soyad'] ?? json['surname'] ?? " ",

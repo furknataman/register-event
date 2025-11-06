@@ -7,14 +7,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
+import '../../../../core/animations/spring_animations.dart';
+import '../../../../core/services/api/service.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/localization_helper.dart';
 import '../../../../core/utils/image_helper.dart';
+import '../../../../core/utils/localization_helper.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
-import '../../../../core/services/api/service.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
-import '../../../../core/animations/spring_animations.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -26,7 +26,10 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   bool _isHeaderVisible = true;
   double _lastScrollOffset = 0.0;
+  double _scrollStartOffset = 0.0; // Scroll direction değiştiğinde başlangıç pozisyonu
+  bool _wasScrollingDown = false;
   static const double _scrollThreshold = 10.0;
+  static const double _showThreshold = 50.0; // Header'ı göstermek için gereken yukarı scroll mesafesi
   static const double _headerHeight = 76.0;
   static const double _chipsHeight = 66.0; // 52 (height) + 12 (top) + 2 (bottom)
 
@@ -42,14 +45,26 @@ class _HomePageState extends ConsumerState<HomePage> {
 
       // Minimum threshold check to avoid jittery behavior
       if (delta.abs() > _scrollThreshold) {
+        final isScrollingDown = delta > 0;
+
+        // Scroll direction değişti mi kontrol et
+        if (isScrollingDown != _wasScrollingDown) {
+          _scrollStartOffset = currentOffset;
+          _wasScrollingDown = isScrollingDown;
+        }
+
         // Scrolling down - hide header
-        if (delta > 0 && _isHeaderVisible && currentOffset > 50) {
+        if (isScrollingDown && _isHeaderVisible && currentOffset > 50) {
           setState(() => _isHeaderVisible = false);
         }
-        // Scrolling up - show header
-        else if (delta < 0 && !_isHeaderVisible) {
-          setState(() => _isHeaderVisible = true);
+        // Scrolling up - show header after 50px up
+        else if (!isScrollingDown && !_isHeaderVisible) {
+          final scrolledUpDistance = _scrollStartOffset - currentOffset;
+          if (scrolledUpDistance >= _showThreshold) {
+            setState(() => _isHeaderVisible = true);
+          }
         }
+
         _lastScrollOffset = currentOffset;
       }
     }
@@ -77,238 +92,238 @@ class _HomePageState extends ConsumerState<HomePage> {
                 // Full-screen scroll view with padding
                 Positioned.fill(
                   child: AnimatedPadding(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
                     padding: EdgeInsets.only(
                       top: _isHeaderVisible ? (_headerHeight + _chipsHeight) : 0,
                     ),
                     child: sessionDataAsync.when(
-                  data: (sessionData) {
-                    final pageController = ref.watch(categoryPageControllerProvider);
+                      data: (sessionData) {
+                        final pageController = ref.watch(categoryPageControllerProvider);
 
-                    // Tüm kategorilerin sunumlarını liste olarak hazırla
-                    final allCategories = [
-                      sessionData.getAllPresentations(),
-                      sessionData.getRegisteredPresentations(),
-                      sessionData.oturum1,
-                      sessionData.oturum2,
-                      sessionData.oturum3,
-                      sessionData.oturum4,
-                    ];
+                        // Tüm kategorilerin sunumlarını liste olarak hazırla
+                        final allCategories = [
+                          sessionData.getAllPresentations(),
+                          sessionData.getRegisteredPresentations(),
+                          sessionData.oturum1,
+                          sessionData.oturum2,
+                          sessionData.oturum3,
+                          sessionData.oturum4,
+                        ];
 
-                    return PageView.builder(
-                      controller: pageController,
-                      itemCount: allCategories.length,
-                      onPageChanged: (index) {
-                        // PageView geçişinde header'ı göster
-                        if (!_isHeaderVisible) {
-                          setState(() => _isHeaderVisible = true);
-                        }
+                        return PageView.builder(
+                          controller: pageController,
+                          itemCount: allCategories.length,
+                          onPageChanged: (index) {
+                            // PageView geçişinde header'ı göster
+                            if (!_isHeaderVisible) {
+                              setState(() => _isHeaderVisible = true);
+                            }
 
-                        ref.read(selectedCategoryProvider.notifier).set(index);
+                            ref.read(selectedCategoryProvider.notifier).set(index);
 
-                        // Bottom bar'ı üste döndür
-                        ref.read(resetBottomBarProvider.notifier).increment();
+                            // Bottom bar'ı üste döndür
+                            ref.read(resetBottomBarProvider.notifier).increment();
 
-                        // Aktif chip'i görünür yap
-                        final scrollController = ref.read(chipScrollControllerProvider);
-                        if (scrollController.hasClients) {
-                          // Her chip için ortalama genişlik (padding + text + margin)
-                          final chipWidth = 120.0;
-                          final screenWidth = MediaQuery.of(context).size.width;
-                          final targetScroll = (index * chipWidth) - (screenWidth / 2) + (chipWidth / 2);
+                            // Aktif chip'i görünür yap
+                            final scrollController = ref.read(chipScrollControllerProvider);
+                            if (scrollController.hasClients) {
+                              // Her chip için ortalama genişlik (padding + text + margin)
+                              final chipWidth = 120.0;
+                              final screenWidth = MediaQuery.of(context).size.width;
+                              final targetScroll = (index * chipWidth) - (screenWidth / 2) + (chipWidth / 2);
 
-                          scrollController.animateTo(
-                            targetScroll.clamp(0.0, scrollController.position.maxScrollExtent),
-                            duration: SpringAnimations.standard,
-                            curve: SpringAnimations.standardSpring,
-                          );
-                        }
-                      },
-                      itemBuilder: (context, pageIndex) {
-                        final presentations = allCategories[pageIndex];
-
-                        return RefreshIndicator(
-                          color: Colors.white,
-                          backgroundColor: const Color(0xFF1a1a2e),
-                          onRefresh: () async {
-                            ref.invalidate(sessionPresentationDataProvider);
+                              scrollController.animateTo(
+                                targetScroll.clamp(0.0, scrollController.position.maxScrollExtent),
+                                duration: SpringAnimations.standard,
+                                curve: SpringAnimations.standardSpring,
+                              );
+                            }
                           },
-                          child: presentations.isEmpty
-                              ? ListView(
-                                  children: [
-                                    Center(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(top: 100),
-                                        child: LiquidGlass(
-                                          settings: LiquidGlassSettings(
-                                            blur: 6,
-                                            ambientStrength: 0.6,
-                                            lightAngle: 0.2 * math.pi,
-                                            glassColor: Colors.white.withValues(alpha: 0.1),
-                                          ),
-                                          shape: LiquidRoundedSuperellipse(
-                                            borderRadius: const Radius.circular(20),
-                                          ),
-                                          glassContainsChild: false,
-                                          child: Container(
-                                            padding: const EdgeInsets.all(24),
-                                            decoration: BoxDecoration(
-                                              color: Colors.white.withValues(alpha: 0.2),
-                                              borderRadius: BorderRadius.circular(20),
-                                              border: Border.all(
-                                                color: Colors.white.withValues(alpha: 0.4),
-                                                width: 1,
+                          itemBuilder: (context, pageIndex) {
+                            final presentations = allCategories[pageIndex];
+
+                            return RefreshIndicator(
+                              color: Colors.white,
+                              backgroundColor: const Color(0xFF1a1a2e),
+                              onRefresh: () async {
+                                ref.invalidate(sessionPresentationDataProvider);
+                              },
+                              child: presentations.isEmpty
+                                  ? ListView(
+                                      children: [
+                                        Center(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(top: 100),
+                                            child: LiquidGlass(
+                                              settings: LiquidGlassSettings(
+                                                blur: 6,
+                                                ambientStrength: 0.6,
+                                                lightAngle: 0.2 * math.pi,
+                                                glassColor: Colors.white.withValues(alpha: 0.1),
                                               ),
-                                            ),
-                                            child: Text(
-                                              AppLocalizations.of(context)!.noEventsYet,
-                                              style: const TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 18,
-                                                fontWeight: FontWeight.w600,
+                                              shape: LiquidRoundedSuperellipse(
+                                                borderRadius: const Radius.circular(20),
+                                              ),
+                                              glassContainsChild: false,
+                                              child: Container(
+                                                padding: const EdgeInsets.all(24),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white.withValues(alpha: 0.2),
+                                                  borderRadius: BorderRadius.circular(20),
+                                                  border: Border.all(
+                                                    color: Colors.white.withValues(alpha: 0.4),
+                                                    width: 1,
+                                                  ),
+                                                ),
+                                                child: Text(
+                                                  AppLocalizations.of(context)!.noEventsYet,
+                                                  style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
                                               ),
                                             ),
                                           ),
                                         ),
-                                      ),
+                                      ],
+                                    )
+                                  : ListView.builder(
+                                      padding: const EdgeInsets.all(16),
+                                      itemCount: presentations.length,
+                                      itemBuilder: (context, index) {
+                                        final presentation = presentations[index];
+                                        final isRegistered =
+                                            sessionData.kayitliSunum.any((r) => r.sunumId == presentation.id);
+
+                                        // Oturum numarasını bul
+                                        int? sessionNumber;
+                                        if (sessionData.oturum1.contains(presentation)) {
+                                          sessionNumber = 1;
+                                        } else if (sessionData.oturum2.contains(presentation)) {
+                                          sessionNumber = 2;
+                                        } else if (sessionData.oturum3.contains(presentation)) {
+                                          sessionNumber = 3;
+                                        } else if (sessionData.oturum4.contains(presentation)) {
+                                          sessionNumber = 4;
+                                        }
+
+                                        // Spring list item animation
+                                        return SpringListItem(
+                                          index: index,
+                                          delay: Duration(milliseconds: index * 60),
+                                          child: RepaintBoundary(
+                                            child: _buildEventCard(
+                                              context,
+                                              ref,
+                                              presentation,
+                                              index,
+                                              isRegistered,
+                                              languageCode,
+                                              sessionNumber,
+                                            ),
+                                          ),
+                                        );
+                                      },
                                     ),
-                                  ],
-                                )
-                              : ListView.builder(
-                                  padding: const EdgeInsets.all(16),
-                                  itemCount: presentations.length,
-                                  itemBuilder: (context, index) {
-                                    final presentation = presentations[index];
-                                    final isRegistered = sessionData.kayitliSunum
-                                        .any((r) => r.sunumId == presentation.id);
-
-                                    // Oturum numarasını bul
-                                    int? sessionNumber;
-                                    if (sessionData.oturum1.contains(presentation)) {
-                                      sessionNumber = 1;
-                                    } else if (sessionData.oturum2.contains(presentation)) {
-                                      sessionNumber = 2;
-                                    } else if (sessionData.oturum3.contains(presentation)) {
-                                      sessionNumber = 3;
-                                    } else if (sessionData.oturum4.contains(presentation)) {
-                                      sessionNumber = 4;
-                                    }
-
-                                    // Spring list item animation
-                                    return SpringListItem(
-                                      index: index,
-                                      delay: Duration(milliseconds: index * 60),
-                                      child: RepaintBoundary(
-                                        child: _buildEventCard(
-                                          context,
-                                          ref,
-                                          presentation,
-                                          index,
-                                          isRegistered,
-                                          languageCode,
-                                          sessionNumber,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ),
+                            );
+                          },
                         );
                       },
-                    );
-                  },
-                  loading: () => Center(
-                    child: LiquidGlass(
-                      settings: LiquidGlassSettings(
-                        blur: 6,
-                        ambientStrength: 0.6,
-                        lightAngle: 0.2 * math.pi,
-                        glassColor: Colors.white.withValues(alpha: 0.1),
-                      ),
-                      shape: LiquidRoundedSuperellipse(
-                        borderRadius: const Radius.circular(20),
-                      ),
-                      glassContainsChild: false,
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.4),
-                            width: 1,
+                      loading: () => Center(
+                        child: LiquidGlass(
+                          settings: LiquidGlassSettings(
+                            blur: 6,
+                            ambientStrength: 0.6,
+                            lightAngle: 0.2 * math.pi,
+                            glassColor: Colors.white.withValues(alpha: 0.1),
+                          ),
+                          shape: LiquidRoundedSuperellipse(
+                            borderRadius: const Radius.circular(20),
+                          ),
+                          glassContainsChild: false,
+                          child: Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.4),
+                                width: 1,
+                              ),
+                            ),
+                            child: const CircularProgressIndicator(
+                              color: Colors.white,
+                            ),
                           ),
                         ),
-                        child: const CircularProgressIndicator(
-                          color: Colors.white,
+                      ),
+                      error: (error, stack) => Center(
+                        child: LiquidGlass(
+                          settings: LiquidGlassSettings(
+                            blur: 6,
+                            ambientStrength: 0.6,
+                            lightAngle: 0.2 * math.pi,
+                            glassColor: Colors.white.withValues(alpha: 0.1),
+                          ),
+                          shape: LiquidRoundedSuperellipse(
+                            borderRadius: const Radius.circular(20),
+                          ),
+                          glassContainsChild: false,
+                          child: Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.2),
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.4),
+                                width: 1,
+                              ),
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(Icons.error_outline, size: 64, color: Colors.white),
+                                const SizedBox(height: 16),
+                                Text(AppLocalizations.of(context)!.anErrorOccurred,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                const SizedBox(height: 8),
+                                Text(
+                                  AppLocalizations.of(context)!.eventsLoadFailed,
+                                  style: TextStyle(
+                                    color: Colors.white.withValues(alpha: 0.8),
+                                    fontSize: 14,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                const SizedBox(height: 24),
+                                ElevatedButton(
+                                  onPressed: () => ref.invalidate(sessionPresentationDataProvider),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.white.withValues(alpha: 0.15),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 32,
+                                      vertical: 12,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                  ),
+                                  child: Text(AppLocalizations.of(context)!.retry),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  error: (error, stack) => Center(
-                    child: LiquidGlass(
-                      settings: LiquidGlassSettings(
-                        blur: 6,
-                        ambientStrength: 0.6,
-                        lightAngle: 0.2 * math.pi,
-                        glassColor: Colors.white.withValues(alpha: 0.1),
-                      ),
-                      shape: LiquidRoundedSuperellipse(
-                        borderRadius: const Radius.circular(20),
-                      ),
-                      glassContainsChild: false,
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withValues(alpha: 0.4),
-                            width: 1,
-                          ),
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(Icons.error_outline, size: 64, color: Colors.white),
-                            const SizedBox(height: 16),
-                            Text(AppLocalizations.of(context)!.anErrorOccurred,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                )),
-                            const SizedBox(height: 8),
-                            Text(
-                              AppLocalizations.of(context)!.eventsLoadFailed,
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.8),
-                                fontSize: 14,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 24),
-                            ElevatedButton(
-                              onPressed: () => ref.invalidate(sessionPresentationDataProvider),
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white.withValues(alpha: 0.15),
-                                foregroundColor: Colors.white,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 32,
-                                  vertical: 12,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                              ),
-                              child: Text(AppLocalizations.of(context)!.retry),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
                   ),
                 ),
                 // Header overlay
@@ -317,11 +332,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                   left: 0,
                   right: 0,
                   child: AnimatedSlide(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -1.5),
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -1.0),
                     child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 300),
                       opacity: _isHeaderVisible ? 1.0 : 0.0,
                       child: _buildHeaderBar(context, userDataAsync),
                     ),
@@ -333,11 +348,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                   left: 0,
                   right: 0,
                   child: AnimatedSlide(
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeInOut,
-                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -2),
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeOutCubic,
+                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -1.3),
                     child: AnimatedOpacity(
-                      duration: const Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 300),
                       opacity: _isHeaderVisible ? 1.0 : 0.0,
                       child: _buildCategoryChips(context, ref, selectedCategory),
                     ),
@@ -404,9 +419,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   color: isSelected ? null : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(
-                    color: isSelected
-                        ? Colors.white.withValues(alpha: 0.3)
-                        : Colors.white.withValues(alpha: 0.25),
+                    color: isSelected ? Colors.white.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.25),
                     width: isSelected ? 1.5 : 1,
                   ),
                   boxShadow: isSelected
