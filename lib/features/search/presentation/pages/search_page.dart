@@ -23,12 +23,14 @@ class SearchPage extends ConsumerStatefulWidget {
 
 class _SearchPageState extends ConsumerState<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
   String _searchQuery = '';
 
   @override
   void dispose() {
     _searchController.dispose();
+    _scrollController.dispose();
     _debounce?.cancel();
     super.dispose();
   }
@@ -37,9 +39,18 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     if (_debounce?.isActive ?? false) _debounce!.cancel();
 
     _debounce = Timer(const Duration(milliseconds: 300), () {
+      final trimmedQuery = query.toLowerCase().trim();
       setState(() {
-        _searchQuery = query.toLowerCase().trim();
+        _searchQuery = trimmedQuery;
       });
+
+      // Eğer query boşsa bottom bar'ı geri getir
+      if (trimmedQuery.isEmpty) {
+        ref.read(resetBottomBarProvider.notifier).increment();
+        if (_scrollController.hasClients) {
+          _scrollController.jumpTo(0);
+        }
+      }
     });
   }
 
@@ -67,7 +78,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   @override
   Widget build(BuildContext context) {
-    final eventData = ref.watch(presentationDataProvider);
+    final eventData = ref.watch(sessionPresentationDataProvider);
     final localeAsync = ref.watch(localeProvider);
     final languageCode = localeAsync.value?.languageCode ?? 'tr';
 
@@ -130,7 +141,15 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                   ),
                                   onPressed: () {
                                     _searchController.clear();
-                                    _onSearchChanged('');
+                                    setState(() {
+                                      _searchQuery = '';
+                                    });
+                                    // Bottom bar'ı geri getir
+                                    ref.read(resetBottomBarProvider.notifier).increment();
+                                    // Scroll pozisyonunu reset et
+                                    if (_scrollController.hasClients) {
+                                      _scrollController.jumpTo(0);
+                                    }
                                   },
                                 )
                               : null,
@@ -199,7 +218,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       ],
                     ),
                   ),
-                  data: (allEvents) {
+                  data: (sessionData) {
+                    final allEvents = sessionData.getAllPresentations();
                     final filteredEvents = _filterEvents(allEvents);
 
                     if (_searchQuery.isEmpty) {
@@ -268,11 +288,27 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     }
 
                     return ListView.builder(
+                      controller: _scrollController,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       physics: const BouncingScrollPhysics(),
                       itemCount: filteredEvents.length,
                       itemBuilder: (context, index) {
                         final presentation = filteredEvents[index];
+
+                        // Kayıt durumu
+                        final isRegistered = sessionData.kayitliSunum.any((r) => r.sunumId == presentation.id);
+
+                        // Oturum numarası
+                        int? sessionNumber;
+                        if (sessionData.oturum1.contains(presentation)) {
+                          sessionNumber = 1;
+                        } else if (sessionData.oturum2.contains(presentation)) {
+                          sessionNumber = 2;
+                        } else if (sessionData.oturum3.contains(presentation)) {
+                          sessionNumber = 3;
+                        } else if (sessionData.oturum4.contains(presentation)) {
+                          sessionNumber = 4;
+                        }
 
                         return TweenAnimationBuilder(
                           duration: Duration(milliseconds: 300 + (index * 100)),
@@ -286,7 +322,14 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               ),
                             );
                           },
-                          child: _buildEventCard(context, presentation, index, languageCode),
+                          child: _buildEventCard(
+                            context,
+                            presentation,
+                            index,
+                            languageCode,
+                            isRegistered,
+                            sessionNumber,
+                          ),
                         );
                       },
                     );
@@ -305,6 +348,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     dynamic presentation,
     int index,
     String languageCode,
+    bool isRegistered,
+    int? sessionNumber,
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
@@ -339,41 +384,182 @@ class _SearchPageState extends ConsumerState<SearchPage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // Image section
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(24),
-                      topRight: Radius.circular(24),
-                    ),
-                    child: Image.asset(
-                      ImageHelper.getImageForBranch(presentation.branch),
-                      height: 220,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        // Fallback gradient if image fails
-                        return Container(
+                  // Image section with badges
+                  Stack(
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(24),
+                          topRight: Radius.circular(24),
+                        ),
+                        child: Image.asset(
+                          ImageHelper.getImageForBranch(presentation.branch),
                           height: 220,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Fallback gradient if image fails
+                            return Container(
+                              height: 220,
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    Colors.white.withValues(alpha: 0.12),
+                                    Colors.white.withValues(alpha: 0.22),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: Icon(
+                                  Icons.event,
+                                  size: 80,
+                                  color: Colors.white.withValues(alpha: 0.5),
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      // Kayıt durumu icon badge - Sağ üst
+                      Positioned(
+                        top: 12,
+                        right: 12,
+                        child: Container(
                           decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                Colors.white.withValues(alpha: 0.12),
-                                Colors.white.withValues(alpha: 0.22),
-                              ],
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.3),
+                                blurRadius: 8,
+                                spreadRadius: 1,
+                              ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(50),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+                              child: Container(
+                                padding: const EdgeInsets.all(14),
+                                decoration: BoxDecoration(
+                                  color: isRegistered
+                                      ? const Color(0xFF6366F1).withValues(alpha: 0.7)
+                                      : Colors.grey.withValues(alpha: 0.6),
+                                  shape: BoxShape.circle,
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.8),
+                                    width: 2.5,
+                                  ),
+                                ),
+                                child: Icon(
+                                  isRegistered ? Icons.bookmark : Icons.bookmark_border,
+                                  size: 26,
+                                  color: Colors.white,
+                                ),
+                              ),
                             ),
                           ),
-                          child: Center(
-                            child: Icon(
-                              Icons.event,
-                              size: 80,
-                              color: Colors.white.withValues(alpha: 0.5),
+                        ),
+                      ),
+                      // Süre badge - Sağ alt
+                      Positioned(
+                        bottom: 12,
+                        right: 12,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(14),
+                          child: BackdropFilter(
+                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.4),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.3),
+                                  width: 1,
+                                ),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.timer,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        );
-                      },
-                    ),
+                        ),
+                      ),
+                      // Oturum badge - Sol alt
+                      if (sessionNumber != null)
+                        Positioned(
+                          bottom: 12,
+                          left: 12,
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(14),
+                            child: BackdropFilter(
+                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 14,
+                                  vertical: 10,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.black.withValues(alpha: 0.5),
+                                  borderRadius: BorderRadius.circular(14),
+                                  border: Border.all(
+                                    color: Colors.white.withValues(alpha: 0.4),
+                                    width: 1.5,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Icon(
+                                      Icons.event_note,
+                                      size: 18,
+                                      color: Colors.white,
+                                    ),
+                                    const SizedBox(width: 7),
+                                    Text(
+                                      '${AppLocalizations.of(context)!.session} $sessionNumber',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600,
+                                        shadows: [
+                                          Shadow(
+                                            color: Colors.black54,
+                                            offset: Offset(0, 1),
+                                            blurRadius: 2,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
                   ),
                   // Content section
                   Padding(
@@ -388,14 +574,27 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           overflow: TextOverflow.ellipsis,
                         ),
                         const SizedBox(height: 12),
+                        // Sunucu isimleri
+                        if (presentation.presenter1Name != null)
+                          Column(
+                            children: [
+                              _buildInfoRow(
+                                Icons.person,
+                                presentation.presenter1Name!,
+                              ),
+                              if (presentation.presenter2Name != null) ...[
+                                const SizedBox(height: 6),
+                                _buildInfoRow(
+                                  Icons.person,
+                                  presentation.presenter2Name!,
+                                ),
+                              ],
+                              const SizedBox(height: 8),
+                            ],
+                          ),
                         _buildInfoRow(
                           Icons.business,
                           presentation.school ?? AppLocalizations.of(context)!.noInstitutionInfo,
-                        ),
-                        const SizedBox(height: 8),
-                        _buildInfoRow(
-                          Icons.timer,
-                          '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
                         ),
                         const SizedBox(height: 8),
                         _buildInfoRow(
@@ -409,29 +608,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                   presentation.type,
                                   languageCode,
                                 ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.22),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.38),
-                              width: 1,
-                            ),
-                          ),
-                          child: Text(
-                            presentation.branch ?? AppLocalizations.of(context)!.noBranchInfo,
-                            style: TextStyle(
-                              color: AppTextStyles.getTextColor(context),
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
                         ),
                       ],
                     ),
