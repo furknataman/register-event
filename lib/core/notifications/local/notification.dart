@@ -1,41 +1,67 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 import 'package:timezone/data/latest.dart' as tzdata;
+import 'package:timezone/timezone.dart' as tz;
 
 class LocalNoticeService {
-  LocalNoticeService();
-  final _localNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  LocalNoticeService._internal();
+
+  static final LocalNoticeService _instance = LocalNoticeService._internal();
+
+  factory LocalNoticeService() => _instance;
+
+  final FlutterLocalNotificationsPlugin _localNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  bool _isInitialized = false;
 
   Future<void> setup() async {
-    // #1
-    const androidSetting = AndroidInitializationSettings('@mipmap/launcher_icon');
-    const iosSetting = DarwinInitializationSettings();
+    if (_isInitialized) {
+      return;
+    }
 
-    // #2
-    const initSettings = InitializationSettings(android: androidSetting, iOS: iosSetting);
+    const androidSetting =
+        AndroidInitializationSettings('@mipmap/launcher_icon');
+    const iosSetting = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
 
-    // #3
-    await _localNotificationsPlugin.initialize(initSettings).then((_) {
+    const initSettings =
+        InitializationSettings(android: androidSetting, iOS: iosSetting);
+
+    try {
+      await _localNotificationsPlugin.initialize(initSettings);
+      _isInitialized = true;
       debugPrint('setupPlugin: setup success');
-    }).catchError((Object error) {
-      debugPrint('Error: $error');
-    });
+
+      await _configureAndroidChannel();
+    } catch (error) {
+      debugPrint('Local notifications init error: $error');
+    }
   }
 
-  Future<void> addNotification(
-      String? channel, String? title, String? body, int? endTime, int id) async {
-    // #1
-    tzdata.initializeTimeZones();
-    final scheduleTime = tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime!);
+  Future<void> addNotification(String? channel, String? title, String? body,
+      int? endTime, int id) async {
+    await setup();
+    if (endTime == null || channel == null) {
+      debugPrint('Scheduled notification skipped due to missing data');
+      return;
+    }
 
-// #2
+    tzdata.initializeTimeZones();
+    final scheduleTime =
+        tz.TZDateTime.fromMillisecondsSinceEpoch(tz.local, endTime);
+
     final androidDetail = AndroidNotificationDetails(
-        channel!, // channel Id
-        channel, // channel Name
-        priority: Priority.max,
-        importance: Importance.max,
-        styleInformation: const DefaultStyleInformation(true, true));
+      channel,
+      channel,
+      priority: Priority.max,
+      importance: Importance.max,
+      styleInformation: const DefaultStyleInformation(true, true),
+    );
 
     const iosDetail = DarwinNotificationDetails();
     final noticeDetail = NotificationDetails(
@@ -43,10 +69,6 @@ class LocalNoticeService {
       android: androidDetail,
     );
 
-// #3
-    
-
-// #4
     await _localNotificationsPlugin.zonedSchedule(
       id,
       title,
@@ -61,15 +83,80 @@ class LocalNoticeService {
     await _localNotificationsPlugin.cancel(id);
   }
 
-  Future showNotification(
+  Future<void> showNotification(
       {int id = 0, String? title, String? body, String? payLoad}) async {
-    return _localNotificationsPlugin.show(id, title, body, notificationDetails());
+    await setup();
+    await _localNotificationsPlugin.show(
+      id,
+      title,
+      body,
+      _notificationDetails(),
+      payload: payLoad,
+    );
   }
 
-  NotificationDetails notificationDetails() {
+  NotificationDetails _notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails('channelId', 'channelName',
-            importance: Importance.max),
-        iOS: DarwinNotificationDetails());
+      android: AndroidNotificationDetails('channelId', 'channelName',
+          importance: Importance.max),
+      iOS: DarwinNotificationDetails(),
+    );
+  }
+
+  Future<void> _configureAndroidChannel() async {
+    if (defaultTargetPlatform != TargetPlatform.android) {
+      return;
+    }
+
+    const channel = AndroidNotificationChannel(
+      'channelId',
+      'channelName',
+      description: 'Default notification channel',
+      importance: Importance.max,
+    );
+
+    const badgeChannel = AndroidNotificationChannel(
+      'badge_update_channel',
+      'Badge Updates',
+      description: 'Silent notifications for badge count updates',
+      importance: Importance.low,
+      playSound: false,
+      enableVibration: false,
+      showBadge: true,
+    );
+
+    final androidPlugin =
+        _localNotificationsPlugin.resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+
+    await androidPlugin?.createNotificationChannel(channel);
+    await androidPlugin?.createNotificationChannel(badgeChannel);
+  }
+
+  Future<void> updateAppBadge(int count) async {
+    await setup();
+
+    try {
+      final badge = FlutterBadgeManager.instance;
+      final isSupported = await badge.isSupported();
+
+      if (isSupported) {
+        if (count > 0) {
+          await badge.update(count);
+          debugPrint('App badge updated to: $count');
+        } else {
+          await badge.remove();
+          debugPrint('App badge cleared');
+        }
+      } else {
+        debugPrint('App badge not supported on this platform');
+      }
+    } catch (e) {
+      debugPrint('Error updating app badge: $e');
+    }
+  }
+
+  Future<void> clearAppBadge() async {
+    await updateAppBadge(0);
   }
 }

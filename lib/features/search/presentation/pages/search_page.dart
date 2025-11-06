@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:autumn_conference/core/data/models/presentation_model.dart';
 import 'package:autumn_conference/core/services/api/service.dart';
 import 'package:autumn_conference/core/theme/app_colors.dart';
@@ -14,6 +14,22 @@ import 'package:autumn_conference/core/utils/image_helper.dart';
 import 'package:autumn_conference/core/widgets/adaptive_glass.dart';
 import 'package:autumn_conference/l10n/app_localizations.dart';
 import 'package:autumn_conference/l10n/locale_notifier.dart';
+
+class SearchQueryNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+
+  void update(String query) {
+    if (state != query) {
+      state = query;
+    }
+  }
+}
+
+final searchQueryProvider =
+    NotifierProvider.autoDispose<SearchQueryNotifier, String>(
+  SearchQueryNotifier.new,
+);
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
@@ -26,7 +42,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   Timer? _debounce;
-  String _searchQuery = '';
 
   @override
   void dispose() {
@@ -41,9 +56,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
     _debounce = Timer(const Duration(milliseconds: 300), () {
       final trimmedQuery = query.toLowerCase().trim();
-      setState(() {
-        _searchQuery = trimmedQuery;
-      });
+      ref.read(searchQueryProvider.notifier).update(trimmedQuery);
 
       // Eğer query boşsa bottom bar'ı geri getir
       if (trimmedQuery.isEmpty) {
@@ -55,10 +68,15 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     });
   }
 
-  List<ClassModelPresentation> _filterEvents(List<ClassModelPresentation> events) {
-    if (_searchQuery.isEmpty) {
+  List<ClassModelPresentation> _filterEvents(
+    List<ClassModelPresentation> events,
+    String searchQuery,
+  ) {
+    if (searchQuery.isEmpty) {
       return events;
     }
+
+    final normalizedQuery = searchQuery.toLowerCase();
 
     return events.where((event) {
       final title = (event.title ?? '').toLowerCase();
@@ -68,12 +86,12 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       final type = (event.type ?? '').toLowerCase();
       final branch = (event.branch ?? '').toLowerCase();
 
-      return title.contains(_searchQuery) ||
-             presenter1.contains(_searchQuery) ||
-             presenter2.contains(_searchQuery) ||
-             school.contains(_searchQuery) ||
-             type.contains(_searchQuery) ||
-             branch.contains(_searchQuery);
+      return title.contains(normalizedQuery) ||
+          presenter1.contains(normalizedQuery) ||
+          presenter2.contains(normalizedQuery) ||
+          school.contains(normalizedQuery) ||
+          type.contains(normalizedQuery) ||
+          branch.contains(normalizedQuery);
     }).toList();
   }
 
@@ -82,6 +100,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
     final eventData = ref.watch(sessionPresentationDataProvider);
     final localeAsync = ref.watch(localeProvider);
     final languageCode = localeAsync.value?.languageCode ?? 'tr';
+    final searchQuery = ref.watch(searchQueryProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -117,7 +136,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           fontSize: 16,
                         ),
                         decoration: InputDecoration(
-                          hintText: AppLocalizations.of(context)!.searchPlaceholder,
+                          hintText:
+                              AppLocalizations.of(context)!.searchPlaceholder,
                           hintStyle: TextStyle(
                             color: Colors.white.withValues(alpha: 0.6),
                             fontSize: 16,
@@ -142,11 +162,13 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                                   ),
                                   onPressed: () {
                                     _searchController.clear();
-                                    setState(() {
-                                      _searchQuery = '';
-                                    });
+                                    ref
+                                        .read(searchQueryProvider.notifier)
+                                        .update('');
                                     // Bottom bar'ı geri getir
-                                    ref.read(resetBottomBarProvider.notifier).increment();
+                                    ref
+                                        .read(resetBottomBarProvider.notifier)
+                                        .increment();
                                     // Scroll pozisyonunu reset et
                                     if (_scrollController.hasClients) {
                                       _scrollController.jumpTo(0);
@@ -221,9 +243,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   ),
                   data: (sessionData) {
                     final allEvents = sessionData.getAllPresentations();
-                    final filteredEvents = _filterEvents(allEvents);
+                    final filteredEvents =
+                        _filterEvents(allEvents, searchQuery);
 
-                    if (_searchQuery.isEmpty) {
+                    if (searchQuery.isEmpty) {
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -276,7 +299,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              AppLocalizations.of(context)!.noResultsFor(_searchQuery),
+                              AppLocalizations.of(context)!
+                                  .noResultsFor(searchQuery),
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.white.withValues(alpha: 0.7),
@@ -290,14 +314,16 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
                     return ListView.builder(
                       controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 10),
                       physics: const BouncingScrollPhysics(),
                       itemCount: filteredEvents.length,
                       itemBuilder: (context, index) {
                         final presentation = filteredEvents[index];
 
                         // Kayıt durumu
-                        final isRegistered = sessionData.kayitliSunum.any((r) => r.sunumId == presentation.id);
+                        final isRegistered = sessionData.kayitliSunum
+                            .any((r) => r.sunumId == presentation.id);
 
                         // Oturum numarası
                         int? sessionNumber;
@@ -436,142 +462,145 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               ),
                             ],
                           ),
-                  child: AdaptiveGlass(
-                    borderRadius: const Radius.circular(50),
-                    settings: LiquidGlassSettings(
-                      blur: 6,
-                      ambientStrength: 0.6,
-                      lightAngle: 0.2 * math.pi,
-                      glassColor: Colors.transparent,
-                      chromaticAberration: 0.0,
-                    ),
-                    fallbackBlur: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(14),
-                      decoration: BoxDecoration(
-                        color: isRegistered
-                            ? const Color(0xFF6366F1).withValues(alpha: 0.7)
-                            : Colors.grey.withValues(alpha: 0.6),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          width: 2.5,
-                        ),
-                      ),
-                      child: Icon(
-                        isRegistered ? Icons.bookmark : Icons.bookmark_border,
-                        size: 26,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                          child: AdaptiveGlass(
+                            borderRadius: const Radius.circular(50),
+                            settings: LiquidGlassSettings(
+                              blur: 6,
+                              ambientStrength: 0.6,
+                              lightAngle: 0.2 * math.pi,
+                              glassColor: Colors.transparent,
+                              chromaticAberration: 0.0,
+                            ),
+                            fallbackBlur: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: isRegistered
+                                    ? const Color(0xFF6366F1)
+                                        .withValues(alpha: 0.7)
+                                    : Colors.grey.withValues(alpha: 0.6),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  width: 2.5,
+                                ),
+                              ),
+                              child: Icon(
+                                isRegistered
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_border,
+                                size: 26,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                       // Süre badge - Sağ alt
                       Positioned(
                         bottom: 12,
                         right: 12,
-                child: AdaptiveGlass(
-                  borderRadius: const Radius.circular(14),
-                  settings: LiquidGlassSettings(
-                    blur: 10,
-                    ambientStrength: 0.7,
-                    lightAngle: 0.3 * math.pi,
-                    glassColor: Colors.transparent,
-                    chromaticAberration: 0.0,
-                  ),
-                  fallbackBlur: 0,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 14,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: Colors.black.withValues(alpha: 0.4),
-                      borderRadius: BorderRadius.circular(14),
-                      border: Border.all(
-                        color: Colors.white.withValues(alpha: 0.3),
-                        width: 1,
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(
-                          Icons.timer,
-                          size: 18,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(width: 7),
-                        Text(
-                          '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
+                        child: AdaptiveGlass(
+                          borderRadius: const Radius.circular(14),
+                          settings: LiquidGlassSettings(
+                            blur: 10,
+                            ambientStrength: 0.7,
+                            lightAngle: 0.3 * math.pi,
+                            glassColor: Colors.transparent,
+                            chromaticAberration: 0.0,
+                          ),
+                          fallbackBlur: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
+                              ),
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.timer,
+                                  size: 18,
+                                  color: Colors.white,
+                                ),
+                                const SizedBox(width: 7),
+                                Text(
+                                  '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ),
                       ),
                       // Oturum badge - Sol alt
                       if (sessionNumber != null)
                         Positioned(
                           bottom: 12,
                           left: 12,
-                  child: AdaptiveGlass(
-                    borderRadius: const Radius.circular(14),
-                    settings: LiquidGlassSettings(
-                      blur: 10,
-                      ambientStrength: 0.7,
-                      lightAngle: 0.3 * math.pi,
-                      glassColor: Colors.transparent,
-                      chromaticAberration: 0.0,
-                    ),
-                    fallbackBlur: 0,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 14,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.black.withValues(alpha: 0.5),
-                        borderRadius: BorderRadius.circular(14),
-                        border: Border.all(
-                          color: Colors.white.withValues(alpha: 0.4),
-                          width: 1.5,
-                        ),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Icon(
-                            Icons.event_note,
-                            size: 18,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 7),
-                          Text(
-                            '${AppLocalizations.of(context)!.session} $sessionNumber',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              shadows: [
-                                Shadow(
-                                  color: Colors.black54,
-                                  offset: Offset(0, 1),
-                                  blurRadius: 2,
+                          child: AdaptiveGlass(
+                            borderRadius: const Radius.circular(14),
+                            settings: LiquidGlassSettings(
+                              blur: 10,
+                              ambientStrength: 0.7,
+                              lightAngle: 0.3 * math.pi,
+                              glassColor: Colors.transparent,
+                              chromaticAberration: 0.0,
+                            ),
+                            fallbackBlur: 0,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.4),
+                                  width: 1.5,
                                 ),
-                              ],
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.event_note,
+                                    size: 18,
+                                    color: Colors.white,
+                                  ),
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    '${AppLocalizations.of(context)!.session} $sessionNumber',
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          offset: Offset(0, 1),
+                                          blurRadius: 2,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
                         ),
                     ],
                   ),
@@ -582,7 +611,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
+                          presentation.title ??
+                              AppLocalizations.of(context)!.noTitleInfo,
                           style: AppTextStyles.cardTitle(context),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -608,7 +638,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           ),
                         _buildInfoRow(
                           Icons.business,
-                          presentation.school ?? AppLocalizations.of(context)!.noInstitutionInfo,
+                          presentation.school ??
+                              AppLocalizations.of(context)!.noInstitutionInfo,
                         ),
                         const SizedBox(height: 8),
                         _buildInfoRow(
@@ -638,7 +669,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   Widget _buildInfoRow(IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppTextStyles.getSecondaryTextColor(context)),
+        Icon(icon,
+            size: 18, color: AppTextStyles.getSecondaryTextColor(context)),
         const SizedBox(width: 8),
         Expanded(
           child: Text(

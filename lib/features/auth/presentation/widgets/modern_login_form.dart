@@ -10,6 +10,22 @@ import '../../../../core/routing/app_router.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../../l10n/app_localizations.dart';
 
+class LoginLoadingNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void setLoading(bool value) {
+    if (state != value) {
+      state = value;
+    }
+  }
+}
+
+final loginLoadingProvider =
+    NotifierProvider.autoDispose<LoginLoadingNotifier, bool>(
+  LoginLoadingNotifier.new,
+);
+
 class ModernLoginForm extends ConsumerStatefulWidget {
   const ModernLoginForm({super.key});
 
@@ -22,7 +38,6 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
   final TextEditingController _passwordController = TextEditingController();
   final ValueNotifier<bool> _isPasswordObscured = ValueNotifier<bool>(true);
   final ValueNotifier<bool> _isFormValid = ValueNotifier<bool>(false);
-  bool _isLoading = false;
   final AppLogger _logger = AppLogger();
 
   @override
@@ -63,15 +78,13 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
+    ref.read(loginLoadingProvider.notifier).setLoading(true);
 
     try {
       final success = await ref.read(authNotifierProvider.notifier).login(
-        _emailController.text.trim(),
-        _passwordController.text,
-      );
+            _emailController.text.trim(),
+            _passwordController.text,
+          );
 
       if (success && mounted) {
         // Wait a frame for state to propagate
@@ -87,9 +100,7 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
       }
     } finally {
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+        ref.read(loginLoadingProvider.notifier).setLoading(false);
       }
     }
   }
@@ -101,6 +112,8 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
 
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(loginLoadingProvider);
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
@@ -137,7 +150,7 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
             return _LiquidGlassButton(
               label: AppLocalizations.of(context)!.login,
               isEnabled: isValid,
-              isLoading: _isLoading,
+              isLoading: isLoading,
               onTap: () => _handleLogin(context),
             );
           },
@@ -145,7 +158,6 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
       ],
     );
   }
-
 }
 
 // Liquid Glass TextField Widget
@@ -184,7 +196,9 @@ class _LiquidGlassTextField extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
           child: TextField(
             controller: controller,
-            keyboardType: isPassword ? TextInputType.visiblePassword : TextInputType.emailAddress,
+            keyboardType: isPassword
+                ? TextInputType.visiblePassword
+                : TextInputType.emailAddress,
             obscureText: isPassword && isObscured,
             style: const TextStyle(
               color: Colors.white,
@@ -202,8 +216,8 @@ class _LiquidGlassTextField extends StatelessWidget {
                   ? IconButton(
                       icon: SvgPicture.asset(
                         isObscured
-                          ? 'assets/svg/eye-slash.svg'
-                          : 'assets/svg/eye.svg',
+                            ? 'assets/svg/eye-slash.svg'
+                            : 'assets/svg/eye.svg',
                         width: 20,
                         height: 20,
                         colorFilter: const ColorFilter.mode(

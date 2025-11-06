@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../animations/spring_animations.dart';
@@ -42,7 +43,8 @@ class LiquidBottomNav extends StatelessWidget {
                       color: Colors.black.withValues(alpha: 0.6),
                       borderRadius: BorderRadius.circular(40),
                     ),
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 10.0, vertical: 6.0),
                     child: Row(
                       children: [
                         if (currentIndex == 0)
@@ -94,7 +96,8 @@ class LiquidBottomNav extends StatelessWidget {
                   duration: SpringAnimations.standard,
                   curve: SpringAnimations.standardSpring,
                   child: SizedBox(
-                    width: tabSpacing.clamp(0, MediaQuery.of(context).size.width - 300),
+                    width: tabSpacing.clamp(
+                        0, MediaQuery.of(context).size.width - 300),
                     height: 0,
                   ),
                 ),
@@ -138,7 +141,7 @@ class _SvgIcon extends StatelessWidget {
   }
 }
 
-class _GlassPill extends StatefulWidget {
+class _GlassPill extends ConsumerStatefulWidget {
   final VoidCallback onTap;
   final String iconAsset;
   final String label;
@@ -152,10 +155,10 @@ class _GlassPill extends StatefulWidget {
   });
 
   @override
-  State<_GlassPill> createState() => _GlassPillState();
+  ConsumerState<_GlassPill> createState() => _GlassPillState();
 }
 
-class _GlassPillState extends State<_GlassPill> with SpringButtonMixin {
+class _GlassPillState extends ConsumerState<_GlassPill> with SpringButtonMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -168,38 +171,38 @@ class _GlassPillState extends State<_GlassPill> with SpringButtonMixin {
       onTapCancel: onTapCancel,
       child: buildPressAnimation(
         child: ClipRRect(
-        borderRadius: BorderRadius.circular(40),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.6),
-              borderRadius: BorderRadius.circular(40),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              children: [
-                _SvgIcon(widget.iconAsset, size: widget.largeIcon ? 32 : 28),
-                const SizedBox(width: 6),
-                Text(
-                  widget.label,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
+          borderRadius: BorderRadius.circular(40),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(40),
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              child: Row(
+                children: [
+                  _SvgIcon(widget.iconAsset, size: widget.largeIcon ? 32 : 28),
+                  const SizedBox(width: 6),
+                  Text(
+                    widget.label,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-          ),
       ),
     );
   }
 }
 
-class _GlassIcon extends StatefulWidget {
+class _GlassIcon extends ConsumerStatefulWidget {
   final VoidCallback onTap;
   final String iconAsset;
   final EdgeInsets padding;
@@ -213,10 +216,10 @@ class _GlassIcon extends StatefulWidget {
   });
 
   @override
-  State<_GlassIcon> createState() => _GlassIconState();
+  ConsumerState<_GlassIcon> createState() => _GlassIconState();
 }
 
-class _GlassIconState extends State<_GlassIcon> with SpringButtonMixin {
+class _GlassIconState extends ConsumerState<_GlassIcon> with SpringButtonMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(

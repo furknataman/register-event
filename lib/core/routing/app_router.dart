@@ -30,6 +30,25 @@ class AppRoutes {
   static const String schedule = '/schedule';
 }
 
+class TabSpacingNotifier extends Notifier<double> {
+  @override
+  double build() => 0.0;
+
+  void setSpacing(double value) {
+    if (state != value) {
+      state = value;
+    }
+  }
+
+  void reset() {
+    setSpacing(0.0);
+  }
+}
+
+final tabSpacingProvider = NotifierProvider<TabSpacingNotifier, double>(
+  TabSpacingNotifier.new,
+);
+
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutes.splash,
@@ -146,16 +165,13 @@ class AppNavigationShell extends ConsumerStatefulWidget {
 }
 
 class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
-  double _tabSpacing = 0.0;
-
   @override
   Widget build(BuildContext context) {
-    // Bottom bar reset sinyalini dinle
-    ref.listen(resetBottomBarProvider, (previous, next) {
-      if (mounted) {
-        setState(() => _tabSpacing = 0.0);
-      }
-    });
+    ref.listen<int>(
+      resetBottomBarProvider,
+      (previous, next) => ref.read(tabSpacingProvider.notifier).reset(),
+    );
+    final tabSpacing = ref.watch(tabSpacingProvider);
 
     return Scaffold(
       extendBody: true,
@@ -165,9 +181,7 @@ class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
           if (notification.metrics.axis == Axis.vertical) {
             final offset = notification.metrics.pixels;
             final newSpacing = offset > 100 ? 150.0 : 0.0;
-            if (newSpacing != _tabSpacing) {
-              setState(() => _tabSpacing = newSpacing);
-            }
+            ref.read(tabSpacingProvider.notifier).setSpacing(newSpacing);
           }
           return false;
         },
@@ -180,7 +194,7 @@ class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
               alignment: Alignment.bottomCenter,
               child: LiquidBottomNav(
                 onTap: (i) => _onTap(context, i),
-                tabSpacing: _tabSpacing,
+                tabSpacing: tabSpacing,
                 currentIndex: _getCurrentIndex(context),
               ),
             ),
@@ -192,7 +206,7 @@ class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
 
   void _onTap(BuildContext context, int index) {
     // Reset tab spacing when changing pages
-    setState(() => _tabSpacing = 0.0);
+    ref.read(tabSpacingProvider.notifier).reset();
 
     switch (index) {
       case 0:

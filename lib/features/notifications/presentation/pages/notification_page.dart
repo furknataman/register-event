@@ -2,8 +2,12 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/providers/notification_provider.dart';
+import '../../data/models/notification_model.dart';
 
 void showNotificationModal(BuildContext context) {
   showModalBottomSheet(
@@ -14,8 +18,46 @@ void showNotificationModal(BuildContext context) {
   );
 }
 
-class NotificationModal extends StatelessWidget {
+class NotificationModal extends ConsumerStatefulWidget {
   const NotificationModal({super.key});
+
+  @override
+  ConsumerState<NotificationModal> createState() => _NotificationModalState();
+}
+
+class _NotificationModalState extends ConsumerState<NotificationModal> {
+  final ScrollController _scrollController = ScrollController();
+  bool _isInitialized = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    timeago.setLocaleMessages('tr', timeago.TrMessages());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !_isInitialized) {
+        _isInitialized = true;
+        ref.read(notificationListProvider.notifier).loadNotifications();
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      final notificationState = ref.read(notificationListProvider);
+      if (!notificationState.isLoading && notificationState.hasMore) {
+        ref.read(notificationListProvider.notifier).loadNotifications();
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,10 +144,10 @@ class NotificationModal extends StatelessWidget {
   }
 
   Widget _buildNotificationList(BuildContext context, ScrollController scrollController) {
-    // Mock data - gerçek data gelince burası değişecek
-    final notifications = <Map<String, String>>[];
+    final notificationState = ref.watch(notificationListProvider);
+    final locale = Localizations.localeOf(context);
 
-    if (notifications.isEmpty) {
+    if (notificationState.notifications.isEmpty && !notificationState.isLoading) {
       return Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -141,75 +183,141 @@ class NotificationModal extends StatelessWidget {
       );
     }
 
-    return ListView.builder(
-      controller: scrollController,
-      padding: const EdgeInsets.all(16),
-      itemCount: notifications.length,
-      itemBuilder: (context, index) {
-        final notification = notifications[index];
-        return _buildNotificationItem(
-          title: notification['title'] ?? '',
-          message: notification['message'] ?? '',
-          time: notification['time'] ?? '',
-        );
-      },
+    return RefreshIndicator(
+      onRefresh: () => ref.read(notificationListProvider.notifier).refresh(),
+      color: Colors.white,
+      backgroundColor: const Color(0xFF004B8D),
+      child: ListView.builder(
+        controller: _scrollController,
+        padding: const EdgeInsets.all(16),
+        itemCount: notificationState.notifications.length + (notificationState.isLoading ? 1 : 0),
+        itemBuilder: (context, index) {
+          if (index == notificationState.notifications.length) {
+            return const Center(
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                ),
+              ),
+            );
+          }
+
+          final notification = notificationState.notifications[index];
+          return _buildNotificationItem(
+            notification: notification,
+            locale: locale,
+            onTap: () async {
+              if (!notification.isRead) {
+                await ref.read(notificationListProvider.notifier).markAsRead(notification.id);
+              }
+            },
+          );
+        },
+      ),
     );
   }
 
   Widget _buildNotificationItem({
-    required String title,
-    required String message,
-    required String time,
+    required NotificationModel notification,
+    required Locale locale,
+    required VoidCallback onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.2),
-                width: 1,
+    final timeAgo = timeago.format(
+      notification.createdAt,
+      locale: locale.languageCode,
+    );
+
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: notification.isRead
+                    ? Colors.white.withValues(alpha: 0.08)
+                    : Colors.white.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: notification.isRead
+                      ? Colors.white.withValues(alpha: 0.15)
+                      : Colors.white.withValues(alpha: 0.3),
+                  width: notification.isRead ? 1 : 1.5,
+                ),
               ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        title,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+              child: Row(
+                children: [
+                  if (!notification.isRead)
+                    Container(
+                      margin: const EdgeInsets.only(right: 12),
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFF00C9FF),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                notification.getTitle(locale),
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: notification.isRead ? FontWeight.w600 : FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Text(
+                              timeAgo,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.6),
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
+                        const SizedBox(height: 8),
+                        Text(
+                          notification.getMessage(locale),
+                          style: TextStyle(
+                            color: Colors.white.withValues(alpha: notification.isRead ? 0.7 : 0.9),
+                            fontSize: 14,
+                          ),
+                        ),
+                        if (notification.type != 'Genel') ...[
+                          const SizedBox(height: 8),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.white.withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              notification.type,
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.9),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
-                    Text(
-                      time,
-                      style: TextStyle(
-                        color: Colors.white.withValues(alpha: 0.6),
-                        fontSize: 12,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  message,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.9),
-                    fontSize: 14,
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

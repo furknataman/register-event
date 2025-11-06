@@ -5,7 +5,10 @@ import 'package:autumn_conference/core/utils/svg.dart';
 import '../widgets/splash_logo.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/services/api/service.dart';
+import '../../../../core/notifications/local/notification.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
+import '../../../notifications/domain/providers/notification_provider.dart';
 
 class SplashPage extends ConsumerStatefulWidget {
   const SplashPage({super.key});
@@ -31,6 +34,24 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       await Future.delayed(const Duration(seconds: 2));
 
       if (!mounted) return;
+
+      // Refresh badge count if user is authenticated
+      if (isAuthenticated) {
+        try {
+          // Fetch unread count from API
+          final webService = ref.read(webServiceProvider);
+          final response = await webService.getUnreadCount();
+          final count = response.unreadCount;
+
+          // Update app badge
+          await LocalNoticeService().updateAppBadge(count);
+
+          // Invalidate provider to refresh bell icon badge
+          ref.invalidate(unreadCountProvider);
+        } catch (e) {
+          debugPrint('Failed to update badge on splash: $e');
+        }
+      }
 
       final route = isAuthenticated ? AppRoutes.home : AppRoutes.login;
       context.go(route);

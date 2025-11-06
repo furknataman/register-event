@@ -1,51 +1,159 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:autumn_conference/core/notifications/local/notification.dart';
+import 'package:autumn_conference/core/services/api/service.dart';
+import 'package:autumn_conference/features/notifications/domain/providers/notification_provider.dart';
+import 'package:autumn_conference/main.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
-void setFiraBase() async {
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
+  if (kDebugMode) {
+    debugPrint(
+        'Background message received: ${message.messageId} | ${message.data}');
+  }
+}
 
-  await FirebaseMessaging.instance.setAutoInitEnabled(true);
+Future<void> configureFirebaseMessaging() async {
+  final messaging = FirebaseMessaging.instance;
 
-  // Önce permission iste
-  await messaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true);
+  await messaging.setAutoInitEnabled(true);
 
-  // iOS için APNS token'ı al ve hazır olana kadar bekle
+  final permission = await messaging.requestPermission(
+    alert: true,
+    announcement: false,
+    badge: true,
+    carPlay: false,
+    criticalAlert: false,
+    provisional: false,
+    sound: true,
+  );
+
+  if (kDebugMode) {
+    debugPrint(
+        'Notification permission status: ${permission.authorizationStatus}');
+  }
+
   if (defaultTargetPlatform == TargetPlatform.iOS) {
-    String? apnsToken;
-    while (apnsToken == null) {
-      apnsToken = await messaging.getAPNSToken();
-      if (apnsToken == null) {
-        await Future.delayed(const Duration(milliseconds: 500));
+    await messaging.setForegroundNotificationPresentationOptions(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+    await _waitForApnsToken(messaging);
+  }
+
+  final fcmToken = await messaging.getToken();
+  if (kDebugMode) {
+    debugPrint('FCM token: $fcmToken');
+  }
+
+  messaging.onTokenRefresh.listen((token) async {
+    if (kDebugMode) {
+      debugPrint('FCM token refreshed: $token');
+    }
+
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      String deviceType;
+      String deviceInfoStr;
+
+      if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        deviceType = 'ios';
+        deviceInfoStr = '${iosInfo.name} - ${iosInfo.systemVersion} - ${iosInfo.model}';
+      } else if (Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        deviceType = 'android';
+        deviceInfoStr = '${androidInfo.brand} ${androidInfo.model} - Android ${androidInfo.version.release}';
+      } else {
+        deviceType = 'unknown';
+        deviceInfoStr = 'Unknown Device';
+      }
+
+      final webService = globalContainer.read(webServiceProvider);
+      await webService.registerFcmToken(token, deviceType, deviceInfoStr);
+      if (kDebugMode) {
+        debugPrint('FCM token registered to backend');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Failed to register refreshed FCM token: $e');
       }
     }
-  }
-
-  // FCM token al
-  String? fcmToken = await FirebaseMessaging.instance.getToken();
-  if (kDebugMode) {
-    print('FCM Token: $fcmToken');
-  }
+  });
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    LocalNoticeService().showNotification(
-      title: message.notification?.title,
-      body: message.notification?.body,
-    );
     if (kDebugMode) {
-      print('Handling a foreground message: ${message.messageId}');
-      print('Message data: ${message.data}');
-      print('Message notification: ${message.notification?.title}');
-      print('Message notification: ${message.notification?.body}');
+      debugPrint('Foreground message: ${message.messageId} | ${message.data}');
+    }
+    unawaited(
+      LocalNoticeService().showNotification(
+        title: message.notification?.title ?? message.data['title']?.toString(),
+        body: message.notification?.body ?? message.data['body']?.toString(),
+      ),
+    );
+
+    // Refresh badge count when notification arrives
+    try {
+      globalContainer.invalidate(unreadCountProvider);
+
+      // Update iOS app badge if badge count is in the payload
+      final badgeCount = message.data['badge'] ?? message.data['unreadCount'];
+      if (badgeCount != null) {
+        final count = int.tryParse(badgeCount.toString()) ?? 0;
+        unawaited(LocalNoticeService().updateAppBadge(count));
+        if (kDebugMode) {
+          debugPrint('iOS app badge updated to: $count');
+        }
+      }
+
+      if (kDebugMode) {
+        debugPrint('Badge count refreshed after FCM message');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Failed to refresh badge count: $e');
+      }
     }
   });
+
+  FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    if (kDebugMode) {
+      debugPrint('Notification opened: ${message.messageId} | ${message.data}');
+    }
+
+    // Refresh badge count when notification is opened
+    try {
+      globalContainer.invalidate(unreadCountProvider);
+      if (kDebugMode) {
+        debugPrint('Badge count refreshed after notification opened');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Failed to refresh badge count: $e');
+      }
+    }
+  });
+}
+
+Future<void> _waitForApnsToken(FirebaseMessaging messaging) async {
+  String? apnsToken = await messaging.getAPNSToken();
+  if (apnsToken != null) {
+    return;
+  }
+
+  while (apnsToken == null) {
+    await Future<void>.delayed(const Duration(milliseconds: 500));
+    apnsToken = await messaging.getAPNSToken();
+  }
+
+  if (kDebugMode) {
+    debugPrint('APNS token resolved');
+  }
 }

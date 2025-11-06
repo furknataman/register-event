@@ -11,6 +11,7 @@ import 'package:autumn_conference/core/data/local/token_stroge.dart';
 import 'package:autumn_conference/main.dart';
 import 'package:autumn_conference/core/notifications/toast/toast_message.dart';
 import 'package:autumn_conference/features/schedule/data/models/program_model.dart';
+import 'package:autumn_conference/features/notifications/data/models/notification_model.dart';
 
 part 'service.g.dart';
 
@@ -319,6 +320,176 @@ class WebService {
     } catch (e, stackTrace) {
       _logger.e('Error fetching program flow', error: e, stackTrace: stackTrace);
       rethrow;
+    }
+  }
+
+  Future<String?> getLanguage() async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Language/GetLanguage";
+      _logger.i('Fetching language preference from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully retrieved language preference');
+        return response.data.toString();
+      } else {
+        _logger.w('Failed to get language: ${response.statusCode}');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching language', error: e, stackTrace: stackTrace);
+      return null;
+    }
+  }
+
+  Future<bool> updateLanguage(String languageCode) async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Language/UpdateLanguage?language=$languageCode";
+      _logger.i('Updating language preference to: $languageCode');
+
+      final response = await _dio.post(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully updated language preference to: $languageCode');
+        return true;
+      } else {
+        _logger.w('Failed to update language: ${response.statusCode}');
+        return false;
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error updating language', error: e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  Future<NotificationResponseModel> getNotifications(int page) async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Notification/GetNotifications?page=$page";
+      _logger.i('Fetching notifications from: $url (page: $page)');
+
+      final response = await _dio.get(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data type: ${response.data.runtimeType}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully loaded notifications for page: $page');
+        return NotificationResponseModel.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load notifications: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching notifications', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<UnreadCountResponseModel> getUnreadCount() async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Notification/GetUnreadCount";
+      _logger.i('Fetching unread count from: $url');
+
+      final response = await _dio.get(
+        url,
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully loaded unread count');
+        return UnreadCountResponseModel.fromJson(response.data);
+      } else {
+        throw Exception('Failed to load unread count: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error fetching unread count', error: e, stackTrace: stackTrace);
+      rethrow;
+    }
+  }
+
+  Future<bool> markNotificationAsRead(int notificationId) async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Notification/MarkAsRead";
+      _logger.i('Marking notification as read: $notificationId');
+
+      final response = await _dio.post(
+        url,
+        data: {'notificationId': notificationId},
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data: ${response.data}');
+
+      if (response.statusCode == 200 && response.data['success'] == true) {
+        _logger.i('Successfully marked notification as read: $notificationId');
+        return true;
+      } else {
+        _logger.w('Failed to mark notification as read: ${response.statusCode}');
+        return false;
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error marking notification as read', error: e, stackTrace: stackTrace);
+      return false;
+    }
+  }
+
+  Future<bool> registerFcmToken(
+    String fcmToken,
+    String deviceType,
+    String deviceInfo,
+  ) async {
+    try {
+      final myToken = await getToken();
+      final url = "$baseUrl/Notification/RegisterToken";
+      _logger.i('Registering FCM token - Device: $deviceType, Info: $deviceInfo');
+
+      final response = await _dio.post(
+        url,
+        data: {
+          'token': fcmToken,
+          'deviceType': deviceType,
+          'deviceInfo': deviceInfo,
+        },
+        options: myToken != null ? _commonHeaders(myToken) : null,
+      );
+
+      _logger.d('Response status: ${response.statusCode}');
+      _logger.d('Response data: ${response.data}');
+
+      if (response.statusCode == 200) {
+        _logger.i('Successfully registered FCM token');
+        return true;
+      } else {
+        _logger.w('Failed to register FCM token: ${response.statusCode}');
+        return false;
+      }
+    } catch (e, stackTrace) {
+      _logger.e('Error registering FCM token', error: e, stackTrace: stackTrace);
+      return false;
     }
   }
 }

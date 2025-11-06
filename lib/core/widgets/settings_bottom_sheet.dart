@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../animations/spring_animations.dart';
@@ -56,13 +57,10 @@ class _LiquidGlassBottomSheet<T> extends StatefulWidget {
   });
 
   @override
-  State<_LiquidGlassBottomSheet<T>> createState() =>
-      _LiquidGlassBottomSheetState<T>();
+  State<_LiquidGlassBottomSheet<T>> createState() => _LiquidGlassBottomSheetState<T>();
 }
 
-class _LiquidGlassBottomSheetState<T>
-    extends State<_LiquidGlassBottomSheet<T>>
-    with SingleTickerProviderStateMixin {
+class _LiquidGlassBottomSheetState<T> extends State<_LiquidGlassBottomSheet<T>> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
   late Animation<double> _fadeAnimation;
@@ -128,94 +126,94 @@ class _LiquidGlassBottomSheetState<T>
               ),
             ),
             child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(24),
-              topRight: Radius.circular(24),
-            ),
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.25),
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(24),
-                    topRight: Radius.circular(24),
-                  ),
-                  border: Border(
-                    top: BorderSide(
-                      color: Colors.white.withValues(alpha: 0.25),
-                      width: 1.5,
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(24),
+                topRight: Radius.circular(24),
+              ),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withValues(alpha: 0.25),
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(24),
+                      topRight: Radius.circular(24),
+                    ),
+                    border: Border(
+                      top: BorderSide(
+                        color: Colors.white.withValues(alpha: 0.25),
+                        width: 1.5,
+                      ),
                     ),
                   ),
-                ),
-                child: SafeArea(
-                  top: false,
-                  bottom: true,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      // Handle indicator
-                      const SizedBox(height: 14),
-                      Container(
-                        width: 40,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.5),
-                          borderRadius: BorderRadius.circular(2.5),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Title
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24),
-                        child: Text(
-                          widget.title,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 0.5,
+                  child: SafeArea(
+                    top: false,
+                    bottom: true,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Handle indicator
+                        const SizedBox(height: 14),
+                        Container(
+                          width: 40,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.5),
+                            borderRadius: BorderRadius.circular(2.5),
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 20),
+                        const SizedBox(height: 20),
 
-                      // Options
-                      ...widget.options.asMap().entries.map((entry) {
-                        final index = entry.key;
-                        final option = entry.value;
-                        final isSelected = option.value == widget.currentValue;
-                        final delay = Duration(milliseconds: 50 + (index * 40));
-
-                        return SpringListItem(
-                          index: index,
-                          delay: delay,
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 16,
-                              vertical: 8,
-                            ),
-                            child: LiquidGlassOptionTile<T>(
-                              option: option,
-                              isSelected: isSelected,
-                              onTap: () => _close(option.value),
+                        // Title
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 24),
+                          child: Text(
+                            widget.title,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 0.5,
                             ),
                           ),
-                        );
-                      }),
+                        ),
+                        const SizedBox(height: 20),
 
-                      SizedBox(
-                        height: MediaQuery.of(context).padding.bottom + 16,
-                        // SafeArea + 16px, minimal bottom spacing
-                      ),
-                    ],
+                        // Options
+                        ...widget.options.asMap().entries.map((entry) {
+                          final index = entry.key;
+                          final option = entry.value;
+                          final isSelected = option.value == widget.currentValue;
+                          final delay = Duration(milliseconds: 50 + (index * 40));
+
+                          return SpringListItem(
+                            index: index,
+                            delay: delay,
+                            child: Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 8,
+                              ),
+                              child: LiquidGlassOptionTile<T>(
+                                option: option,
+                                isSelected: isSelected,
+                                onTap: () => _close(option.value),
+                              ),
+                            ),
+                          );
+                        }),
+
+                        SizedBox(
+                          height: MediaQuery.of(context).padding.bottom + 16,
+                          // SafeArea + 16px, minimal bottom spacing
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-            ),
         ),
       ),
     );
@@ -223,7 +221,7 @@ class _LiquidGlassBottomSheetState<T>
 }
 
 /// Single option tile with liquid glass effect
-class LiquidGlassOptionTile<T> extends StatefulWidget {
+class LiquidGlassOptionTile<T> extends ConsumerStatefulWidget {
   final LiquidGlassOption<T> option;
   final bool isSelected;
   final VoidCallback onTap;
@@ -236,12 +234,10 @@ class LiquidGlassOptionTile<T> extends StatefulWidget {
   });
 
   @override
-  State<LiquidGlassOptionTile<T>> createState() =>
-      _LiquidGlassOptionTileState<T>();
+  ConsumerState<LiquidGlassOptionTile<T>> createState() => _LiquidGlassOptionTileState<T>();
 }
 
-class _LiquidGlassOptionTileState<T> extends State<LiquidGlassOptionTile<T>>
-    with SpringButtonMixin {
+class _LiquidGlassOptionTileState<T> extends ConsumerState<LiquidGlassOptionTile<T>> with SpringButtonMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -291,9 +287,7 @@ class _LiquidGlassOptionTileState<T> extends State<LiquidGlassOptionTile<T>>
                   ),
                 ),
           child: Container(
-            margin: widget.isSelected
-                ? const EdgeInsets.all(2.5)
-                : EdgeInsets.zero,
+            margin: widget.isSelected ? const EdgeInsets.all(2.5) : EdgeInsets.zero,
             decoration: widget.isSelected
                 ? BoxDecoration(
                     borderRadius: BorderRadius.circular(13.5),
@@ -320,9 +314,7 @@ class _LiquidGlassOptionTileState<T> extends State<LiquidGlassOptionTile<T>>
                                 width: 26,
                                 height: 26,
                                 colorFilter: ColorFilter.mode(
-                                  widget.isSelected
-                                      ? Colors.white
-                                      : Colors.white.withValues(alpha: 0.6),
+                                  widget.isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
                                   BlendMode.srcIn,
                                 ),
                               )
@@ -330,9 +322,7 @@ class _LiquidGlassOptionTileState<T> extends State<LiquidGlassOptionTile<T>>
                                 ? Icon(
                                     widget.option.iconData,
                                     size: 26,
-                                    color: widget.isSelected
-                                        ? Colors.white
-                                        : Colors.white.withValues(alpha: 0.6),
+                                    color: widget.isSelected ? Colors.white : Colors.white.withValues(alpha: 0.6),
                                   )
                                 : const SizedBox.shrink(),
                   ),
@@ -345,9 +335,7 @@ class _LiquidGlassOptionTileState<T> extends State<LiquidGlassOptionTile<T>>
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 17,
-                        fontWeight: widget.isSelected
-                            ? FontWeight.w600
-                            : FontWeight.w500,
+                        fontWeight: widget.isSelected ? FontWeight.w600 : FontWeight.w500,
                         letterSpacing: 0.3,
                         shadows: widget.isSelected
                             ? [
@@ -437,12 +425,10 @@ class _LiquidGlassLogoutDialog extends StatefulWidget {
   });
 
   @override
-  State<_LiquidGlassLogoutDialog> createState() =>
-      _LiquidGlassLogoutDialogState();
+  State<_LiquidGlassLogoutDialog> createState() => _LiquidGlassLogoutDialogState();
 }
 
-class _LiquidGlassLogoutDialogState extends State<_LiquidGlassLogoutDialog>
-    with SingleTickerProviderStateMixin {
+class _LiquidGlassLogoutDialogState extends State<_LiquidGlassLogoutDialog> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
   late Animation<double> _fadeAnimation;
@@ -622,7 +608,7 @@ class _LiquidGlassLogoutDialogState extends State<_LiquidGlassLogoutDialog>
   }
 }
 
-class _DialogButton extends StatefulWidget {
+class _DialogButton extends ConsumerStatefulWidget {
   final String text;
   final VoidCallback onPressed;
   final bool isPrimary;
@@ -636,10 +622,10 @@ class _DialogButton extends StatefulWidget {
   });
 
   @override
-  State<_DialogButton> createState() => _DialogButtonState();
+  ConsumerState<_DialogButton> createState() => _DialogButtonState();
 }
 
-class _DialogButtonState extends State<_DialogButton> with SpringButtonMixin {
+class _DialogButtonState extends ConsumerState<_DialogButton> with SpringButtonMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -663,9 +649,7 @@ class _DialogButtonState extends State<_DialogButton> with SpringButtonMixin {
                 : Colors.white.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: widget.isPrimary
-                  ? Colors.transparent
-                  : Colors.white.withValues(alpha: 0.3),
+              color: widget.isPrimary ? Colors.transparent : Colors.white.withValues(alpha: 0.3),
               width: 1,
             ),
           ),

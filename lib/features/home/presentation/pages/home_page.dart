@@ -17,69 +17,111 @@ import '../../../../core/widgets/adaptive_glass.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
+import '../../../notifications/domain/providers/notification_provider.dart';
 
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({super.key});
+class HomeScrollState {
+  const HomeScrollState({
+    this.isHeaderVisible = true,
+    this.lastScrollOffset = 0.0,
+    this.scrollStartOffset = 0.0,
+    this.wasScrollingDown = false,
+  });
 
-  @override
-  ConsumerState<HomePage> createState() => _HomePageState();
+  final bool isHeaderVisible;
+  final double lastScrollOffset;
+  final double scrollStartOffset;
+  final bool wasScrollingDown;
+
+  HomeScrollState copyWith({
+    bool? isHeaderVisible,
+    double? lastScrollOffset,
+    double? scrollStartOffset,
+    bool? wasScrollingDown,
+  }) {
+    return HomeScrollState(
+      isHeaderVisible: isHeaderVisible ?? this.isHeaderVisible,
+      lastScrollOffset: lastScrollOffset ?? this.lastScrollOffset,
+      scrollStartOffset: scrollStartOffset ?? this.scrollStartOffset,
+      wasScrollingDown: wasScrollingDown ?? this.wasScrollingDown,
+    );
+  }
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
-  bool _isHeaderVisible = true;
-  double _lastScrollOffset = 0.0;
-  double _scrollStartOffset = 0.0; // Scroll direction değiştiğinde başlangıç pozisyonu
-  bool _wasScrollingDown = false;
-  static const double _scrollThreshold = 10.0;
-  static const double _showThreshold = 50.0; // Header'ı göstermek için gereken yukarı scroll mesafesi
-  static const double _headerHeight = 76.0;
-  static const double _chipsHeight = 66.0; // 52 (height) + 12 (top) + 2 (bottom)
+class HomeScrollNotifier extends Notifier<HomeScrollState> {
+  @override
+  HomeScrollState build() => const HomeScrollState();
 
-  bool _handleScrollNotification(ScrollNotification notification) {
-    // SADECE DİKEY SCROLL'U DİNLE - PageView'daki yatay scroll'u ignore et
+  static const double _scrollThreshold = 10.0;
+  static const double _showThreshold = 50.0;
+
+  bool handleScrollNotification(ScrollNotification notification) {
     if (notification.metrics.axis != Axis.vertical) {
       return false;
     }
 
     if (notification is ScrollUpdateNotification) {
       final currentOffset = notification.metrics.pixels;
-      final delta = currentOffset - _lastScrollOffset;
+      final delta = currentOffset - state.lastScrollOffset;
 
-      // Minimum threshold check to avoid jittery behavior
       if (delta.abs() > _scrollThreshold) {
         final isScrollingDown = delta > 0;
+        var scrollStartOffset = state.scrollStartOffset;
+        var wasScrollingDown = state.wasScrollingDown;
+        var isHeaderVisible = state.isHeaderVisible;
 
-        // Scroll direction değişti mi kontrol et
-        if (isScrollingDown != _wasScrollingDown) {
-          _scrollStartOffset = currentOffset;
-          _wasScrollingDown = isScrollingDown;
+        if (isScrollingDown != wasScrollingDown) {
+          scrollStartOffset = currentOffset;
+          wasScrollingDown = isScrollingDown;
         }
 
-        // Scrolling down - hide header
-        if (isScrollingDown && _isHeaderVisible && currentOffset > 50) {
-          setState(() => _isHeaderVisible = false);
-        }
-        // Scrolling up - show header after 50px up
-        else if (!isScrollingDown && !_isHeaderVisible) {
-          final scrolledUpDistance = _scrollStartOffset - currentOffset;
+        if (isScrollingDown && isHeaderVisible && currentOffset > 50) {
+          isHeaderVisible = false;
+        } else if (!isScrollingDown && !isHeaderVisible) {
+          final scrolledUpDistance = scrollStartOffset - currentOffset;
           if (scrolledUpDistance >= _showThreshold) {
-            setState(() => _isHeaderVisible = true);
+            isHeaderVisible = true;
           }
         }
 
-        _lastScrollOffset = currentOffset;
+        state = state.copyWith(
+          isHeaderVisible: isHeaderVisible,
+          lastScrollOffset: currentOffset,
+          scrollStartOffset: scrollStartOffset,
+          wasScrollingDown: wasScrollingDown,
+        );
       }
     }
+
     return false;
   }
 
+  void showHeader() {
+    if (!state.isHeaderVisible) {
+      state = state.copyWith(isHeaderVisible: true);
+    }
+  }
+}
+
+final homeScrollProvider =
+    NotifierProvider.autoDispose<HomeScrollNotifier, HomeScrollState>(
+  HomeScrollNotifier.new,
+);
+
+class HomePage extends ConsumerWidget {
+  const HomePage({super.key});
+
+  static const double _headerHeight = 76.0;
+  static const double _chipsHeight = 66.0;
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
     final userDataAsync = ref.watch(userProfileProvider);
     final selectedCategory = ref.watch(selectedCategoryProvider);
     final localeAsync = ref.watch(localeProvider);
     final languageCode = localeAsync.value?.languageCode ?? 'tr';
+    final scrollState = ref.watch(homeScrollProvider);
+    final scrollNotifier = ref.read(homeScrollProvider.notifier);
 
     return Scaffold(
       body: Container(
@@ -88,7 +130,7 @@ class _HomePageState extends ConsumerState<HomePage> {
         ),
         child: SafeArea(
           child: NotificationListener<ScrollNotification>(
-            onNotification: _handleScrollNotification,
+            onNotification: scrollNotifier.handleScrollNotification,
             child: Stack(
               children: [
                 // Full-screen scroll view with padding
@@ -97,11 +139,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOutCubic,
                     padding: EdgeInsets.only(
-                      top: _isHeaderVisible ? (_headerHeight + _chipsHeight) : 0,
+                      top: scrollState.isHeaderVisible
+                          ? (_headerHeight + _chipsHeight)
+                          : 0,
                     ),
                     child: sessionDataAsync.when(
                       data: (sessionData) {
-                        final pageController = ref.watch(categoryPageControllerProvider);
+                        final pageController =
+                            ref.watch(categoryPageControllerProvider);
 
                         // Tüm kategorilerin sunumlarını liste olarak hazırla
                         final allCategories = [
@@ -118,25 +163,32 @@ class _HomePageState extends ConsumerState<HomePage> {
                           itemCount: allCategories.length,
                           onPageChanged: (index) {
                             // PageView geçişinde header'ı göster
-                            if (!_isHeaderVisible) {
-                              setState(() => _isHeaderVisible = true);
-                            }
+                            scrollNotifier.showHeader();
 
-                            ref.read(selectedCategoryProvider.notifier).set(index);
+                            ref
+                                .read(selectedCategoryProvider.notifier)
+                                .set(index);
 
                             // Bottom bar'ı üste döndür
-                            ref.read(resetBottomBarProvider.notifier).increment();
+                            ref
+                                .read(resetBottomBarProvider.notifier)
+                                .increment();
 
                             // Aktif chip'i görünür yap
-                            final scrollController = ref.read(chipScrollControllerProvider);
+                            final scrollController =
+                                ref.read(chipScrollControllerProvider);
                             if (scrollController.hasClients) {
                               // Her chip için ortalama genişlik (padding + text + margin)
                               final chipWidth = 120.0;
-                              final screenWidth = MediaQuery.of(context).size.width;
-                              final targetScroll = (index * chipWidth) - (screenWidth / 2) + (chipWidth / 2);
+                              final screenWidth =
+                                  MediaQuery.of(context).size.width;
+                              final targetScroll = (index * chipWidth) -
+                                  (screenWidth / 2) +
+                                  (chipWidth / 2);
 
                               scrollController.animateTo(
-                                targetScroll.clamp(0.0, scrollController.position.maxScrollExtent),
+                                targetScroll.clamp(0.0,
+                                    scrollController.position.maxScrollExtent),
                                 duration: SpringAnimations.standard,
                                 curve: SpringAnimations.standardSpring,
                               );
@@ -150,34 +202,43 @@ class _HomePageState extends ConsumerState<HomePage> {
                               backgroundColor: const Color(0xFF1a1a2e),
                               onRefresh: () async {
                                 ref.invalidate(sessionPresentationDataProvider);
+                                ref.invalidate(unreadCountProvider);
                               },
                               child: presentations.isEmpty
                                   ? ListView(
                                       children: [
                                         Center(
                                           child: Padding(
-                                            padding: const EdgeInsets.only(top: 100),
+                                            padding:
+                                                const EdgeInsets.only(top: 100),
                                             child: AdaptiveGlass(
-                                              borderRadius: const Radius.circular(20),
+                                              borderRadius:
+                                                  const Radius.circular(20),
                                               settings: LiquidGlassSettings(
                                                 blur: 6,
                                                 ambientStrength: 0.6,
                                                 lightAngle: 0.2 * math.pi,
-                                                glassColor: Colors.white.withValues(alpha: 0.1),
+                                                glassColor: Colors.white
+                                                    .withValues(alpha: 0.1),
                                               ),
                                               fallbackBlur: 6,
                                               child: Container(
-                                                padding: const EdgeInsets.all(24),
+                                                padding:
+                                                    const EdgeInsets.all(24),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white.withValues(alpha: 0.2),
-                                                  borderRadius: BorderRadius.circular(20),
+                                                  color: Colors.white
+                                                      .withValues(alpha: 0.2),
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
                                                   border: Border.all(
-                                                    color: Colors.white.withValues(alpha: 0.4),
+                                                    color: Colors.white
+                                                        .withValues(alpha: 0.4),
                                                     width: 1,
                                                   ),
                                                 ),
                                                 child: Text(
-                                                  AppLocalizations.of(context)!.noEventsYet,
+                                                  AppLocalizations.of(context)!
+                                                      .noEventsYet,
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 18,
@@ -194,26 +255,33 @@ class _HomePageState extends ConsumerState<HomePage> {
                                       padding: const EdgeInsets.all(16),
                                       itemCount: presentations.length,
                                       itemBuilder: (context, index) {
-                                        final presentation = presentations[index];
+                                        final presentation =
+                                            presentations[index];
                                         final isRegistered =
-                                            sessionData.kayitliSunum.any((r) => r.sunumId == presentation.id);
+                                            sessionData.kayitliSunum.any((r) =>
+                                                r.sunumId == presentation.id);
 
                                         // Oturum numarasını bul
                                         int? sessionNumber;
-                                        if (sessionData.oturum1.contains(presentation)) {
+                                        if (sessionData.oturum1
+                                            .contains(presentation)) {
                                           sessionNumber = 1;
-                                        } else if (sessionData.oturum2.contains(presentation)) {
+                                        } else if (sessionData.oturum2
+                                            .contains(presentation)) {
                                           sessionNumber = 2;
-                                        } else if (sessionData.oturum3.contains(presentation)) {
+                                        } else if (sessionData.oturum3
+                                            .contains(presentation)) {
                                           sessionNumber = 3;
-                                        } else if (sessionData.oturum4.contains(presentation)) {
+                                        } else if (sessionData.oturum4
+                                            .contains(presentation)) {
                                           sessionNumber = 4;
                                         }
 
                                         // Spring list item animation
                                         return SpringListItem(
                                           index: index,
-                                          delay: Duration(milliseconds: index * 60),
+                                          delay: Duration(
+                                              milliseconds: index * 60),
                                           child: RepaintBoundary(
                                             child: _buildEventCard(
                                               context,
@@ -281,9 +349,12 @@ class _HomePageState extends ConsumerState<HomePage> {
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Icon(Icons.error_outline, size: 64, color: Colors.white),
+                                const Icon(Icons.error_outline,
+                                    size: 64, color: Colors.white),
                                 const SizedBox(height: 16),
-                                Text(AppLocalizations.of(context)!.anErrorOccurred,
+                                Text(
+                                    AppLocalizations.of(context)!
+                                        .anErrorOccurred,
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -291,7 +362,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                     )),
                                 const SizedBox(height: 8),
                                 Text(
-                                  AppLocalizations.of(context)!.eventsLoadFailed,
+                                  AppLocalizations.of(context)!
+                                      .eventsLoadFailed,
                                   style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 14,
@@ -300,9 +372,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ),
                                 const SizedBox(height: 24),
                                 ElevatedButton(
-                                  onPressed: () => ref.invalidate(sessionPresentationDataProvider),
+                                  onPressed: () => ref.invalidate(
+                                      sessionPresentationDataProvider),
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white.withValues(alpha: 0.15),
+                                    backgroundColor:
+                                        Colors.white.withValues(alpha: 0.15),
                                     foregroundColor: Colors.white,
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 32,
@@ -312,7 +386,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  child: Text(AppLocalizations.of(context)!.retry),
+                                  child:
+                                      Text(AppLocalizations.of(context)!.retry),
                                 ),
                               ],
                             ),
@@ -330,11 +405,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: AnimatedSlide(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOutCubic,
-                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -1.0),
+                    offset: scrollState.isHeaderVisible
+                        ? Offset.zero
+                        : const Offset(0, -1.0),
                     child: AnimatedOpacity(
                       duration: const Duration(milliseconds: 300),
-                      opacity: _isHeaderVisible ? 1.0 : 0.0,
-                      child: _buildHeaderBar(context, userDataAsync),
+                      opacity: scrollState.isHeaderVisible ? 1.0 : 0.0,
+                      child: _buildHeaderBar(context, ref, userDataAsync),
                     ),
                   ),
                 ),
@@ -346,11 +423,14 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: AnimatedSlide(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOutCubic,
-                    offset: _isHeaderVisible ? Offset.zero : const Offset(0, -1.3),
+                    offset: scrollState.isHeaderVisible
+                        ? Offset.zero
+                        : const Offset(0, -1.3),
                     child: AnimatedOpacity(
                       duration: const Duration(milliseconds: 300),
-                      opacity: _isHeaderVisible ? 1.0 : 0.0,
-                      child: _buildCategoryChips(context, ref, selectedCategory),
+                      opacity: scrollState.isHeaderVisible ? 1.0 : 0.0,
+                      child:
+                          _buildCategoryChips(context, ref, selectedCategory),
                     ),
                   ),
                 ),
@@ -362,7 +442,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildCategoryChips(BuildContext context, WidgetRef ref, int selectedCategory) {
+  Widget _buildCategoryChips(
+      BuildContext context, WidgetRef ref, int selectedCategory) {
     final categories = [
       AppLocalizations.of(context)!.categoryAll,
       AppLocalizations.of(context)!.myRegistrations,
@@ -400,7 +481,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: AnimatedContainer(
                 duration: SpringAnimations.fast,
                 curve: SpringAnimations.gentleSpring,
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
                 decoration: BoxDecoration(
                   gradient: isSelected
                       ? const LinearGradient(
@@ -412,16 +494,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         )
                       : null,
-                  color: isSelected ? null : Colors.white.withValues(alpha: 0.2),
+                  color:
+                      isSelected ? null : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(25),
                   border: Border.all(
-                    color: isSelected ? Colors.white.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.25),
+                    color: isSelected
+                        ? Colors.white.withValues(alpha: 0.3)
+                        : Colors.white.withValues(alpha: 0.25),
                     width: isSelected ? 1.5 : 1,
                   ),
                   boxShadow: isSelected
                       ? [
                           BoxShadow(
-                            color: const Color(0xFF667eea).withValues(alpha: 0.4),
+                            color:
+                                const Color(0xFF667eea).withValues(alpha: 0.4),
                             blurRadius: 12,
                             offset: const Offset(0, 4),
                           ),
@@ -435,7 +521,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
-                      fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                      fontWeight:
+                          isSelected ? FontWeight.w700 : FontWeight.w500,
                       letterSpacing: 0.2,
                       shadows: isSelected
                           ? [
@@ -458,7 +545,8 @@ class _HomePageState extends ConsumerState<HomePage> {
     );
   }
 
-  Widget _buildHeaderBar(BuildContext context, AsyncValue<dynamic> userDataAsync) {
+  Widget _buildHeaderBar(
+      BuildContext context, WidgetRef ref, AsyncValue<dynamic> userDataAsync) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: ClipRRect(
@@ -477,7 +565,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             ),
             child: Row(
               children: [
-                // Notification Icon
+                // Notification Icon with Badge
                 InkWell(
                   onTap: () {
                     showNotificationModal(context);
@@ -485,15 +573,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   borderRadius: BorderRadius.circular(12),
                   child: Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: SvgPicture.asset(
-                      'assets/svg/bell.svg',
-                      width: 24,
-                      height: 24,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
+                    child: _buildBellIconWithBadge(ref),
                   ),
                 ),
                 const Spacer(),
@@ -642,7 +722,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
                                 color: isRegistered
-                                    ? const Color(0xFF6366F1).withValues(alpha: 0.7)
+                                    ? const Color(0xFF6366F1)
+                                        .withValues(alpha: 0.7)
                                     : Colors.grey.withValues(alpha: 0.6),
                                 shape: BoxShape.circle,
                                 border: Border.all(
@@ -651,7 +732,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ),
                               ),
                               child: Icon(
-                                isRegistered ? Icons.bookmark : Icons.bookmark_border,
+                                isRegistered
+                                    ? Icons.bookmark
+                                    : Icons.bookmark_border,
                                 size: 26,
                                 color: Colors.white,
                               ),
@@ -774,7 +857,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
+                          presentation.title ??
+                              AppLocalizations.of(context)!.noTitleInfo,
                           style: AppTextStyles.cardTitle(context),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
@@ -803,7 +887,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                         _buildInfoRow(
                           context,
                           Icons.business,
-                          presentation.school ?? AppLocalizations.of(context)!.noInstitutionInfo,
+                          presentation.school ??
+                              AppLocalizations.of(context)!.noInstitutionInfo,
                         ),
                         const SizedBox(height: 8),
                         _buildInfoRow(
@@ -834,7 +919,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget _buildInfoRow(BuildContext context, IconData icon, String text) {
     return Row(
       children: [
-        Icon(icon, size: 18, color: AppTextStyles.getSecondaryTextColor(context)),
+        Icon(icon,
+            size: 18, color: AppTextStyles.getSecondaryTextColor(context)),
         const SizedBox(width: 8),
         Expanded(
           child: Text(
@@ -843,6 +929,52 @@ class _HomePageState extends ConsumerState<HomePage> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildBellIconWithBadge(WidgetRef ref) {
+    final unreadCountAsync = ref.watch(unreadCountProvider);
+
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        SvgPicture.asset(
+          'assets/svg/bell.svg',
+          width: 24,
+          height: 24,
+          colorFilter: const ColorFilter.mode(
+            Colors.white,
+            BlendMode.srcIn,
+          ),
+        ),
+        unreadCountAsync.when(
+          data: (count) {
+            if (count == 0) return const SizedBox.shrink();
+
+            return Positioned(
+              right: -6,
+              top: -6,
+              child: Container(
+                padding: const EdgeInsets.all(4),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFF4444),
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Colors.white,
+                    width: 1.5,
+                  ),
+                ),
+                constraints: const BoxConstraints(
+                  minWidth: 10,
+                  minHeight: 10,
+                ),
+              ),
+            );
+          },
+          loading: () => const SizedBox.shrink(),
+          error: (_, __) => const SizedBox.shrink(),
         ),
       ],
     );

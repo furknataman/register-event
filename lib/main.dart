@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -19,9 +20,11 @@ import 'l10n/l10n.dart';
 import 'l10n/locale_notifier.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+late final ProviderContainer globalContainer;
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
   // Set up preferred orientations
   await SystemChrome.setPreferredOrientations([
@@ -39,19 +42,27 @@ void main() async {
 
   // Initialize Firebase
   await Firebase.initializeApp();
-  setFiraBase();
+  await LocalNoticeService().setup();
+  await configureFirebaseMessaging();
 
   // Setup notifications
   FlutterLocalNotificationsPlugin()
-      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>()
       ?.requestNotificationsPermission();
-  await LocalNoticeService().setup();
 
   // Initialize logger
   final logger = getIt<AppLogger>();
-  logger.logAppEvent('App Started', {'timestamp': DateTime.now().toIso8601String()});
+  logger.logAppEvent(
+      'App Started', {'timestamp': DateTime.now().toIso8601String()});
 
-  runApp(const ProviderScope(child: MyApp()));
+  // Create global provider container for FCM handlers
+  globalContainer = ProviderContainer();
+
+  runApp(UncontrolledProviderScope(
+    container: globalContainer,
+    child: const MyApp(),
+  ));
 }
 
 class MyApp extends ConsumerWidget {

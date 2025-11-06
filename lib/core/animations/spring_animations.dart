@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// iOS 26 inspired spring animation utilities
 /// Provides physics-based, natural feeling animations with optimal performance
@@ -182,9 +183,8 @@ class StaggeredAnimation {
   /// Get animation delay for item at index
   Duration getDelay(int index) {
     final maxDelay = itemCount * staggerDelay.inMilliseconds;
-    final adjustedDelay = (index * staggerDelay.inMilliseconds)
-        .clamp(0, maxDelay)
-        .toInt();
+    final adjustedDelay =
+        (index * staggerDelay.inMilliseconds).clamp(0, maxDelay).toInt();
     return Duration(milliseconds: adjustedDelay);
   }
 
@@ -202,28 +202,53 @@ class StaggeredAnimation {
 
 /// Button press animation mixin
 /// Provides scale feedback on tap
-mixin SpringButtonMixin<T extends StatefulWidget> on State<T> {
-  bool _isPressed = false;
+class SpringButtonPressedNotifier extends Notifier<bool> {
+  SpringButtonPressedNotifier(this.buttonKey);
 
-  bool get isPressed => _isPressed;
+  final int buttonKey;
+
+  @override
+  bool build() => false;
+
+  void setPressed(bool value) {
+    if (state != value) {
+      state = value;
+    }
+  }
+}
+
+final _springButtonPressedProvider =
+    NotifierProvider.family.autoDispose<SpringButtonPressedNotifier, bool, int>(
+  SpringButtonPressedNotifier.new,
+);
+
+mixin SpringButtonMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
+  late final int _buttonKey = hashCode;
 
   void onTapDown(TapDownDetails details) {
-    setState(() => _isPressed = true);
+    ref
+        .read(_springButtonPressedProvider(_buttonKey).notifier)
+        .setPressed(true);
   }
 
   void onTapUp(TapUpDetails details) {
-    setState(() => _isPressed = false);
+    ref
+        .read(_springButtonPressedProvider(_buttonKey).notifier)
+        .setPressed(false);
   }
 
   void onTapCancel() {
-    setState(() => _isPressed = false);
+    ref
+        .read(_springButtonPressedProvider(_buttonKey).notifier)
+        .setPressed(false);
   }
 
   double get pressedScale => 0.95;
 
   Widget buildPressAnimation({required Widget child}) {
+    final isPressed = ref.watch(_springButtonPressedProvider(_buttonKey));
     return AnimatedScale(
-      scale: _isPressed ? pressedScale : 1.0,
+      scale: isPressed ? pressedScale : 1.0,
       duration: SpringAnimations.fast,
       curve: SpringAnimations.gentleSpring,
       child: child,
@@ -282,14 +307,16 @@ class _SpringListItemState extends State<SpringListItem>
     );
 
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: SpringAnimations.gentleSpring),
+      CurvedAnimation(
+          parent: _controller, curve: SpringAnimations.gentleSpring),
     );
 
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, 0.03),
       end: Offset.zero,
     ).animate(
-      CurvedAnimation(parent: _controller, curve: SpringAnimations.standardSpring),
+      CurvedAnimation(
+          parent: _controller, curve: SpringAnimations.standardSpring),
     );
 
     Future.delayed(widget.delay, () {

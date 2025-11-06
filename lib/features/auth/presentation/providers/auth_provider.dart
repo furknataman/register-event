@@ -1,16 +1,22 @@
+import 'dart:io';
+
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 
 import '../../../../core/utils/logger.dart';
 import '../../../../core/network/api_client.dart';
+import '../../../../core/services/api/service.dart';
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../../data/repositories/auth_repository_impl.dart';
 import '../../data/datasources/auth_remote_datasource.dart';
 import '../../data/datasources/auth_local_datasource.dart';
+import '../../../../l10n/locale_notifier.dart';
 
 part 'auth_provider.g.dart';
 
@@ -40,17 +46,53 @@ class AuthNotifier extends _$AuthNotifier {
 
   Future<bool> login(String email, String password) async {
     state = const AsyncValue.loading();
-    
+
     final authRepo = ref.read(authRepositoryProvider);
     final result = await authRepo.login(email, password);
-    
+
     return result.fold(
       (failure) {
         state = AsyncValue.error(failure, StackTrace.current);
         return false;
       },
-      (user) {
+      (user) async {
         state = AsyncValue.data(user);
+
+        try {
+          await ref.read(localeProvider.notifier).syncLanguageFromServer();
+        } catch (e) {
+          final logger = ref.read(loggerProvider);
+          logger.error('Failed to sync language after login: $e');
+        }
+
+        try {
+          final fcmToken = await FirebaseMessaging.instance.getToken();
+          if (fcmToken != null) {
+            final deviceInfo = DeviceInfoPlugin();
+            String deviceType;
+            String deviceInfoStr;
+
+            if (Platform.isIOS) {
+              final iosInfo = await deviceInfo.iosInfo;
+              deviceType = 'ios';
+              deviceInfoStr = '${iosInfo.name} - ${iosInfo.systemVersion} - ${iosInfo.model}';
+            } else if (Platform.isAndroid) {
+              final androidInfo = await deviceInfo.androidInfo;
+              deviceType = 'android';
+              deviceInfoStr = '${androidInfo.brand} ${androidInfo.model} - Android ${androidInfo.version.release}';
+            } else {
+              deviceType = 'unknown';
+              deviceInfoStr = 'Unknown Device';
+            }
+
+            final webService = ref.read(webServiceProvider);
+            await webService.registerFcmToken(fcmToken, deviceType, deviceInfoStr);
+          }
+        } catch (e) {
+          final logger = ref.read(loggerProvider);
+          logger.error('Failed to register FCM token after login: $e');
+        }
+
         return true;
       },
     );
