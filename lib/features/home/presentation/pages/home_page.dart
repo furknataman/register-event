@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/animations/spring_animations.dart';
@@ -12,6 +13,7 @@ import '../../../../core/services/api/service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../../../../core/utils/localization_helper.dart';
+import '../../../../core/widgets/adaptive_glass.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
 import '../../../notifications/presentation/pages/notification_page.dart';
@@ -155,17 +157,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                                         Center(
                                           child: Padding(
                                             padding: const EdgeInsets.only(top: 100),
-                                            child: LiquidGlass(
+                                            child: AdaptiveGlass(
+                                              borderRadius: const Radius.circular(20),
                                               settings: LiquidGlassSettings(
                                                 blur: 6,
                                                 ambientStrength: 0.6,
                                                 lightAngle: 0.2 * math.pi,
                                                 glassColor: Colors.white.withValues(alpha: 0.1),
                                               ),
-                                              shape: LiquidRoundedSuperellipse(
-                                                borderRadius: const Radius.circular(20),
-                                              ),
-                                              glassContainsChild: false,
+                                              fallbackBlur: 6,
                                               child: Container(
                                                 padding: const EdgeInsets.all(24),
                                                 decoration: BoxDecoration(
@@ -233,17 +233,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                         );
                       },
                       loading: () => Center(
-                        child: LiquidGlass(
+                        child: AdaptiveGlass(
+                          borderRadius: const Radius.circular(20),
                           settings: LiquidGlassSettings(
                             blur: 6,
                             ambientStrength: 0.6,
                             lightAngle: 0.2 * math.pi,
                             glassColor: Colors.white.withValues(alpha: 0.1),
                           ),
-                          shape: LiquidRoundedSuperellipse(
-                            borderRadius: const Radius.circular(20),
-                          ),
-                          glassContainsChild: false,
+                          fallbackBlur: 6,
                           child: Container(
                             padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
@@ -261,17 +259,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                         ),
                       ),
                       error: (error, stack) => Center(
-                        child: LiquidGlass(
+                        child: AdaptiveGlass(
+                          borderRadius: const Radius.circular(20),
                           settings: LiquidGlassSettings(
                             blur: 6,
                             ambientStrength: 0.6,
                             lightAngle: 0.2 * math.pi,
                             glassColor: Colors.white.withValues(alpha: 0.1),
                           ),
-                          shape: LiquidRoundedSuperellipse(
-                            borderRadius: const Radius.circular(20),
-                          ),
-                          glassContainsChild: false,
+                          fallbackBlur: 6,
                           child: Container(
                             padding: const EdgeInsets.all(24),
                             decoration: BoxDecoration(
@@ -550,7 +546,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      child: LiquidGlass(
+      child: AdaptiveGlass(
+        borderRadius: const Radius.circular(24),
         settings: LiquidGlassSettings(
           blur: 0,
           ambientStrength: 0.7,
@@ -558,10 +555,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           glassColor: Colors.transparent,
           chromaticAberration: 0.0,
         ),
-        shape: LiquidRoundedSuperellipse(
-          borderRadius: const Radius.circular(24),
-        ),
-        glassContainsChild: false,
+        fallbackBlur: 0,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -634,27 +628,32 @@ class _HomePageState extends ConsumerState<HomePage> {
                               ),
                             ],
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                              child: Container(
-                                padding: const EdgeInsets.all(14),
-                                decoration: BoxDecoration(
-                                  color: isRegistered
-                                      ? const Color(0xFF6366F1).withValues(alpha: 0.7)
-                                      : Colors.grey.withValues(alpha: 0.6),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                    width: 2.5,
-                                  ),
+                          child: AdaptiveGlass(
+                            borderRadius: const Radius.circular(50),
+                            settings: LiquidGlassSettings(
+                              blur: 6,
+                              ambientStrength: 0.6,
+                              lightAngle: 0.2 * math.pi,
+                              glassColor: Colors.transparent,
+                              chromaticAberration: 0.0,
+                            ),
+                            fallbackBlur: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(14),
+                              decoration: BoxDecoration(
+                                color: isRegistered
+                                    ? const Color(0xFF6366F1).withValues(alpha: 0.7)
+                                    : Colors.grey.withValues(alpha: 0.6),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.8),
+                                  width: 2.5,
                                 ),
-                                child: Icon(
-                                  isRegistered ? Icons.bookmark : Icons.bookmark_border,
-                                  size: 26,
-                                  color: Colors.white,
-                                ),
+                              ),
+                              child: Icon(
+                                isRegistered ? Icons.bookmark : Icons.bookmark_border,
+                                size: 26,
+                                color: Colors.white,
                               ),
                             ),
                           ),
@@ -664,42 +663,47 @@ class _HomePageState extends ConsumerState<HomePage> {
                       Positioned(
                         bottom: 12,
                         right: 12,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 10,
+                        child: AdaptiveGlass(
+                          borderRadius: const Radius.circular(14),
+                          settings: LiquidGlassSettings(
+                            blur: 10,
+                            ambientStrength: 0.7,
+                            lightAngle: 0.3 * math.pi,
+                            glassColor: Colors.transparent,
+                            chromaticAberration: 0.0,
+                          ),
+                          fallbackBlur: 0,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 14,
+                              vertical: 10,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              borderRadius: BorderRadius.circular(14),
+                              border: Border.all(
+                                color: Colors.white.withValues(alpha: 0.3),
+                                width: 1,
                               ),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.4),
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
-                                  width: 1,
+                            ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Icon(
+                                  Icons.timer,
+                                  size: 18,
+                                  color: Colors.white,
                                 ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.timer,
-                                    size: 18,
+                                const SizedBox(width: 7),
+                                Text(
+                                  '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
+                                  style: const TextStyle(
                                     color: Colors.white,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
                                   ),
-                                  const SizedBox(width: 7),
-                                  Text(
-                                    '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -709,49 +713,54 @@ class _HomePageState extends ConsumerState<HomePage> {
                         Positioned(
                           bottom: 12,
                           left: 12,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 10,
+                          child: AdaptiveGlass(
+                            borderRadius: const Radius.circular(14),
+                            settings: LiquidGlassSettings(
+                              blur: 10,
+                              ambientStrength: 0.7,
+                              lightAngle: 0.3 * math.pi,
+                              glassColor: Colors.transparent,
+                              chromaticAberration: 0.0,
+                            ),
+                            fallbackBlur: 0,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 14,
+                                vertical: 10,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.black.withValues(alpha: 0.5),
+                                borderRadius: BorderRadius.circular(14),
+                                border: Border.all(
+                                  color: Colors.white.withValues(alpha: 0.4),
+                                  width: 1.5,
                                 ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.4),
-                                    width: 1.5,
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(
+                                    Icons.event_note,
+                                    size: 18,
+                                    color: Colors.white,
                                   ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.event_note,
-                                      size: 18,
+                                  const SizedBox(width: 7),
+                                  Text(
+                                    '${AppLocalizations.of(context)!.session} $sessionNumber',
+                                    style: const TextStyle(
                                       color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black54,
+                                          offset: Offset(0, 1),
+                                          blurRadius: 2,
+                                        ),
+                                      ],
                                     ),
-                                    const SizedBox(width: 7),
-                                    Text(
-                                      '${AppLocalizations.of(context)!.session} $sessionNumber',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black54,
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
                           ),

@@ -11,6 +11,7 @@ import 'package:autumn_conference/core/services/api/service.dart';
 import 'package:autumn_conference/core/theme/app_colors.dart';
 import 'package:autumn_conference/core/utils/localization_helper.dart';
 import 'package:autumn_conference/core/utils/image_helper.dart';
+import 'package:autumn_conference/core/widgets/adaptive_glass.dart';
 import 'package:autumn_conference/l10n/app_localizations.dart';
 import 'package:autumn_conference/l10n/locale_notifier.dart';
 
@@ -353,7 +354,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
   ) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      child: LiquidGlass(
+      child: AdaptiveGlass(
+        borderRadius: const Radius.circular(24),
         settings: LiquidGlassSettings(
           blur: 0,
           ambientStrength: 0.7,
@@ -361,10 +363,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           glassColor: Colors.transparent,
           chromaticAberration: 0.0,
         ),
-        shape: LiquidRoundedSuperellipse(
-          borderRadius: const Radius.circular(24),
-        ),
-        glassContainsChild: false,
+        fallbackBlur: 0,
         child: Material(
           color: Colors.transparent,
           child: InkWell(
@@ -437,127 +436,142 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               ),
                             ],
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(50),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
-                              child: Container(
-                                padding: const EdgeInsets.all(14),
-                                decoration: BoxDecoration(
-                                  color: isRegistered
-                                      ? const Color(0xFF6366F1).withValues(alpha: 0.7)
-                                      : Colors.grey.withValues(alpha: 0.6),
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                    width: 2.5,
-                                  ),
-                                ),
-                                child: Icon(
-                                  isRegistered ? Icons.bookmark : Icons.bookmark_border,
-                                  size: 26,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
+                  child: AdaptiveGlass(
+                    borderRadius: const Radius.circular(50),
+                    settings: LiquidGlassSettings(
+                      blur: 6,
+                      ambientStrength: 0.6,
+                      lightAngle: 0.2 * math.pi,
+                      glassColor: Colors.transparent,
+                      chromaticAberration: 0.0,
+                    ),
+                    fallbackBlur: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(14),
+                      decoration: BoxDecoration(
+                        color: isRegistered
+                            ? const Color(0xFF6366F1).withValues(alpha: 0.7)
+                            : Colors.grey.withValues(alpha: 0.6),
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          width: 2.5,
+                        ),
+                      ),
+                      child: Icon(
+                        isRegistered ? Icons.bookmark : Icons.bookmark_border,
+                        size: 26,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                         ),
                       ),
                       // Süre badge - Sağ alt
                       Positioned(
                         bottom: 12,
                         right: 12,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(14),
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 10,
-                              ),
-                              decoration: BoxDecoration(
-                                color: Colors.black.withValues(alpha: 0.4),
-                                borderRadius: BorderRadius.circular(14),
-                                border: Border.all(
-                                  color: Colors.white.withValues(alpha: 0.3),
-                                  width: 1,
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(
-                                    Icons.timer,
-                                    size: 18,
-                                    color: Colors.white,
-                                  ),
-                                  const SizedBox(width: 7),
-                                  Text(
-                                    '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                child: AdaptiveGlass(
+                  borderRadius: const Radius.circular(14),
+                  settings: LiquidGlassSettings(
+                    blur: 10,
+                    ambientStrength: 0.7,
+                    lightAngle: 0.3 * math.pi,
+                    glassColor: Colors.transparent,
+                    chromaticAberration: 0.0,
+                  ),
+                  fallbackBlur: 0,
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: Colors.white.withValues(alpha: 0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.timer,
+                          size: 18,
+                          color: Colors.white,
+                        ),
+                        const SizedBox(width: 7),
+                        Text(
+                          '${presentation.duration ?? '0'} ${AppLocalizations.of(context)!.minutes}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
+                      ],
+                    ),
+                  ),
+                ),
                       ),
                       // Oturum badge - Sol alt
                       if (sessionNumber != null)
                         Positioned(
                           bottom: 12,
                           left: 12,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: BackdropFilter(
-                              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 14,
-                                  vertical: 10,
+                  child: AdaptiveGlass(
+                    borderRadius: const Radius.circular(14),
+                    settings: LiquidGlassSettings(
+                      blur: 10,
+                      ambientStrength: 0.7,
+                      lightAngle: 0.3 * math.pi,
+                      glassColor: Colors.transparent,
+                      chromaticAberration: 0.0,
+                    ),
+                    fallbackBlur: 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 14,
+                        vertical: 10,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withValues(alpha: 0.5),
+                        borderRadius: BorderRadius.circular(14),
+                        border: Border.all(
+                          color: Colors.white.withValues(alpha: 0.4),
+                          width: 1.5,
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Icon(
+                            Icons.event_note,
+                            size: 18,
+                            color: Colors.white,
+                          ),
+                          const SizedBox(width: 7),
+                          Text(
+                            '${AppLocalizations.of(context)!.session} $sessionNumber',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600,
+                              shadows: [
+                                Shadow(
+                                  color: Colors.black54,
+                                  offset: Offset(0, 1),
+                                  blurRadius: 2,
                                 ),
-                                decoration: BoxDecoration(
-                                  color: Colors.black.withValues(alpha: 0.5),
-                                  borderRadius: BorderRadius.circular(14),
-                                  border: Border.all(
-                                    color: Colors.white.withValues(alpha: 0.4),
-                                    width: 1.5,
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Icon(
-                                      Icons.event_note,
-                                      size: 18,
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(width: 7),
-                                    Text(
-                                      '${AppLocalizations.of(context)!.session} $sessionNumber',
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600,
-                                        shadows: [
-                                          Shadow(
-                                            color: Colors.black54,
-                                            offset: Offset(0, 1),
-                                            blurRadius: 2,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
+                              ],
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
                         ),
                     ],
                   ),

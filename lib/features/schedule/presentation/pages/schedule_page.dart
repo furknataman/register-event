@@ -7,6 +7,7 @@ import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/api/service.dart';
+import '../../../../core/widgets/adaptive_glass.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../l10n/locale_notifier.dart';
 import '../../../../core/animations/spring_animations.dart';
@@ -95,17 +96,15 @@ class SchedulePage extends ConsumerWidget {
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(24),
-        child: LiquidGlass(
+        child: AdaptiveGlass(
+          borderRadius: const Radius.circular(20),
           settings: LiquidGlassSettings(
             blur: 6,
             ambientStrength: 0.6,
             lightAngle: 0.2 * math.pi,
             glassColor: Colors.white.withValues(alpha: 0.1),
           ),
-          shape: LiquidRoundedSuperellipse(
-            borderRadius: const Radius.circular(20),
-          ),
-          glassContainsChild: false,
+          fallbackBlur: 6,
           child: Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
@@ -148,88 +147,91 @@ class _ProgramCard extends StatelessWidget {
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.25),
-                width: 1.5,
-              ),
+      child: AdaptiveGlass(
+        borderRadius: const Radius.circular(16),
+        settings: LiquidGlassSettings(
+          blur: 10,
+          ambientStrength: 0.7,
+          lightAngle: 0.3 * math.pi,
+          glassColor: Colors.transparent,
+          chromaticAberration: 0.0,
+        ),
+        fallbackBlur: 0,
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.25),
+              width: 1.5,
             ),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Time Badge - Kompakt versiyon
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(
-                      color: Colors.white.withValues(alpha: 0.3),
-                      width: 1,
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Icon(
+                      Icons.access_time,
+                      color: Colors.white,
+                      size: 22,
                     ),
-                  ),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const Icon(
-                        Icons.access_time,
+                    const SizedBox(height: 4),
+                    Text(
+                      program.baslangicSaati.substring(0, 5),
+                      style: const TextStyle(
                         color: Colors.white,
-                        size: 22,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        program.baslangicSaati.substring(0, 5),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                        ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.symmetric(vertical: 2),
+                      width: 22,
+                      height: 1,
+                      color: Colors.white.withValues(alpha: 0.5),
+                    ),
+                    Text(
+                      program.bitisSaati.substring(0, 5),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
                       ),
-                      Container(
-                        margin: const EdgeInsets.symmetric(vertical: 2),
-                        width: 22,
-                        height: 1,
-                        color: Colors.white.withValues(alpha: 0.5),
-                      ),
-                      Text(
-                        program.bitisSaati.substring(0, 5),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 12),
-                // Program Description
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        localizedProgram.replaceAll('\\n', '\n'),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          height: 1.4,
-                        ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      localizedProgram.replaceAll('\\n', '\n'),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                        height: 1.4,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
