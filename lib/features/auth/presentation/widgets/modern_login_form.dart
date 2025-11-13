@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
@@ -67,13 +68,16 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
   }
 
   Future<void> _handleLogin(BuildContext context) async {
+    HapticFeedback.selectionClick();
     // Minimum 3 karakter kontrolü
     if (_emailController.text.length < 3) {
+      HapticFeedback.mediumImpact();
       _showErrorMessage(context, 'Email must be at least 3 characters');
       return;
     }
 
     if (_passwordController.text.length < 3) {
+      HapticFeedback.mediumImpact();
       _showErrorMessage(context, 'Password must be at least 3 characters');
       return;
     }
@@ -87,15 +91,18 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
           );
 
       if (success && mounted) {
+        HapticFeedback.lightImpact();
         // Wait a frame for state to propagate
         await Future.delayed(const Duration(milliseconds: 50));
         if (!mounted) return;
         context.replace(AppRoutes.home);
       } else if (mounted) {
+        HapticFeedback.mediumImpact();
         _showErrorMessage(context, AppLocalizations.of(context)!.loginError);
       }
     } catch (e) {
       if (mounted) {
+        HapticFeedback.mediumImpact();
         _showErrorMessage(context, AppLocalizations.of(context)!.loginFailed);
       }
     } finally {
@@ -143,7 +150,27 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
             );
           },
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 8),
+        Align(
+          alignment: Alignment.centerRight,
+          child: TextButton(
+            onPressed: () {
+              context.push('/forgot-password');
+            },
+            style: TextButton.styleFrom(
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            ),
+            child: Text(
+              AppLocalizations.of(context)!.forgotPassword,
+              style: const TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 8),
         ValueListenableBuilder<bool>(
           valueListenable: _isFormValid,
           builder: (context, isValid, child) {
@@ -265,8 +292,16 @@ class _LiquidGlassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    void handleTap() {
+      if (!isEnabled || isLoading) {
+        return;
+      }
+      HapticFeedback.selectionClick();
+      onTap?.call();
+    }
+
     return GestureDetector(
-      onTap: isEnabled && !isLoading ? onTap : null,
+      onTap: handleTap,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(28),
         child: BackdropFilter(

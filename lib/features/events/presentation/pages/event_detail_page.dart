@@ -4,12 +4,14 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/services.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/utils/localization_helper.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../../../../core/data/models/presentation_model.dart';
+import '../../../../core/data/models/presentation_status.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../../core/services/api/service.dart';
 import '../../../../core/theme/theme_mode.dart';
@@ -44,7 +46,7 @@ Widget _buildGlassEffect({
   );
 }
 
-class EventDetailPage extends ConsumerWidget {
+class EventDetailPage extends ConsumerStatefulWidget {
   final String eventId;
 
   const EventDetailPage({
@@ -53,8 +55,13 @@ class EventDetailPage extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final eventAsync = ref.watch(eventDetailsProvider(int.parse(eventId)));
+  ConsumerState<EventDetailPage> createState() => _EventDetailPageState();
+}
+
+class _EventDetailPageState extends ConsumerState<EventDetailPage> {
+  @override
+  Widget build(BuildContext context) {
+    final eventAsync = ref.watch(eventDetailsProvider(int.parse(widget.eventId)));
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
 
     // Dark mode kontrolü
@@ -62,7 +69,7 @@ class EventDetailPage extends ConsumerWidget {
     final themeMode = themeModeAsync.value ?? ThemeMode.system;
     final isDark = themeMode == ThemeMode.dark ||
         (themeMode == ThemeMode.system &&
-         MediaQuery.of(context).platformBrightness == Brightness.dark);
+            MediaQuery.of(context).platformBrightness == Brightness.dark);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -93,185 +100,290 @@ class EventDetailPage extends ConsumerWidget {
                           : AppColors.backgroundGradient,
                     ),
                     child: CustomScrollView(
-              physics: const ClampingScrollPhysics(),
-              slivers: [
-                  // Header image with custom persistent header
-                  SliverPersistentHeader(
-                    pinned: true,
-                    delegate: _EventHeaderDelegate(
-                      minHeight: 56,
-                      maxHeight: 240,
-                      imagePath: ImageHelper.getImageForBranch(presentation.branch),
-                      isDark: isDark,
-                    ),
-                  ),
-
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
-                    sliver: SliverList(
-                      delegate: SliverChildListDelegate([
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                        // Title
-                        Text(
-                          presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
-                          style: TextStyle(
-                            color: AppTextStyles.getTextColor(context),
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            height: 1.3,
+                      physics: const ClampingScrollPhysics(),
+                      slivers: [
+                        // Header image with SliverAppBar
+                        SliverAppBar(
+                          expandedHeight: 240,
+                          pinned: true,
+                          backgroundColor: isDark
+                              ? const Color(0xFF1a1a2e)
+                              : const Color(0xFF004B8D),
+                          leading: IconButton(
+                            icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
+                            onPressed: () => Navigator.of(context).pop(),
                           ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Info cards - Grid layout
-                        RepaintBoundary(
-                          child: Wrap(
-                            spacing: 12,
-                            runSpacing: 12,
-                            children: [
-                            if (presentation.presentationPlace != null)
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 56) / 2,
-                                child: _buildInfoCard(
-                                  context,
-                                  'assets/svg/location-dot.svg',
-                                  AppLocalizations.of(context)!.presentationPlace,
-                                  presentation.presentationPlace!,
-                                  isDark,
-                                ),
-                              ),
-                            if (presentation.time != null)
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 56) / 2,
-                                child: _buildInfoCard(
-                                  context,
-                                  'assets/svg/clock.svg',
-                                  AppLocalizations.of(context)!.presentationTime,
-                                  presentation.time!,
-                                  isDark,
-                                ),
-                              ),
-                            if (presentation.session != null)
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 56) / 2,
-                                child: _buildInfoCard(
-                                  context,
-                                  'assets/svg/calendar.svg',
-                                  'Oturum',
-                                  '${AppLocalizations.of(context)!.session} ${presentation.session}',
-                                  isDark,
-                                ),
-                              ),
-                            if (presentation.quota != null && presentation.registrationCount != null)
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 56) / 2,
-                                child: _buildInfoCard(
-                                  context,
-                                  'assets/svg/users.svg',
-                                  AppLocalizations.of(context)!.quota,
-                                  '${presentation.registrationCount}/${presentation.quota}',
-                                  isDark,
-                                ),
-                              ),
-                            if (presentation.duration != null)
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 56) / 2,
-                                child: _buildInfoCard(
-                                  context,
-                                  'assets/svg/hourglass.svg',
-                                  AppLocalizations.of(context)!.duration,
-                                  '${presentation.duration} ${AppLocalizations.of(context)!.minutes}',
-                                  isDark,
-                                ),
-                              ),
-                            if (presentation.language != null)
-                              SizedBox(
-                                width: (MediaQuery.of(context).size.width - 56) / 2,
-                                child: _buildInfoCard(
-                                  context,
-                                  'assets/svg/globe.svg',
-                                  AppLocalizations.of(context)!.language,
-                                  getLocalizedText(
-                                    presentation.language,
-                                    Localizations.localeOf(context).languageCode,
-                                  ),
-                                  isDark,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-
-                        // Presenters
-                        if (presentation.presenter1Name != null) ...[
-                          Text(
-                            AppLocalizations.of(context)!.speakers,
-                            style: TextStyle(
-                              color: AppTextStyles.getTextColor(context),
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          _buildPresenterCard(
-                            context,
-                            presentation.presenter1Name!,
-                            presentation.presenter1Email,
-                            presentation.position,
-                            isDark,
-                          ),
-                          if (presentation.presenter2Name != null) ...[
-                            const SizedBox(height: 12),
-                            _buildPresenterCard(
-                              context,
-                              presentation.presenter2Name!,
-                              presentation.presenter2Email,
-                              null, // position sadece ilk sunucu için var
-                              isDark,
-                            ),
-                          ],
-                          const SizedBox(height: 20),
-                        ],
-
-                        // Description
-                        if (presentation.description != null) ...[
-                          _buildGlassEffect(
-                            isDark: isDark,
-                            child: Container(
-                              padding: const EdgeInsets.all(18),
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.15)
-                                    : Colors.white.withValues(alpha: 0.25),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(
+                          flexibleSpace: FlexibleSpaceBar(
+                            background: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                // Background color
+                                Container(
                                   color: isDark
-                                      ? Colors.white.withValues(alpha: 0.3)
-                                      : Colors.white.withValues(alpha: 0.4),
+                                      ? const Color(0xFF1a1a2e)
+                                      : const Color(0xFF004B8D),
                                 ),
-                              ),
-                              child: Text(
-                                presentation.description!,
-                                style: TextStyle(
-                                  color: AppTextStyles.getTextColor(context, opacity: 0.95),
-                                  height: 1.6,
-                                  fontSize: 15,
+                                // Image
+                                RepaintBoundary(
+                                  child: Image.asset(
+                                    ImageHelper.getImageForBranch(presentation.branch),
+                                    fit: BoxFit.cover,
+                                    alignment: Alignment.center,
+                                    width: double.infinity,
+                                    height: double.infinity,
+                                    cacheHeight: 480,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Container(
+                                        decoration: BoxDecoration(
+                                          gradient: LinearGradient(
+                                            begin: Alignment.topLeft,
+                                            end: Alignment.bottomRight,
+                                            colors: [
+                                              Colors.white.withValues(alpha: 0.12),
+                                              Colors.white.withValues(alpha: 0.22),
+                                            ],
+                                          ),
+                                        ),
+                                        child: Center(
+                                          child: Icon(
+                                            Icons.event,
+                                            size: 80,
+                                            color: Colors.white.withValues(alpha: 0.5),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                  ),
                                 ),
-                              ),
+                                // Gradient overlay
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                      colors: [
+                                        Colors.black.withValues(alpha: 0.2),
+                                        Colors.black.withValues(alpha: 0.5),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
-                          ],
-                          ],
                         ),
-                      ]),
+
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                          sliver: SliverList(
+                            delegate: SliverChildListDelegate([
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Title
+                                  Text(
+                                    presentation.title ??
+                                        AppLocalizations.of(context)!
+                                            .noTitleInfo,
+                                    style: TextStyle(
+                                      color:
+                                          AppTextStyles.getTextColor(context),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Info cards - Grid layout
+                                  RepaintBoundary(
+                                    child: Wrap(
+                                      spacing: 12,
+                                      runSpacing: 12,
+                                      children: [
+                                        if (presentation.presentationPlace !=
+                                            null)
+                                          SizedBox(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    56) /
+                                                2,
+                                            child: _buildInfoCard(
+                                              context,
+                                              'assets/svg/location-dot.svg',
+                                              AppLocalizations.of(context)!
+                                                  .presentationPlace,
+                                              presentation.presentationPlace!,
+                                              isDark,
+                                            ),
+                                          ),
+                                        if (presentation.time != null)
+                                          SizedBox(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    56) /
+                                                2,
+                                            child: _buildInfoCard(
+                                              context,
+                                              'assets/svg/clock.svg',
+                                              AppLocalizations.of(context)!
+                                                  .presentationTime,
+                                              presentation.time!,
+                                              isDark,
+                                            ),
+                                          ),
+                                        if (presentation.session != null)
+                                          SizedBox(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    56) /
+                                                2,
+                                            child: _buildInfoCard(
+                                              context,
+                                              'assets/svg/calendar.svg',
+                                              'Oturum',
+                                              '${AppLocalizations.of(context)!.session} ${presentation.session}',
+                                              isDark,
+                                            ),
+                                          ),
+                                        if (presentation.quota != null &&
+                                            presentation.registrationCount !=
+                                                null)
+                                          SizedBox(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    56) /
+                                                2,
+                                            child: _buildInfoCard(
+                                              context,
+                                              'assets/svg/users.svg',
+                                              AppLocalizations.of(context)!
+                                                  .quota,
+                                              '${presentation.registrationCount}/${presentation.quota}',
+                                              isDark,
+                                            ),
+                                          ),
+                                        if (presentation.duration != null)
+                                          SizedBox(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    56) /
+                                                2,
+                                            child: _buildInfoCard(
+                                              context,
+                                              'assets/svg/hourglass.svg',
+                                              AppLocalizations.of(context)!
+                                                  .duration,
+                                              '${presentation.duration} ${AppLocalizations.of(context)!.minutes}',
+                                              isDark,
+                                            ),
+                                          ),
+                                        if (presentation.language != null)
+                                          SizedBox(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    56) /
+                                                2,
+                                            child: _buildInfoCard(
+                                              context,
+                                              'assets/svg/globe.svg',
+                                              AppLocalizations.of(context)!
+                                                  .language,
+                                              getLocalizedText(
+                                                presentation.language,
+                                                Localizations.localeOf(context)
+                                                    .languageCode,
+                                              ),
+                                              isDark,
+                                            ),
+                                          ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+
+                                  // Presenters
+                                  if (presentation.presenter1Name != null) ...[
+                                    Text(
+                                      AppLocalizations.of(context)!.speakers,
+                                      style: TextStyle(
+                                        color:
+                                            AppTextStyles.getTextColor(context),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 12),
+                                    _buildPresenterCard(
+                                      context,
+                                      presentation.presenter1Name!,
+                                      presentation.presenter1Email,
+                                      presentation.position,
+                                      isDark,
+                                    ),
+                                    if (presentation.presenter2Name !=
+                                        null) ...[
+                                      const SizedBox(height: 12),
+                                      _buildPresenterCard(
+                                        context,
+                                        presentation.presenter2Name!,
+                                        presentation.presenter2Email,
+                                        null, // position sadece ilk sunucu için var
+                                        isDark,
+                                      ),
+                                    ],
+                                    const SizedBox(height: 20),
+                                  ],
+
+                                  // Description
+                                  if (presentation.description != null) ...[
+                                    _buildGlassEffect(
+                                      isDark: isDark,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(18),
+                                        decoration: BoxDecoration(
+                                          color: isDark
+                                              ? Colors.white
+                                                  .withValues(alpha: 0.15)
+                                              : Colors.white
+                                                  .withValues(alpha: 0.25),
+                                          borderRadius:
+                                              BorderRadius.circular(16),
+                                          border: Border.all(
+                                            color: isDark
+                                                ? Colors.white
+                                                    .withValues(alpha: 0.3)
+                                                : Colors.white
+                                                    .withValues(alpha: 0.4),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          presentation.description!,
+                                          style: TextStyle(
+                                            color: AppTextStyles.getTextColor(
+                                                context,
+                                                opacity: 0.95),
+                                            height: 1.6,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ]),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
                   // Register button at bottom
                   Positioned(
                     left: 0,
@@ -288,6 +400,7 @@ class EventDetailPage extends ConsumerWidget {
                             presentation,
                             isRegistered,
                             isDark,
+                            widget.eventId,
                           ),
                         ),
                       ),
@@ -326,7 +439,7 @@ class EventDetailPage extends ConsumerWidget {
           final themeMode = themeModeAsync.value ?? ThemeMode.system;
           final isDarkLoading = themeMode == ThemeMode.dark ||
               (themeMode == ThemeMode.system &&
-               MediaQuery.of(context).platformBrightness == Brightness.dark);
+                  MediaQuery.of(context).platformBrightness == Brightness.dark);
 
           return Container(
             decoration: BoxDecoration(
@@ -356,7 +469,7 @@ class EventDetailPage extends ConsumerWidget {
           final themeMode = themeModeAsync.value ?? ThemeMode.system;
           final isDarkError = themeMode == ThemeMode.dark ||
               (themeMode == ThemeMode.system &&
-               MediaQuery.of(context).platformBrightness == Brightness.dark);
+                  MediaQuery.of(context).platformBrightness == Brightness.dark);
 
           return Container(
             decoration: BoxDecoration(
@@ -392,7 +505,8 @@ class EventDetailPage extends ConsumerWidget {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () => ref.invalidate(eventDetailsProvider(int.parse(eventId))),
+                    onPressed: () => ref
+                        .invalidate(eventDetailsProvider(int.parse(widget.eventId))),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white.withValues(alpha: 0.15),
                       foregroundColor: Colors.white,
@@ -498,7 +612,8 @@ class EventDetailPage extends ConsumerWidget {
           ),
         ),
         child: ListTile(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           leading: CircleAvatar(
             radius: 24,
             backgroundColor: const Color(0xFF667eea),
@@ -556,184 +671,261 @@ class EventDetailPage extends ConsumerWidget {
     ClassModelPresentation presentation,
     bool isRegistered,
     bool isDark,
+    String eventId,
   ) {
-    final isLoadingNotifier = ValueNotifier<bool>(false);
+    final status = PresentationStatus.fromValue(presentation.status);
 
-    return ValueListenableBuilder<bool>(
-      valueListenable: isLoadingNotifier,
-      builder: (context, isLoading, _) {
-        return _buildGlassEffect(
-          isDark: isDark,
-          child: GradientButton(
-            text: isLoading
-                ? AppLocalizations.of(context)!.processing
-                : isRegistered
-                    ? AppLocalizations.of(context)!.unregister
-                    : AppLocalizations.of(context)!.register,
-            isLoading: isLoading,
-            gradientColors: isRegistered
-                ? [
-                    const Color(0xFFe53935),  // Kırmızı
-                    const Color(0xFFc62828),  // Koyu kırmızı
-                  ]
-                : null,  // Default mor-mavi
-            icon: isLoading
-                ? null
-                : SvgPicture.asset(
-                    isRegistered
-                        ? 'assets/svg/bookmark-slash.svg'
-                        : 'assets/svg/bookmark.svg',
-                    width: 20,
-                    height: 20,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
-                    ),
-                  ),
-            onPressed: () async {
-              isLoadingNotifier.value = true;
-
-              try {
-                final userAsync = ref.read(userProfileProvider);
-                await userAsync.when(
-                  data: (user) async {
-                    if (user.id == null || presentation.id == null) {
-                      toastMessage(AppLocalizations.of(context)!.userInfoNotFound);
-                      return;
-                    }
-
-                    try {
-                      if (isRegistered) {
-                        // Unregister
-                        await ref.read(webServiceProvider).removeEvent(user.id!, presentation.id!);
-                        toastMessage(AppLocalizations.of(context)!.unregistrationSuccess);
-                      } else {
-                        // Register
-                        await ref.read(webServiceProvider).registerEvent(user.id!, presentation.id!);
-                        toastMessage(AppLocalizations.of(context)!.registrationSuccess);
-                      }
-                      // Refresh data
-                      ref.invalidate(sessionPresentationDataProvider);
-                      ref.invalidate(eventDetailsProvider(int.parse(eventId)));
-                    } catch (e) {
-                      toastMessage(AppLocalizations.of(context)!.operationFailed);
-                    }
-                  },
-                  loading: () {
-                    toastMessage(AppLocalizations.of(context)!.userInfoLoading);
-                  },
-                  error: (error, _) {
-                    toastMessage(AppLocalizations.of(context)!.userInfoFetchFailed);
-                  },
-                );
-              } finally {
-                isLoadingNotifier.value = false;
-              }
-            },
-          ),
-        );
-      },
+    return _RegisterActionButton(
+      presentation: presentation,
+      isRegistered: isRegistered,
+      isDark: isDark,
+      eventId: eventId,
+      status: status,
     );
   }
 }
 
-// Custom SliverPersistentHeader delegate for event header image
-class _EventHeaderDelegate extends SliverPersistentHeaderDelegate {
-  final double minHeight;
-  final double maxHeight;
-  final String imagePath;
+class _RegisterActionButton extends ConsumerStatefulWidget {
+  final ClassModelPresentation presentation;
+  final bool isRegistered;
   final bool isDark;
+  final String eventId;
+  final PresentationStatus status;
 
-  _EventHeaderDelegate({
-    required this.minHeight,
-    required this.maxHeight,
-    required this.imagePath,
+  const _RegisterActionButton({
+    required this.presentation,
+    required this.isRegistered,
     required this.isDark,
+    required this.eventId,
+    required this.status,
   });
 
   @override
-  double get minExtent => minHeight;
+  ConsumerState<_RegisterActionButton> createState() =>
+      _RegisterActionButtonState();
+}
+
+class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _pressController;
+  late final Animation<double> _scaleAnimation;
+  bool _isProcessing = false;
 
   @override
-  double get maxExtent => maxHeight;
-
-  @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
-    final progress = shrinkOffset / maxExtent;
-
-    return SizedBox(
-      height: maxExtent,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          // Background color
-          Container(
-            color: isDark ? const Color(0xFF1a1a2e) : const Color(0xFF004B8D),
-          ),
-          // Image
-          RepaintBoundary(
-            child: Image.asset(
-              imagePath,
-              fit: BoxFit.cover,
-              alignment: Alignment.center,
-              width: double.infinity,
-              height: double.infinity,
-              cacheHeight: 480,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        Colors.white.withValues(alpha: 0.12),
-                        Colors.white.withValues(alpha: 0.22),
-                      ],
-                    ),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.event,
-                      size: 80,
-                      color: Colors.white.withValues(alpha: 0.5),
-                    ),
-                  ),
-                );
-              },
-            ),
-          ),
-          // Gradient overlay
-          Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Colors.black.withValues(alpha: 0.2 + (progress * 0.3)),
-                  Colors.black.withValues(alpha: 0.5 + (progress * 0.3)),
-                ],
-              ),
-            ),
-          ),
-          // Back button
-          Positioned(
-            top: MediaQuery.of(context).padding.top,
-            left: 0,
-            child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ),
-        ],
+  void initState() {
+    super.initState();
+    _pressController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 140),
+      reverseDuration: const Duration(milliseconds: 160),
+    );
+    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.94).animate(
+      CurvedAnimation(
+        parent: _pressController,
+        curve: Curves.easeOutCubic,
+        reverseCurve: Curves.easeOut,
       ),
     );
   }
 
   @override
-  bool shouldRebuild(_EventHeaderDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        imagePath != oldDelegate.imagePath ||
-        isDark != oldDelegate.isDark;
+  void dispose() {
+    _pressController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleTap() async {
+    if (_isProcessing) {
+      HapticFeedback.selectionClick();
+      return;
+    }
+
+    setState(() {
+      _isProcessing = true;
+    });
+
+    HapticFeedback.selectionClick();
+
+    final localizations = AppLocalizations.of(context)!;
+    final userAsync = ref.read(userProfileProvider);
+    var success = false;
+
+    try {
+      await userAsync.when(
+        data: (user) async {
+          if (user.id == null || widget.presentation.id == null) {
+            toastMessage(localizations.userInfoNotFound);
+            return;
+          }
+
+          try {
+            if (widget.isRegistered) {
+              await ref
+                  .read(webServiceProvider)
+                  .removeEvent(user.id!, widget.presentation.id!);
+              toastMessage(localizations.unregistrationSuccess);
+            } else {
+              await ref
+                  .read(webServiceProvider)
+                  .registerEvent(user.id!, widget.presentation.id!);
+              toastMessage(localizations.registrationSuccess);
+            }
+
+            ref.invalidate(sessionPresentationDataProvider);
+            ref.invalidate(eventDetailsProvider(int.parse(widget.eventId)));
+            success = true;
+          } catch (e) {
+            toastMessage(localizations.operationFailed);
+            HapticFeedback.mediumImpact();
+          }
+        },
+        loading: () {
+          toastMessage(localizations.userInfoLoading);
+        },
+        error: (error, _) {
+          toastMessage(localizations.userInfoFetchFailed);
+          HapticFeedback.mediumImpact();
+        },
+      );
+    } finally {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _isProcessing = false;
+      });
+      if (success) {
+        HapticFeedback.lightImpact();
+      }
+    }
+  }
+
+  void _onHighlightChanged(bool isHighlighted) {
+    if (isHighlighted) {
+      _pressController.forward();
+    } else {
+      _pressController.reverse();
+    }
+  }
+
+  String _getButtonText(AppLocalizations localizations) {
+    switch (widget.status) {
+      case PresentationStatus.canRegister:
+        return localizations.register;
+      case PresentationStatus.alreadyRegistered:
+        return localizations.unregister;
+      case PresentationStatus.timePassed:
+        return localizations.timeHasPassed;
+      case PresentationStatus.sameSessionRegistered:
+        return localizations.sameSessionRegistered;
+      case PresentationStatus.quotaFull:
+        return localizations.quotaFull;
+      case PresentationStatus.registeredButTimePassed:
+        return localizations.registeredTimePassed;
+      case PresentationStatus.presentationNotFound:
+        return localizations.presentationNotFound;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final localizations = AppLocalizations.of(context)!;
+    final buttonText = _getButtonText(localizations);
+    final buttonIcon = widget.status.getIconPath();
+    final buttonColors = widget.status.getButtonColors();
+
+    final button = GradientButton(
+      text: '',
+      onPressed: _handleTap,
+      isLoading: _isProcessing,
+      enabled: !widget.status.isDisabled,
+      gradientColors: buttonColors.cast<Color>(),
+      onHighlightChanged: _onHighlightChanged,
+      child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 220),
+          switchInCurve: Curves.easeOutCubic,
+          switchOutCurve: Curves.easeInCubic,
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.92, end: 1.0).animate(animation),
+                child: child,
+              ),
+            );
+          },
+          child: _isProcessing
+              ? Row(
+                  key: const ValueKey('processing'),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor:
+                            AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      localizations.processing,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              : Row(
+                  key: ValueKey(buttonText),
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SvgPicture.asset(
+                      buttonIcon,
+                      width: 20,
+                      height: 20,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Text(
+                      buttonText,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        shadows: [
+                          Shadow(
+                            color: Colors.black26,
+                            offset: Offset(0, 2),
+                            blurRadius: 4,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+    );
+
+    return _buildGlassEffect(
+      isDark: widget.isDark,
+      child: ScaleTransition(
+        scale: _scaleAnimation,
+        child: button,
+      ),
+    );
   }
 }

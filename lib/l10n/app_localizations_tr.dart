@@ -351,4 +351,80 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get loginFailed => 'Giriş başarısız oldu';
+
+  @override
+  String get timeHasPassed => 'Saat Geçti';
+
+  @override
+  String get sameSessionRegistered => 'Aynı Oturumda Kayıtlı';
+
+  @override
+  String get quotaFull => 'Kontenjan Dolu';
+
+  @override
+  String get presentationNotFound => 'Sunum Bulunamadı';
+
+  @override
+  String get registeredTimePassed => 'Kayıtlısınız (Saat Geçti)';
+
+  @override
+  String get forgotPassword => 'Şifremi Unuttum?';
+
+  @override
+  String get sendResetCode => 'Kod Gönder';
+
+  @override
+  String get enterEmailOrPhone => 'E-posta veya Telefon';
+
+  @override
+  String get resetViaEmail => 'E-posta ile';
+
+  @override
+  String get resetViaSms => 'SMS ile';
+
+  @override
+  String get selectResetMethod => 'Sıfırlama Yöntemi';
+
+  @override
+  String get enterResetCode => 'Sıfırlama Kodu';
+
+  @override
+  String get newPassword => 'Yeni Şifre';
+
+  @override
+  String get confirmPassword => 'Şifreyi Onayla';
+
+  @override
+  String get resetPassword => 'Şifreyi Sıfırla';
+
+  @override
+  String get resetCodeSent => 'Sıfırlama kodu gönderildi';
+
+  @override
+  String get passwordResetSuccess => 'Şifre başarıyla sıfırlandı';
+
+  @override
+  String get passwordsMustMatch => 'Şifreler eşleşmiyor';
+
+  @override
+  String get enterCode => 'Kodu Girin';
+
+  @override
+  String get code => 'Kod';
+
+  @override
+  String get resetPasswordTitle => 'Şifre Sıfırlama';
+
+  @override
+  String get forgotPasswordTitle => 'Şifremi Unuttum';
+
+  @override
+  String get confirmRegistration => 'Kayıt işlemini onaylıyor musunuz?';
+
+  @override
+  String get confirmUnregistration =>
+      'Kaydı silmek istediğinizden emin misiniz?';
+
+  @override
+  String get confirm => 'Onayla';
 }

@@ -352,4 +352,80 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get loginFailed => 'Login failed';
+
+  @override
+  String get timeHasPassed => 'Time Has Passed';
+
+  @override
+  String get sameSessionRegistered => 'Registered in Same Session';
+
+  @override
+  String get quotaFull => 'Quota Full';
+
+  @override
+  String get presentationNotFound => 'Presentation Not Found';
+
+  @override
+  String get registeredTimePassed => 'Registered (Time Passed)';
+
+  @override
+  String get forgotPassword => 'Forgot Password?';
+
+  @override
+  String get sendResetCode => 'Send Code';
+
+  @override
+  String get enterEmailOrPhone => 'Email or Phone';
+
+  @override
+  String get resetViaEmail => 'Via Email';
+
+  @override
+  String get resetViaSms => 'Via SMS';
+
+  @override
+  String get selectResetMethod => 'Reset Method';
+
+  @override
+  String get enterResetCode => 'Reset Code';
+
+  @override
+  String get newPassword => 'New Password';
+
+  @override
+  String get confirmPassword => 'Confirm Password';
+
+  @override
+  String get resetPassword => 'Reset Password';
+
+  @override
+  String get resetCodeSent => 'Reset code sent';
+
+  @override
+  String get passwordResetSuccess => 'Password reset successfully';
+
+  @override
+  String get passwordsMustMatch => 'Passwords must match';
+
+  @override
+  String get enterCode => 'Enter Code';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String get resetPasswordTitle => 'Password Reset';
+
+  @override
+  String get forgotPasswordTitle => 'Forgot Password';
+
+  @override
+  String get confirmRegistration => 'Do you want to confirm registration?';
+
+  @override
+  String get confirmUnregistration =>
+      'Are you sure you want to cancel registration?';
+
+  @override
+  String get confirm => 'Confirm';
 }

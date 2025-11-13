@@ -203,3 +203,38 @@ extension UserDomainExtension on User {
     );
   }
 }
+
+// Password Reset Models
+class ForgotPasswordResponse {
+  final bool basarili;
+  final String? mesaj;
+
+  const ForgotPasswordResponse({
+    required this.basarili,
+    this.mesaj,
+  });
+
+  factory ForgotPasswordResponse.fromJson(Map<String, dynamic> json) {
+    return ForgotPasswordResponse(
+      basarili: json['basarili'] as bool? ?? false,
+      mesaj: json['mesaj'] as String?,
+    );
+  }
+}
+
+class ResetPasswordResponse {
+  final bool basarili;
+  final String? mesaj;
+
+  const ResetPasswordResponse({
+    required this.basarili,
+    this.mesaj,
+  });
+
+  factory ResetPasswordResponse.fromJson(Map<String, dynamic> json) {
+    return ResetPasswordResponse(
+      basarili: json['basarili'] as bool? ?? false,
+      mesaj: json['mesaj'] as String?,
+    );
+  }
+}

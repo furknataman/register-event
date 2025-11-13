@@ -62,7 +62,7 @@ class _NotificationModalState extends ConsumerState<NotificationModal> {
   @override
   Widget build(BuildContext context) {
     return DraggableScrollableSheet(
-      initialChildSize: 0.7,
+      initialChildSize: 0.80,
       minChildSize: 0.5,
       maxChildSize: 0.95,
       builder: (context, scrollController) {
@@ -72,17 +72,17 @@ class _NotificationModalState extends ConsumerState<NotificationModal> {
             topRight: Radius.circular(28),
           ),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.15),
+                color: Colors.white.withValues(alpha: 0.35),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(28),
                   topRight: Radius.circular(28),
                 ),
                 border: Border(
                   top: BorderSide(
-                    color: Colors.white.withValues(alpha: 0.3),
+                    color: Colors.white.withValues(alpha: 0.4),
                     width: 1.5,
                   ),
                 ),
@@ -174,7 +174,7 @@ class _NotificationModalState extends ConsumerState<NotificationModal> {
             Text(
               AppLocalizations.of(context)!.newNotificationsHere,
               style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.7),
+                color: Colors.white.withValues(alpha: 0.85),
                 fontSize: 14,
               ),
             ),
@@ -235,13 +235,13 @@ class _NotificationModalState extends ConsumerState<NotificationModal> {
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
           child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
             child: Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 color: notification.isRead
-                    ? Colors.white.withValues(alpha: 0.08)
-                    : Colors.white.withValues(alpha: 0.15),
+                    ? Colors.white.withValues(alpha: 0.25)
+                    : Colors.white.withValues(alpha: 0.35),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: notification.isRead
@@ -281,7 +281,7 @@ class _NotificationModalState extends ConsumerState<NotificationModal> {
                             Text(
                               timeAgo,
                               style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.6),
+                                color: Colors.white.withValues(alpha: 0.85),
                                 fontSize: 12,
                               ),
                             ),
@@ -291,28 +291,10 @@ class _NotificationModalState extends ConsumerState<NotificationModal> {
                         Text(
                           notification.getMessage(locale),
                           style: TextStyle(
-                            color: Colors.white.withValues(alpha: notification.isRead ? 0.7 : 0.9),
+                            color: Colors.white.withValues(alpha: notification.isRead ? 0.85 : 0.95),
                             fontSize: 14,
                           ),
                         ),
-                        if (notification.type != 'Genel') ...[
-                          const SizedBox(height: 8),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.15),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              notification.type,
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.9),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ),
-                        ],
                       ],
                     ),
                   ),

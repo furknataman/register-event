@@ -757,6 +757,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login failed'**
   String get loginFailed;
+
+  /// No description provided for @timeHasPassed.
+  ///
+  /// In en, this message translates to:
+  /// **'Time Has Passed'**
+  String get timeHasPassed;
+
+  /// No description provided for @sameSessionRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered in Same Session'**
+  String get sameSessionRegistered;
+
+  /// No description provided for @quotaFull.
+  ///
+  /// In en, this message translates to:
+  /// **'Quota Full'**
+  String get quotaFull;
+
+  /// No description provided for @presentationNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Presentation Not Found'**
+  String get presentationNotFound;
+
+  /// No description provided for @registeredTimePassed.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered (Time Passed)'**
+  String get registeredTimePassed;
+
+  /// No description provided for @forgotPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password?'**
+  String get forgotPassword;
+
+  /// No description provided for @sendResetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Send Code'**
+  String get sendResetCode;
+
+  /// No description provided for @enterEmailOrPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Email or Phone'**
+  String get enterEmailOrPhone;
+
+  /// No description provided for @resetViaEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Via Email'**
+  String get resetViaEmail;
+
+  /// No description provided for @resetViaSms.
+  ///
+  /// In en, this message translates to:
+  /// **'Via SMS'**
+  String get resetViaSms;
+
+  /// No description provided for @selectResetMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Method'**
+  String get selectResetMethod;
+
+  /// No description provided for @enterResetCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Code'**
+  String get enterResetCode;
+
+  /// No description provided for @newPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'New Password'**
+  String get newPassword;
+
+  /// No description provided for @confirmPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Password'**
+  String get confirmPassword;
+
+  /// No description provided for @resetPassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetPassword;
+
+  /// No description provided for @resetCodeSent.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset code sent'**
+  String get resetCodeSent;
+
+  /// No description provided for @passwordResetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Password reset successfully'**
+  String get passwordResetSuccess;
+
+  /// No description provided for @passwordsMustMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords must match'**
+  String get passwordsMustMatch;
+
+  /// No description provided for @enterCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Code'**
+  String get enterCode;
+
+  /// No description provided for @code.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get code;
+
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Password Reset'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @forgotPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot Password'**
+  String get forgotPasswordTitle;
+
+  /// No description provided for @confirmRegistration.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you want to confirm registration?'**
+  String get confirmRegistration;
+
+  /// No description provided for @confirmUnregistration.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to cancel registration?'**
+  String get confirmUnregistration;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
 }
 
 class _AppLocalizationsDelegate

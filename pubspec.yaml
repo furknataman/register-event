@@ -41,6 +41,7 @@ dependencies:
   timeago: ^3.7.0
   flutter_badge_manager: ^0.0.3
   device_info_plus: ^11.2.0
+  animations: ^2.1.0
 
 flutter_native_splash:
   color: "#ffffff"

@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -136,7 +137,7 @@ class CustomPageTransitions {
       key: state.pageKey,
       child: child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return _SharedAxisTransition(
+        return SharedAxisTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
           transitionType: transitionType,
@@ -210,138 +211,6 @@ class CustomPageTransitions {
   }
 }
 
-/// Shared axis transition types
-enum SharedAxisTransitionType {
-  horizontal,
-  vertical,
-  scaled,
-}
-
-/// Internal shared axis transition widget
-class _SharedAxisTransition extends StatelessWidget {
-  final Animation<double> animation;
-  final Animation<double> secondaryAnimation;
-  final SharedAxisTransitionType transitionType;
-  final Widget child;
-
-  const _SharedAxisTransition({
-    required this.animation,
-    required this.secondaryAnimation,
-    required this.transitionType,
-    required this.child,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final curvedAnimation = CurvedAnimation(
-      parent: animation,
-      curve: SpringAnimations.standardSpring,
-    );
-
-    final curvedSecondaryAnimation = CurvedAnimation(
-      parent: secondaryAnimation,
-      curve: SpringAnimations.standardSpring,
-    );
-
-    switch (transitionType) {
-      case SharedAxisTransitionType.horizontal:
-        return _buildHorizontalTransition(
-          curvedAnimation,
-          curvedSecondaryAnimation,
-        );
-      case SharedAxisTransitionType.vertical:
-        return _buildVerticalTransition(
-          curvedAnimation,
-          curvedSecondaryAnimation,
-        );
-      case SharedAxisTransitionType.scaled:
-        return _buildScaledTransition(
-          curvedAnimation,
-          curvedSecondaryAnimation,
-        );
-    }
-  }
-
-  Widget _buildHorizontalTransition(
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
-    final primarySlide = Tween<Offset>(
-      begin: const Offset(0.05, 0),
-      end: Offset.zero,
-    ).animate(animation);
-
-    final primaryFade = Tween<double>(begin: 0.0, end: 1.0).animate(animation);
-
-    return FadeTransition(
-      opacity: primaryFade,
-      child: SlideTransition(
-        position: primarySlide,
-        child: child,
-      ),
-    );
-  }
-
-  Widget _buildVerticalTransition(
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
-    final primarySlide = Tween<Offset>(
-      begin: const Offset(0, 0.05),
-      end: Offset.zero,
-    ).animate(animation);
-
-    final primaryFade = Tween<double>(begin: 0.0, end: 1.0).animate(animation);
-
-    return FadeTransition(
-      opacity: primaryFade,
-      child: SlideTransition(
-        position: primarySlide,
-        child: child,
-      ),
-    );
-  }
-
-  Widget _buildScaledTransition(
-    Animation<double> animation,
-    Animation<double> secondaryAnimation,
-  ) {
-    final primaryScale = Tween<double>(
-      begin: 0.95,
-      end: 1.0,
-    ).animate(animation);
-
-    final primaryFade = Tween<double>(begin: 0.0, end: 1.0).animate(animation);
-
-    // Outgoing page subtle scale down
-    final secondaryScale = Tween<double>(
-      begin: 1.0,
-      end: 0.97,
-    ).animate(secondaryAnimation);
-
-    return Stack(
-      children: [
-        // Outgoing page
-        if (secondaryAnimation.status != AnimationStatus.dismissed)
-          ScaleTransition(
-            scale: secondaryScale,
-            child: Container(
-              color: Colors.black.withValues(alpha: 0.1),
-            ),
-          ),
-        // Incoming page
-        FadeTransition(
-          opacity: primaryFade,
-          child: ScaleTransition(
-            scale: primaryScale,
-            child: child,
-          ),
-        ),
-      ],
-    );
-  }
-}
-
 /// Extension for easy page transition building
 extension GoRouterPageTransition on GoRouterState {
   /// Build a fade transition page
@@ -373,10 +242,14 @@ extension GoRouterPageTransition on GoRouterState {
   }
 
   /// Build a shared axis transition page
-  CustomTransitionPage buildSharedAxisPage(Widget child) {
+  CustomTransitionPage buildSharedAxisPage(
+    Widget child, {
+    SharedAxisTransitionType transitionType = SharedAxisTransitionType.scaled,
+  }) {
     return CustomPageTransitions.sharedAxisTransition(
       child: child,
       state: this,
+      transitionType: transitionType,
     );
   }
 
