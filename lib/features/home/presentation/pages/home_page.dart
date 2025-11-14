@@ -645,11 +645,15 @@ class HomePage extends ConsumerWidget {
             borderRadius: BorderRadius.circular(24),
             child: Container(
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.28),
+                color: isRegistered
+                    ? Colors.green.withValues(alpha: 0.15)
+                    : Colors.white.withValues(alpha: 0.28),
                 borderRadius: BorderRadius.circular(24),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.45),
-                  width: 1,
+                  color: isRegistered
+                      ? Colors.green.shade400
+                      : Colors.white.withValues(alpha: 0.45),
+                  width: isRegistered ? 2 : 1,
                 ),
               ),
               child: Column(
@@ -722,8 +726,8 @@ class HomePage extends ConsumerWidget {
                               padding: const EdgeInsets.all(14),
                               decoration: BoxDecoration(
                                 color: isRegistered
-                                    ? const Color(0xFF6366F1)
-                                        .withValues(alpha: 0.7)
+                                    ? const Color(0xFF10B981)
+                                        .withValues(alpha: 0.8)
                                     : Colors.grey.withValues(alpha: 0.6),
                                 shape: BoxShape.circle,
                                 border: Border.all(

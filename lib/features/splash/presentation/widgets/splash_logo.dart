@@ -14,22 +14,21 @@ class SplashLogo extends StatelessWidget {
           style: TextStyle(
               fontWeight: FontWeight.w400,
               color: Colors.white,
-              fontSize: 45,
-              fontFamily: 'Raleway'),
+              fontSize: 45),
         ),
         const SizedBox(
           height: 20,
         ),
         const Text(
           "18. IB Day",
-          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold, fontFamily: 'Raleway'),
+          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
         ),
         const SizedBox(
           height: 8,
         ),
         const Text(
           "Better Together",
-          style: TextStyle(color: Colors.white, fontSize: 20, fontFamily: 'Raleway'),
+          style: TextStyle(color: Colors.white, fontSize: 20),
         )
       ]),
     );

@@ -49,7 +49,7 @@
     "generalForm":"Konferans Değerlendirme Formu",
     "status":"Giriş Durumu",
     "canLogin":"Giriş Yapabilir.",
-    "dailySchedule" :"Günlük Program",
+    "dailySchedule" :"Programım",
     "eventLocation" : "Etkinlik Yeri",
     "profile": "Profil",
     "userInfo": "Kullanıcı Bilgileri",
@@ -149,5 +149,6 @@
     "navHome": "Ana Sayfa",
     "navScan": "Tara",
     "navSearch": "Ara",
-    "navProfile": "Profil"
+    "navProfile": "Profil",
+    "searchResultsCount": "{count} sonuç bulundu"
 }

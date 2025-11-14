@@ -6,7 +6,6 @@ ThemeData lightTheme = ThemeData(
     primaryColor: const Color(0xFF4679B1),
     floatingActionButtonTheme:
         const FloatingActionButtonThemeData(backgroundColor: Color(0xFF4679B1)),
-    fontFamily: "Raleway",
     textTheme: const TextTheme(
         displayLarge:
             TextStyle(fontSize: 24, color: Color(0xff333333), fontWeight: FontWeight.w400),

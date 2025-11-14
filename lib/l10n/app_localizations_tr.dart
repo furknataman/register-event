@@ -167,7 +167,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get canLogin => 'Giriş Yapabilir.';
 
   @override
-  String get dailySchedule => 'Günlük Program';
+  String get dailySchedule => 'Programım';
 
   @override
   String get eventLocation => 'Etkinlik Yeri';
@@ -473,4 +473,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get navProfile => 'Profil';
+
+  @override
+  String searchResultsCount(Object count) {
+    return '$count sonuç bulundu';
+  }
 }

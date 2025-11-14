@@ -168,7 +168,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get canLogin => 'Allowed';
 
   @override
-  String get dailySchedule => 'Daily Schedule';
+  String get dailySchedule => 'My Program';
 
   @override
   String get eventLocation => 'Event Location';
@@ -474,4 +474,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get navProfile => 'Profile';
+
+  @override
+  String searchResultsCount(Object count) {
+    return '$count results found';
+  }
 }

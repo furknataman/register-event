@@ -401,7 +401,7 @@ abstract class AppLocalizations {
   /// No description provided for @dailySchedule.
   ///
   /// In en, this message translates to:
-  /// **'Daily Schedule'**
+  /// **'My Program'**
   String get dailySchedule;
 
   /// No description provided for @eventLocation.
@@ -997,6 +997,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Profile'**
   String get navProfile;
+
+  /// No description provided for @searchResultsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} results found'**
+  String searchResultsCount(Object count);
 }
 
 class _AppLocalizationsDelegate

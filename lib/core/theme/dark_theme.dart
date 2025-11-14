@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 ThemeData darkTheme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: const Color(0xff1E1E1E),
-    fontFamily: "Raleway",
     primaryColor: const Color(0xFF4679B1),
     splashColor: Colors.white,
     cardColor: const Color(0xff242424),

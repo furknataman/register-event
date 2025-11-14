@@ -4,6 +4,8 @@ class ProgramModel {
   final String bitisSaati;
   final String programTr;
   final String programEn;
+  final bool renkli;
+  final String? kayitliSunumBaslik;
 
   ProgramModel({
     required this.id,
@@ -11,6 +13,8 @@ class ProgramModel {
     required this.bitisSaati,
     required this.programTr,
     required this.programEn,
+    this.renkli = false,
+    this.kayitliSunumBaslik,
   });
 
   factory ProgramModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +24,8 @@ class ProgramModel {
       bitisSaati: json['bitisSaati'] ?? '',
       programTr: json['programTr'] ?? '',
       programEn: json['programEn'] ?? '',
+      renkli: json['renkli'] ?? false,
+      kayitliSunumBaslik: json['kayitliSunumBaslik'],
     );
   }
 
@@ -30,6 +36,8 @@ class ProgramModel {
       'bitisSaati': bitisSaati,
       'programTr': programTr,
       'programEn': programEn,
+      'renkli': renkli,
+      'kayitliSunumBaslik': kayitliSunumBaslik,
     };
   }
 
@@ -41,6 +49,10 @@ class ProgramModel {
   }
 
   String getLocalizedProgram(String languageCode) {
-    return languageCode == 'en' ? programEn : programTr;
+    final baseProgram = languageCode == 'en' ? programEn : programTr;
+    if (kayitliSunumBaslik != null && kayitliSunumBaslik!.isNotEmpty) {
+      return '$baseProgram - $kayitliSunumBaslik';
+    }
+    return baseProgram;
   }
 }

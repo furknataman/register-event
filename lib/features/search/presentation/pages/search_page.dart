@@ -312,53 +312,77 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                       );
                     }
 
-                    return ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 10),
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: filteredEvents.length,
-                      itemBuilder: (context, index) {
-                        final presentation = filteredEvents[index];
-
-                        // Kayıt durumu
-                        final isRegistered = sessionData.kayitliSunum
-                            .any((r) => r.sunumId == presentation.id);
-
-                        // Oturum numarası
-                        int? sessionNumber;
-                        if (sessionData.oturum1.contains(presentation)) {
-                          sessionNumber = 1;
-                        } else if (sessionData.oturum2.contains(presentation)) {
-                          sessionNumber = 2;
-                        } else if (sessionData.oturum3.contains(presentation)) {
-                          sessionNumber = 3;
-                        } else if (sessionData.oturum4.contains(presentation)) {
-                          sessionNumber = 4;
-                        }
-
-                        return TweenAnimationBuilder(
-                          duration: Duration(milliseconds: 300 + (index * 100)),
-                          tween: Tween<double>(begin: 0, end: 1),
-                          builder: (context, double value, child) {
-                            return Opacity(
-                              opacity: value,
-                              child: Transform.translate(
-                                offset: Offset(0, 50 * (1 - value)),
-                                child: child,
+                    return Column(
+                      children: [
+                        // Sonuç sayısı
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 12),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              AppLocalizations.of(context)!
+                                  .searchResultsCount(filteredEvents.length.toString()),
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.8),
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
                               ),
-                            );
-                          },
-                          child: _buildEventCard(
-                            context,
-                            presentation,
-                            index,
-                            languageCode,
-                            isRegistered,
-                            sessionNumber,
+                            ),
                           ),
-                        );
-                      },
+                        ),
+                        // Sonuç listesi
+                        Expanded(
+                          child: ListView.builder(
+                            controller: _scrollController,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 16, vertical: 10),
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: filteredEvents.length,
+                            itemBuilder: (context, index) {
+                              final presentation = filteredEvents[index];
+
+                              // Kayıt durumu
+                              final isRegistered = sessionData.kayitliSunum
+                                  .any((r) => r.sunumId == presentation.id);
+
+                              // Oturum numarası
+                              int? sessionNumber;
+                              if (sessionData.oturum1.contains(presentation)) {
+                                sessionNumber = 1;
+                              } else if (sessionData.oturum2.contains(presentation)) {
+                                sessionNumber = 2;
+                              } else if (sessionData.oturum3.contains(presentation)) {
+                                sessionNumber = 3;
+                              } else if (sessionData.oturum4.contains(presentation)) {
+                                sessionNumber = 4;
+                              }
+
+                              return TweenAnimationBuilder(
+                                duration: Duration(milliseconds: 300 + (index * 100)),
+                                tween: Tween<double>(begin: 0, end: 1),
+                                builder: (context, double value, child) {
+                                  return Opacity(
+                                    opacity: value,
+                                    child: Transform.translate(
+                                      offset: Offset(0, 50 * (1 - value)),
+                                      child: child,
+                                    ),
+                                  );
+                                },
+                                child: _buildEventCard(
+                                  context,
+                                  presentation,
+                                  index,
+                                  languageCode,
+                                  isRegistered,
+                                  sessionNumber,
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     );
                   },
                 ),

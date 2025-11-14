@@ -49,7 +49,7 @@
     "generalForm":"Conference Evaluation Form",
     "status":"Login Status",
     "canLogin":"Allowed",
-    "dailySchedule" :"Daily Schedule",
+    "dailySchedule" :"My Program",
     "eventLocation" : "Event Location",
     "profile": "Profile",
     "userInfo": "User Information",
@@ -149,5 +149,6 @@
     "navHome": "Home",
     "navScan": "Scan",
     "navSearch": "Search",
-    "navProfile": "Profile"
+    "navProfile": "Profile",
+    "searchResultsCount": "{count} results found"
 }

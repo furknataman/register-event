@@ -95,8 +95,3 @@ flutter:
     - android/app/src/main/res/drawable/
     - android/app/src/main/res/
     - android/app/src/main/res/drawable-v21/
-
-  fonts:
-    - family: Raleway
-      fonts:
-        - asset: assets/fonts/Raleway-Regular.ttf

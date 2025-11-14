@@ -144,6 +144,15 @@ class _ProgramCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final localizedProgram = program.getLocalizedProgram(languageCode);
+    final isColorful = program.renkli ?? false;
+
+    final cardColor = isColorful
+        ? const Color(0xFFFF9800).withValues(alpha: 0.2)
+        : Colors.white.withValues(alpha: 0.15);
+
+    final borderColor = isColorful
+        ? const Color(0xFFFF9800).withValues(alpha: 0.4)
+        : Colors.white.withValues(alpha: 0.25);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -160,10 +169,10 @@ class _ProgramCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white.withValues(alpha: 0.15),
+            color: cardColor,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
-              color: Colors.white.withValues(alpha: 0.25),
+              color: borderColor,
               width: 1.5,
             ),
           ),
@@ -173,10 +182,14 @@ class _ProgramCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                 decoration: BoxDecoration(
-                  color: Colors.white.withValues(alpha: 0.2),
+                  color: isColorful
+                      ? const Color(0xFFFF9800).withValues(alpha: 0.3)
+                      : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: Colors.white.withValues(alpha: 0.3),
+                    color: isColorful
+                        ? const Color(0xFFFF9800).withValues(alpha: 0.5)
+                        : Colors.white.withValues(alpha: 0.3),
                     width: 1,
                   ),
                 ),
