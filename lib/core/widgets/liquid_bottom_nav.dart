@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../animations/spring_animations.dart';
+import '../../l10n/app_localizations.dart';
 
 // Exact bottom bar composition inspired by the demo layout
 // Left group: Home pill + Scan + Search; Spacer animates; Right icon.
@@ -51,7 +52,7 @@ class LiquidBottomNav extends StatelessWidget {
                           _GlassPill(
                             onTap: () => onTap(0),
                             iconAsset: 'assets/svg/home.svg',
-                            label: 'Home',
+                            label: AppLocalizations.of(context)!.navHome,
                           )
                         else
                           _GlassIcon(
@@ -64,7 +65,7 @@ class LiquidBottomNav extends StatelessWidget {
                           _GlassPill(
                             onTap: () => onTap(1),
                             iconAsset: 'assets/svg/scan.svg',
-                            label: 'Scan',
+                            label: AppLocalizations.of(context)!.navScan,
                           )
                         else
                           _GlassIcon(
@@ -77,7 +78,7 @@ class LiquidBottomNav extends StatelessWidget {
                           _GlassPill(
                             onTap: () => onTap(2),
                             iconAsset: 'assets/svg/search.svg',
-                            label: 'Search',
+                            label: AppLocalizations.of(context)!.navSearch,
                           )
                         else
                           _GlassIcon(
@@ -107,7 +108,7 @@ class LiquidBottomNav extends StatelessWidget {
                 _GlassPill(
                   onTap: () => onTap(3),
                   iconAsset: 'assets/svg/profile.svg',
-                  label: 'Profile',
+                  label: AppLocalizations.of(context)!.navProfile,
                   largeIcon: true,
                 )
               else

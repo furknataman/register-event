@@ -98,7 +98,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get ongoingEvents => 'Devam Eden Etkinlikler';
 
   @override
-  String get registeredEvents => 'Kayıtlı Etkinlikler';
+  String get registeredEvents => 'Kayıt Olunan Etkinlikler';
 
   @override
   String get nonRegistered => 'Etkinlik Kayıtlı Değil';
@@ -427,4 +427,50 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get confirm => 'Onayla';
+
+  @override
+  String get profileEmail => 'E-posta';
+
+  @override
+  String get profilePhone => 'Telefon';
+
+  @override
+  String get profileSchool => 'Okul';
+
+  @override
+  String get profileJobTitle => 'Ünvan';
+
+  @override
+  String get statistics => 'İstatistikler';
+
+  @override
+  String get attendedEvents => 'Katılınan Etkinlikler';
+
+  @override
+  String get profileInformation => 'Profil Bilgileri';
+
+  @override
+  String get notProvided => 'Belirtilmemiş';
+
+  @override
+  String get user => 'Kullanıcı';
+
+  @override
+  String get appDevelopedBy =>
+      'Bu uygulama Eyüboğlu Eğitim Kurumları tarafından geliştirilmiştir';
+
+  @override
+  String get version => 'Sürüm';
+
+  @override
+  String get navHome => 'Ana Sayfa';
+
+  @override
+  String get navScan => 'Tara';
+
+  @override
+  String get navSearch => 'Ara';
+
+  @override
+  String get navProfile => 'Profil';
 }

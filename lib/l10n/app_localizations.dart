@@ -907,6 +907,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Confirm'**
   String get confirm;
+
+  /// No description provided for @profileEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email'**
+  String get profileEmail;
+
+  /// No description provided for @profilePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone'**
+  String get profilePhone;
+
+  /// No description provided for @profileSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'School'**
+  String get profileSchool;
+
+  /// No description provided for @profileJobTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Job Title'**
+  String get profileJobTitle;
+
+  /// No description provided for @statistics.
+  ///
+  /// In en, this message translates to:
+  /// **'Statistics'**
+  String get statistics;
+
+  /// No description provided for @attendedEvents.
+  ///
+  /// In en, this message translates to:
+  /// **'Attended Events'**
+  String get attendedEvents;
+
+  /// No description provided for @profileInformation.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile Information'**
+  String get profileInformation;
+
+  /// No description provided for @notProvided.
+  ///
+  /// In en, this message translates to:
+  /// **'Not provided'**
+  String get notProvided;
+
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
+  /// No description provided for @appDevelopedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'This app is developed by Eyüboğlu Education Institutions'**
+  String get appDevelopedBy;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @navHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get navHome;
+
+  /// No description provided for @navScan.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan'**
+  String get navScan;
+
+  /// No description provided for @navSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get navSearch;
+
+  /// No description provided for @navProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
 }
 
 class _AppLocalizationsDelegate

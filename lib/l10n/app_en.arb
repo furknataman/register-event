@@ -133,5 +133,21 @@
     "forgotPasswordTitle": "Forgot Password",
     "confirmRegistration": "Do you want to confirm registration?",
     "confirmUnregistration": "Are you sure you want to cancel registration?",
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "profileEmail": "Email",
+    "profilePhone": "Phone",
+    "profileSchool": "School",
+    "profileJobTitle": "Job Title",
+    "statistics": "Statistics",
+    "registeredEvents": "Registered Events",
+    "attendedEvents": "Attended Events",
+    "profileInformation": "Profile Information",
+    "notProvided": "Not provided",
+    "user": "User",
+    "appDevelopedBy": "This app is developed by Eyüboğlu Education Institutions",
+    "version": "Version",
+    "navHome": "Home",
+    "navScan": "Scan",
+    "navSearch": "Search",
+    "navProfile": "Profile"
 }

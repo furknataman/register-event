@@ -44,7 +44,7 @@ class ProfilePage extends ConsumerWidget {
                 const SizedBox(height: 16),
                 ElevatedButton(
                   onPressed: () => ref.refresh(userProfileProvider),
-                  child: const Text('Retry'),
+                  child: Text(AppLocalizations.of(context)!.retry),
                 ),
               ],
             ),
@@ -66,76 +66,45 @@ class _ProfileContent extends ConsumerWidget {
       child: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          // Profile Header
-          Container(
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.3),
-                width: 1,
+          // Statistics
+          Text(
+            AppLocalizations.of(context)!.statistics,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          Row(
+            children: [
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.event,
+                  title: AppLocalizations.of(context)!.registeredEvents,
+                  value: '${user.registeredPresentationCount ?? 0}',
+                  color: Colors.blue,
+                ),
               ),
-            ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Theme.of(context).primaryColor,
-                  child: Text(
-                    user.name?.substring(0, 1).toUpperCase() ?? 'U',
-                    style: const TextStyle(
-                      fontSize: 32,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: _StatCard(
+                  icon: Icons.check_circle,
+                  title: AppLocalizations.of(context)!.attendedEvents,
+                  value: '${user.attendanceCount ?? 0}',
+                  color: Colors.green,
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        '${user.name ?? ''} ${user.surname ?? ''}'.trim(),
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        user.email ?? '',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.white.withValues(alpha: 0.8),
-                        ),
-                      ),
-                      if (user.job != null && user.job!.isNotEmpty) ...[
-                        const SizedBox(height: 4),
-                        Text(
-                          user.job!,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white.withValues(alpha: 0.8),
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-          ),
-          const SizedBox(height: 16),
+
+          const SizedBox(height: 24),
 
           // Profile Information
-          const Text(
-            'Profile Information',
-            style: TextStyle(
+          Text(
+            AppLocalizations.of(context)!.profileInformation,
+            style: const TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
               color: Colors.white,
@@ -145,69 +114,28 @@ class _ProfileContent extends ConsumerWidget {
 
         _ProfileInfoCard(
           iconPath: 'assets/svg/envelope.svg',
-          title: 'Email',
-          value: user.email ?? 'Not provided',
+          title: AppLocalizations.of(context)!.profileEmail,
+          value: user.email ?? AppLocalizations.of(context)!.notProvided,
         ),
         if (user.telephone != null && user.telephone != '0' && user.telephone!.isNotEmpty)
           _ProfileInfoCard(
             iconPath: 'assets/svg/phone.svg',
-            title: 'Phone',
+            title: AppLocalizations.of(context)!.profilePhone,
             value: user.telephone!,
           ),
         if (user.school != null && user.school!.isNotEmpty)
           _ProfileInfoCard(
             iconPath: 'assets/svg/school.svg',
-            title: 'School',
+            title: AppLocalizations.of(context)!.profileSchool,
             value: user.school!,
           ),
         if (user.job != null && user.job!.isNotEmpty)
           _ProfileInfoCard(
             iconPath: 'assets/svg/briefcase.svg',
-            title: 'Job Title',
+            title: AppLocalizations.of(context)!.profileJobTitle,
             value: user.job!,
           ),
-        if (user.ekBilgi != null && user.ekBilgi!.isNotEmpty)
-          _ProfileInfoCard(
-            iconPath: 'assets/svg/circle-info.svg',
-            title: 'Additional Info',
-            value: user.ekBilgi!,
-          ),
-        
-        const SizedBox(height: 24),
 
-        // Statistics
-        const Text(
-          'Statistics',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        Row(
-          children: [
-            Expanded(
-              child: _StatCard(
-                icon: Icons.event,
-                title: 'Registered Events',
-                value: '${user.registeredEventId?.length ?? 0}',
-                color: Colors.blue,
-              ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: _StatCard(
-                icon: Icons.check_circle,
-                title: 'Attended Events',
-                value: '${user.attendedToEventId?.length ?? 0}',
-                color: Colors.green,
-              ),
-            ),
-          ],
-        ),
-        
         const SizedBox(height: 24),
 
         // Actions
@@ -307,7 +235,7 @@ class _ProfileContent extends ConsumerWidget {
           child: Column(
             children: [
               Text(
-                'Bu uygulama Eyüboğlu Eğitim Kurumları tarafından geliştirilmiştir',
+                AppLocalizations.of(context)!.appDevelopedBy,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.7),
@@ -316,7 +244,7 @@ class _ProfileContent extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'Version 1.0.8 (8)',
+                '${AppLocalizations.of(context)!.version} 1.0.8 (8)',
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 11,
@@ -507,7 +435,7 @@ class _StatCard extends StatelessWidget {
             Text(
               title,
               style: TextStyle(
-                fontSize: 12,
+                fontSize: 14,
                 color: Colors.white.withValues(alpha: 0.8),
               ),
               textAlign: TextAlign.center,

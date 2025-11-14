@@ -151,9 +151,11 @@ class AppTextStyles {
   static TextStyle profileInfoTitle(BuildContext context) => TextStyle(
     color: getTextColor(context),
     fontWeight: FontWeight.w500,
+    fontSize: 16,
   );
 
   static TextStyle profileInfoSubtitle(BuildContext context) => TextStyle(
     color: getSecondaryTextColor(context),
+    fontSize: 15,
   );
 }

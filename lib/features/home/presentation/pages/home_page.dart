@@ -563,51 +563,51 @@ class HomePage extends ConsumerWidget {
                 width: 1.5,
               ),
             ),
-            child: Row(
-              children: [
-                // Notification Icon with Badge
-                InkWell(
-                  onTap: () {
-                    showNotificationModal(context);
-                  },
-                  borderRadius: BorderRadius.circular(12),
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: _buildBellIconWithBadge(ref),
-                  ),
-                ),
-                const Spacer(),
-                // User Name
-                userDataAsync.when(
-                  data: (user) {
-                    final userName = user.name?.trim() ?? '';
-                    return Text(
-                      userName.isEmpty ? 'Kullanıcı' : userName,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+            child: InkWell(
+              onTap: () {
+                showNotificationModal(context);
+              },
+              borderRadius: BorderRadius.circular(20),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    // User Name - EN SOLDA
+                    userDataAsync.when(
+                      data: (user) {
+                        final userName = user.name?.trim() ?? '';
+                        return Text(
+                          userName.isEmpty ? AppLocalizations.of(context)!.user : userName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        );
+                      },
+                      loading: () => const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
                       ),
-                    );
-                  },
-                  loading: () => const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
+                      error: (_, __) => Text(
+                        AppLocalizations.of(context)!.user,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
                     ),
-                  ),
-                  error: (_, __) => const Text(
-                    'Kullanıcı',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
+                    const Spacer(),
+                    // Notification Icon with Badge - EN SAĞDA
+                    _buildBellIconWithBadge(ref),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -942,8 +942,8 @@ class HomePage extends ConsumerWidget {
       children: [
         SvgPicture.asset(
           'assets/svg/bell.svg',
-          width: 24,
-          height: 24,
+          width: 26,
+          height: 26,
           colorFilter: const ColorFilter.mode(
             Colors.white,
             BlendMode.srcIn,

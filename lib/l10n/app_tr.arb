@@ -133,5 +133,21 @@
     "forgotPasswordTitle": "Şifremi Unuttum",
     "confirmRegistration": "Kayıt işlemini onaylıyor musunuz?",
     "confirmUnregistration": "Kaydı silmek istediğinizden emin misiniz?",
-    "confirm": "Onayla"
+    "confirm": "Onayla",
+    "profileEmail": "E-posta",
+    "profilePhone": "Telefon",
+    "profileSchool": "Okul",
+    "profileJobTitle": "Ünvan",
+    "statistics": "İstatistikler",
+    "registeredEvents": "Kayıt Olunan Etkinlikler",
+    "attendedEvents": "Katılınan Etkinlikler",
+    "profileInformation": "Profil Bilgileri",
+    "notProvided": "Belirtilmemiş",
+    "user": "Kullanıcı",
+    "appDevelopedBy": "Bu uygulama Eyüboğlu Eğitim Kurumları tarafından geliştirilmiştir",
+    "version": "Sürüm",
+    "navHome": "Ana Sayfa",
+    "navScan": "Tara",
+    "navSearch": "Ara",
+    "navProfile": "Profil"
 }

@@ -740,13 +740,29 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
       return;
     }
 
+    HapticFeedback.selectionClick();
+
+    final localizations = AppLocalizations.of(context)!;
+
+    // Show confirmation bottom sheet
+    final confirmed = await _showConfirmationBottomSheet(
+      context,
+      localizations.areYouSure,
+      widget.isRegistered
+          ? localizations.confirmUnregistration
+          : localizations.confirmRegistration,
+      widget.isDark,
+    );
+
+    // If user cancelled, return early
+    if (confirmed != true) {
+      return;
+    }
+
     setState(() {
       _isProcessing = true;
     });
 
-    HapticFeedback.selectionClick();
-
-    final localizations = AppLocalizations.of(context)!;
     final userAsync = ref.read(userProfileProvider);
     var success = false;
 
@@ -773,6 +789,7 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
 
             ref.invalidate(sessionPresentationDataProvider);
             ref.invalidate(eventDetailsProvider(int.parse(widget.eventId)));
+            ref.invalidate(userProfileProvider);
             success = true;
           } catch (e) {
             toastMessage(localizations.operationFailed);
@@ -928,4 +945,176 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
       ),
     );
   }
+}
+
+// Confirmation bottom sheet
+Future<bool?> _showConfirmationBottomSheet(
+  BuildContext context,
+  String title,
+  String message,
+  bool isDark,
+) async {
+  return showModalBottomSheet<bool>(
+    context: context,
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    builder: (context) => Container(
+      decoration: BoxDecoration(
+        gradient: isDark
+            ? LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  const Color(0xFF1a1a2e).withValues(alpha: 0.98),
+                  const Color(0xFF16213e).withValues(alpha: 0.98),
+                ],
+              )
+            : LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.white.withValues(alpha: 0.98),
+                  const Color(0xFFf5f5f5).withValues(alpha: 0.98),
+                ],
+              ),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.1)
+              : Colors.white.withValues(alpha: 0.5),
+          width: 1.5,
+        ),
+      ),
+      padding: const EdgeInsets.all(24),
+      child: SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Handle bar
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 24),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.2)
+                    : Colors.black.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+
+            // Icon
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: isDark
+                    ? Colors.orange.withValues(alpha: 0.15)
+                    : Colors.orange.withValues(alpha: 0.1),
+                shape: BoxShape.circle,
+              ),
+              child: Icon(
+                Icons.help_outline_rounded,
+                size: 48,
+                color: Colors.orange.shade600,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Title
+            Text(
+              title,
+              style: TextStyle(
+                color: isDark ? Colors.white : Colors.black87,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 12),
+
+            // Message
+            Text(
+              message,
+              style: TextStyle(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.7)
+                    : Colors.black.withValues(alpha: 0.6),
+                fontSize: 15,
+                height: 1.5,
+              ),
+              textAlign: TextAlign.center,
+            ),
+
+            const SizedBox(height: 28),
+
+            // Buttons
+            Row(
+              children: [
+                // Cancel button
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      HapticFeedback.lightImpact();
+                      Navigator.of(context).pop(false);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: isDark
+                          ? Colors.white.withValues(alpha: 0.1)
+                          : Colors.black.withValues(alpha: 0.05),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: BorderSide(
+                          color: isDark
+                              ? Colors.white.withValues(alpha: 0.2)
+                              : Colors.black.withValues(alpha: 0.1),
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.cancel,
+                      style: TextStyle(
+                        color: isDark ? Colors.white : Colors.black87,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(width: 12),
+
+                // Confirm button
+                Expanded(
+                  child: TextButton(
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      Navigator.of(context).pop(true);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.orange.shade600,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.confirm,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

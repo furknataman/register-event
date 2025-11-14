@@ -428,4 +428,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get confirm => 'Confirm';
+
+  @override
+  String get profileEmail => 'Email';
+
+  @override
+  String get profilePhone => 'Phone';
+
+  @override
+  String get profileSchool => 'School';
+
+  @override
+  String get profileJobTitle => 'Job Title';
+
+  @override
+  String get statistics => 'Statistics';
+
+  @override
+  String get attendedEvents => 'Attended Events';
+
+  @override
+  String get profileInformation => 'Profile Information';
+
+  @override
+  String get notProvided => 'Not provided';
+
+  @override
+  String get user => 'User';
+
+  @override
+  String get appDevelopedBy =>
+      'This app is developed by Eyüboğlu Education Institutions';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get navHome => 'Home';
+
+  @override
+  String get navScan => 'Scan';
+
+  @override
+  String get navSearch => 'Search';
+
+  @override
+  String get navProfile => 'Profile';
 }
