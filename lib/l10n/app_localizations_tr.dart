@@ -466,7 +466,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get navHome => 'Ana Sayfa';
 
   @override
-  String get navScan => 'Tara';
+  String get navScan => 'QR';
 
   @override
   String get navSearch => 'Ara';
@@ -478,4 +478,26 @@ class AppLocalizationsTr extends AppLocalizations {
   String searchResultsCount(Object count) {
     return '$count sonuç bulundu';
   }
+
+  @override
+  String get scanPageTitle => 'QR';
+
+  @override
+  String get scanQrInstruction => 'Etkinlik kapısındaki QR kodu tarayın';
+
+  @override
+  String get scanQrAutomatic => 'QR kod otomatik olarak okunacak';
+
+  @override
+  String get manualEntryTitle => 'Manuel Giriş';
+
+  @override
+  String get manualEntryDescription =>
+      'Etkinlik ID numarasını manuel olarak girin';
+
+  @override
+  String get eventIdLabel => 'Etkinlik ID veya QR Veri';
+
+  @override
+  String get manualEntryProcess => 'Gönder';
 }

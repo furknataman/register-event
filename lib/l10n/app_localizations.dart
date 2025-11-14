@@ -1003,6 +1003,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} results found'**
   String searchResultsCount(Object count);
+
+  /// No description provided for @scanPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR Code'**
+  String get scanPageTitle;
+
+  /// No description provided for @scanQrInstruction.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the QR code at the event door'**
+  String get scanQrInstruction;
+
+  /// No description provided for @scanQrAutomatic.
+  ///
+  /// In en, this message translates to:
+  /// **'The QR code will be scanned automatically'**
+  String get scanQrAutomatic;
+
+  /// No description provided for @manualEntryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Manual Entry'**
+  String get manualEntryTitle;
+
+  /// No description provided for @manualEntryDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter event ID manually'**
+  String get manualEntryDescription;
+
+  /// No description provided for @eventIdLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Event ID or QR Data'**
+  String get eventIdLabel;
+
+  /// No description provided for @manualEntryProcess.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get manualEntryProcess;
 }
 
 class _AppLocalizationsDelegate

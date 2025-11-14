@@ -147,8 +147,15 @@
     "appDevelopedBy": "Bu uygulama Eyüboğlu Eğitim Kurumları tarafından geliştirilmiştir",
     "version": "Sürüm",
     "navHome": "Ana Sayfa",
-    "navScan": "Tara",
+    "navScan": "QR",
     "navSearch": "Ara",
     "navProfile": "Profil",
-    "searchResultsCount": "{count} sonuç bulundu"
+    "searchResultsCount": "{count} sonuç bulundu",
+    "scanPageTitle": "QR",
+    "scanQrInstruction": "Etkinlik kapısındaki QR kodu tarayın",
+    "scanQrAutomatic": "QR kod otomatik olarak okunacak",
+    "manualEntryTitle": "Manuel Giriş",
+    "manualEntryDescription": "Etkinlik ID numarasını manuel olarak girin",
+    "eventIdLabel": "Etkinlik ID veya QR Veri",
+    "manualEntryProcess": "Gönder"
 }

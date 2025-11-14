@@ -188,12 +188,12 @@ class _ScanPageState extends ConsumerState<ScanPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         foregroundColor: Colors.white,
-        title: const Text('Scan QR Code'),
+        title: Text(AppLocalizations.of(context)!.scanPageTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.keyboard),
             onPressed: () => _showManualEntryDialog(),
-            tooltip: 'Manual Entry',
+            tooltip: AppLocalizations.of(context)!.manualEntryTitle,
           ),
         ],
       ),
@@ -258,9 +258,9 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                   size: 32,
                                 ),
                                 const SizedBox(height: 8),
-                                const Text(
-                                  'Point your camera at a QR code',
-                                  style: TextStyle(
+                                Text(
+                                  AppLocalizations.of(context)!.scanQrInstruction,
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w500,
@@ -269,7 +269,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'The QR code will be automatically scanned',
+                                  AppLocalizations.of(context)!.scanQrAutomatic,
                                   style: TextStyle(
                                     color: Colors.white.withValues(alpha: 0.8),
                                     fontSize: 14,
@@ -347,15 +347,15 @@ class _ScanPageState extends ConsumerState<ScanPage> {
               width: 1,
             ),
           ),
-          title: const Text(
-            'Manual Entry',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          title: Text(
+            AppLocalizations.of(context)!.manualEntryTitle,
+            style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                'Enter event ID or QR code data manually:',
+                AppLocalizations.of(context)!.manualEntryDescription,
                 style: TextStyle(color: Colors.white.withValues(alpha: 0.9)),
               ),
               const SizedBox(height: 16),
@@ -363,7 +363,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                 controller: textController,
                 style: const TextStyle(color: Colors.white),
                 decoration: InputDecoration(
-                  labelText: 'Event ID or QR Data',
+                  labelText: AppLocalizations.of(context)!.eventIdLabel,
                   labelStyle:
                       TextStyle(color: Colors.white.withValues(alpha: 0.8)),
                   enabledBorder: OutlineInputBorder(
@@ -383,7 +383,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel', style: TextStyle(color: Colors.red)),
+              child: Text(AppLocalizations.of(context)!.cancel, style: const TextStyle(color: Colors.red)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -399,7 +399,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                   _processQRCode(value);
                 }
               },
-              child: const Text('Process'),
+              child: Text(AppLocalizations.of(context)!.manualEntryProcess),
             ),
           ],
         ),

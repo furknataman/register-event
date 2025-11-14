@@ -479,4 +479,25 @@ class AppLocalizationsEn extends AppLocalizations {
   String searchResultsCount(Object count) {
     return '$count results found';
   }
+
+  @override
+  String get scanPageTitle => 'Scan QR Code';
+
+  @override
+  String get scanQrInstruction => 'Scan the QR code at the event door';
+
+  @override
+  String get scanQrAutomatic => 'The QR code will be scanned automatically';
+
+  @override
+  String get manualEntryTitle => 'Manual Entry';
+
+  @override
+  String get manualEntryDescription => 'Enter event ID manually';
+
+  @override
+  String get eventIdLabel => 'Event ID or QR Data';
+
+  @override
+  String get manualEntryProcess => 'Send';
 }
