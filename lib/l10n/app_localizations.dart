@@ -788,6 +788,12 @@ abstract class AppLocalizations {
   /// **'Registered (Time Passed)'**
   String get registeredTimePassed;
 
+  /// No description provided for @attendanceTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Taken'**
+  String get attendanceTaken;
+
   /// No description provided for @forgotPassword.
   ///
   /// In en, this message translates to:

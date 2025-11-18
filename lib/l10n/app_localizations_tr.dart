@@ -368,6 +368,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get registeredTimePassed => 'Kayıtlısınız (Saat Geçti)';
 
   @override
+  String get attendanceTaken => 'Yoklama Alındı';
+
+  @override
   String get forgotPassword => 'Şifremi Unuttum?';
 
   @override

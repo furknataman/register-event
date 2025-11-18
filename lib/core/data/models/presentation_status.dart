@@ -7,7 +7,8 @@ enum PresentationStatus {
   timePassed(3),
   sameSessionRegistered(4),
   quotaFull(5),
-  registeredButTimePassed(6);
+  registeredButTimePassed(6),
+  attendanceTaken(7);
 
   const PresentationStatus(this.value);
   final int value;
@@ -28,6 +29,8 @@ enum PresentationStatus {
         return PresentationStatus.quotaFull;
       case 6:
         return PresentationStatus.registeredButTimePassed;
+      case 7:
+        return PresentationStatus.attendanceTaken;
       default:
         return PresentationStatus.presentationNotFound;
     }
@@ -44,7 +47,8 @@ extension PresentationStatusExtension on PresentationStatus {
     return this == PresentationStatus.timePassed ||
         this == PresentationStatus.sameSessionRegistered ||
         this == PresentationStatus.quotaFull ||
-        this == PresentationStatus.registeredButTimePassed;
+        this == PresentationStatus.registeredButTimePassed ||
+        this == PresentationStatus.attendanceTaken;
   }
 
   bool get showUnregisterButton {
@@ -70,6 +74,8 @@ extension PresentationStatusExtension on PresentationStatus {
         return 'assets/svg/ban.svg';
       case PresentationStatus.registeredButTimePassed:
         return 'assets/svg/bookmark-slash.svg';
+      case PresentationStatus.attendanceTaken:
+        return 'assets/svg/circle-check.svg';
       case PresentationStatus.presentationNotFound:
         return 'assets/svg/circle-xmark.svg';
     }
@@ -88,6 +94,12 @@ extension PresentationStatusExtension on PresentationStatus {
         return [
           const Color(0xFFe53935),
           const Color(0xFFc62828),
+        ];
+      case PresentationStatus.attendanceTaken:
+        // Yeşil tonları
+        return [
+          const Color(0xFF4caf50),
+          const Color(0xFF388e3c),
         ];
       case PresentationStatus.timePassed:
       case PresentationStatus.sameSessionRegistered:

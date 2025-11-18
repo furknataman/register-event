@@ -114,6 +114,7 @@
     "quotaFull": "Quota Full",
     "presentationNotFound": "Presentation Not Found",
     "registeredTimePassed": "Registered (Time Passed)",
+    "attendanceTaken": "Attendance Taken",
     "forgotPassword": "Forgot Password?",
     "sendResetCode": "Send Code",
     "enterEmailOrPhone": "Email or Phone",

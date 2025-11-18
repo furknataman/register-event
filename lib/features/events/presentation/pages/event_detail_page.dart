@@ -174,7 +174,12 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                         ),
 
                         SliverPadding(
-                          padding: const EdgeInsets.fromLTRB(16, 16, 16, 100),
+                          padding: EdgeInsets.fromLTRB(
+                            16,
+                            16,
+                            16,
+                            MediaQuery.of(context).padding.bottom + 90,
+                          ),
                           sliver: SliverList(
                             delegate: SliverChildListDelegate([
                               Column(
@@ -829,6 +834,8 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
         return localizations.quotaFull;
       case PresentationStatus.registeredButTimePassed:
         return localizations.registeredTimePassed;
+      case PresentationStatus.attendanceTaken:
+        return localizations.attendanceTaken;
       case PresentationStatus.presentationNotFound:
         return localizations.presentationNotFound;
     }

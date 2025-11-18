@@ -369,6 +369,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get registeredTimePassed => 'Registered (Time Passed)';
 
   @override
+  String get attendanceTaken => 'Attendance Taken';
+
+  @override
   String get forgotPassword => 'Forgot Password?';
 
   @override
