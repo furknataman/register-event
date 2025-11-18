@@ -157,5 +157,15 @@
     "manualEntryTitle": "Manuel Giriş",
     "manualEntryDescription": "Etkinlik ID numarasını manuel olarak girin",
     "eventIdLabel": "Etkinlik ID veya QR Veri",
-    "manualEntryProcess": "Gönder"
+    "manualEntryProcess": "Gönder",
+    "attendanceSuccess": "Yoklama Başarılı",
+    "generalAttendanceSuccess": "Genel yoklamanız başarıyla alındı!",
+    "presentationAttendanceSuccess": "Sunum yoklamanız başarıyla alındı!",
+    "attendanceAlreadyTaken": "Yoklama Zaten Alınmış",
+    "generalAttendanceAlreadyTaken": "Genel yoklamanız daha önce alınmış.",
+    "presentationAttendanceAlreadyTaken": "Bu sunum için yoklamanız daha önce alınmış.",
+    "attendanceError": "Yoklama Hatası",
+    "notRegisteredForPresentation": "Bu sunuma kayıtlı değilsiniz.",
+    "invalidQrCode": "Geçersiz QR kod. Lütfen doğru kodu tarayın.",
+    "processingAttendance": "Yoklama alınıyor..."
 }

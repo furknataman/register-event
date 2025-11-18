@@ -104,7 +104,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                       slivers: [
                         // Header image with SliverAppBar
                         SliverAppBar(
-                          expandedHeight: 240,
+                          expandedHeight: 180,
                           pinned: true,
                           backgroundColor: isDark
                               ? const Color(0xFF1a1a2e)
@@ -127,7 +127,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                 RepaintBoundary(
                                   child: Image.asset(
                                     ImageHelper.getImageForBranch(presentation.branch),
-                                    fit: BoxFit.cover,
+                                    fit: BoxFit.fitWidth,
                                     alignment: Alignment.center,
                                     width: double.infinity,
                                     height: double.infinity,

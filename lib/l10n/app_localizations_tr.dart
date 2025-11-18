@@ -500,4 +500,37 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get manualEntryProcess => 'Gönder';
+
+  @override
+  String get attendanceSuccess => 'Yoklama Başarılı';
+
+  @override
+  String get generalAttendanceSuccess => 'Genel yoklamanız başarıyla alındı!';
+
+  @override
+  String get presentationAttendanceSuccess =>
+      'Sunum yoklamanız başarıyla alındı!';
+
+  @override
+  String get attendanceAlreadyTaken => 'Yoklama Zaten Alınmış';
+
+  @override
+  String get generalAttendanceAlreadyTaken =>
+      'Genel yoklamanız daha önce alınmış.';
+
+  @override
+  String get presentationAttendanceAlreadyTaken =>
+      'Bu sunum için yoklamanız daha önce alınmış.';
+
+  @override
+  String get attendanceError => 'Yoklama Hatası';
+
+  @override
+  String get notRegisteredForPresentation => 'Bu sunuma kayıtlı değilsiniz.';
+
+  @override
+  String get invalidQrCode => 'Geçersiz QR kod. Lütfen doğru kodu tarayın.';
+
+  @override
+  String get processingAttendance => 'Yoklama alınıyor...';
 }

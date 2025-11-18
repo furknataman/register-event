@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -25,9 +24,8 @@ final loggerProvider = Provider<AppLogger>((ref) => AppLogger());
 
 final apiClientProvider = Provider<ApiClient>((ref) {
   final dio = Dio();
-  const secureStorage = FlutterSecureStorage();
   final logger = Logger();
-  return ApiClient(dio, secureStorage, logger);
+  return ApiClient(dio, logger);
 });
 
 @Riverpod(keepAlive: true)

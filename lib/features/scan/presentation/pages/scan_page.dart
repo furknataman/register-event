@@ -1,10 +1,11 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../data/models/attendance_response_model.dart';
+import '../providers/attendance_provider.dart';
 
 class ScanProcessingNotifier extends Notifier<bool> {
   @override
@@ -70,33 +71,61 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   }
 
   Future<void> _processQRCode(String qrData) async {
-    // Parse QR code data
-    // Expected format: event_id or json with event info
-
     try {
-      // Try to parse as event ID first
-      final eventId = int.tryParse(qrData);
+      // Call attendance API
+      final attendanceNotifier = ref.read(attendanceProvider.notifier);
+      final response = await attendanceNotifier.takeAttendance(qrData);
 
-      if (eventId != null) {
-        // Navigate to event detail page
-        if (mounted) {
-          context.push('/event/$eventId');
-        }
-      } else {
-        // Try to parse as JSON or other format
-        // For now, show the raw data
-        if (mounted) {
-          _showResultDialog('QR Code Content', qrData);
-        }
+      if (!mounted) return;
+
+      if (response == null) {
+        _showErrorDialog(AppLocalizations.of(context)!.qrCodeProcessFailed);
+        return;
       }
-    } catch (e) {
+
+      // Show result based on status
+      _showAttendanceResult(response);
+    } catch (e, stackTrace) {
+      print('QR Processing Error: $e');
+      print('StackTrace: $stackTrace');
       if (mounted) {
-        _showErrorDialog('Invalid QR code format');
+        _showErrorDialog('${AppLocalizations.of(context)!.qrCodeProcessFailed}\n\nError: $e');
       }
     }
   }
 
-  void _showResultDialog(String title, String content) {
+  void _showAttendanceResult(AttendanceResponseModel response) {
+    if (response.isSuccess) {
+      // Success - green dialog
+      final message = response.status == AttendanceStatus.generalAttendanceSuccess
+          ? AppLocalizations.of(context)!.generalAttendanceSuccess
+          : AppLocalizations.of(context)!.presentationAttendanceSuccess;
+
+      _showSuccessDialog(
+        AppLocalizations.of(context)!.attendanceSuccess,
+        message,
+      );
+    } else if (response.isAlreadyTaken) {
+      // Already taken - warning yellow dialog
+      final message = response.status == AttendanceStatus.generalAttendanceAlreadyTaken
+          ? AppLocalizations.of(context)!.generalAttendanceAlreadyTaken
+          : AppLocalizations.of(context)!.presentationAttendanceAlreadyTaken;
+
+      _showWarningDialog(
+        AppLocalizations.of(context)!.attendanceAlreadyTaken,
+        message,
+      );
+    } else if (response.isError) {
+      // Error - red dialog
+      final message = response.status == AttendanceStatus.notRegisteredForPresentation
+          ? AppLocalizations.of(context)!.notRegisteredForPresentation
+          : AppLocalizations.of(context)!.invalidQrCode;
+
+      _showErrorDialog(message);
+    }
+  }
+
+  void _showSuccessDialog(String title, String message) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -111,19 +140,76 @@ class _ScanPageState extends ConsumerState<ScanPage> {
               width: 1,
             ),
           ),
-          title: Text(
-            title,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold),
+          title: Row(
+            children: [
+              const Icon(Icons.check_circle, color: Colors.green, size: 28),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
           content: Text(
-            content,
+            message,
             style: TextStyle(color: Colors.white.withValues(alpha: 0.9)),
           ),
           actions: [
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1AB7EA),
+                backgroundColor: Colors.green,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12)),
+              ),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showWarningDialog(String title, String message) {
+    showDialog(
+      context: context,
+      barrierColor: Colors.black.withValues(alpha: 0.5),
+      builder: (context) => BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+        child: AlertDialog(
+          backgroundColor: Colors.white.withValues(alpha: 0.15),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+            side: BorderSide(
+              color: Colors.white.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          title: Row(
+            children: [
+              const Icon(Icons.warning, color: Colors.orange, size: 28),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
+          ),
+          content: Text(
+            message,
+            style: TextStyle(color: Colors.white.withValues(alpha: 0.9)),
+          ),
+          actions: [
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.orange,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
@@ -290,16 +376,16 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
                           child: Container(
                             color: Colors.black.withValues(alpha: 0.5),
-                            child: const Center(
+                            child: Center(
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  CircularProgressIndicator(
+                                  const CircularProgressIndicator(
                                       color: Colors.white),
-                                  SizedBox(height: 16),
+                                  const SizedBox(height: 16),
                                   Text(
-                                    'Processing QR code...',
-                                    style: TextStyle(
+                                    AppLocalizations.of(context)!.processingAttendance,
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),

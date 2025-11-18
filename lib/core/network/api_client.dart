@@ -1,16 +1,15 @@
 import 'package:dio/dio.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 
 import '../constants/app_constants.dart';
+import '../data/local/token_stroge.dart' as token_storage;
 import '../errors/exceptions.dart';
 
 class ApiClient {
   final Dio _dio;
-  final FlutterSecureStorage _secureStorage;
   final Logger _logger;
 
-  ApiClient(this._dio, this._secureStorage, this._logger) {
+  ApiClient(this._dio, this._logger) {
     _setupInterceptors();
   }
 
@@ -24,14 +23,14 @@ class ApiClient {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           // Add auth token
-          final token = await _secureStorage.read(key: AppConstants.tokenKey);
+          final token = await token_storage.getToken();
           if (token != null) {
             options.headers['Authorization'] = 'Bearer $token';
           }
-          
+
           _logger.d('REQUEST[${options.method}] => PATH: ${options.path}');
           _logger.d('Headers: ${options.headers}');
-          
+
           handler.next(options);
         },
         onResponse: (response, handler) {
@@ -67,28 +66,7 @@ class ApiClient {
   }
 
   Future<bool> _refreshToken() async {
-    try {
-      final refreshToken = await _secureStorage.read(key: AppConstants.refreshTokenKey);
-      if (refreshToken == null) return false;
-
-      final response = await _dio.post(
-        '/auth/refresh',
-        data: {'refresh_token': refreshToken},
-      );
-
-      if (response.statusCode == 200) {
-        final newToken = response.data['access_token'];
-        final newRefreshToken = response.data['refresh_token'];
-        
-        await _secureStorage.write(key: AppConstants.tokenKey, value: newToken);
-        await _secureStorage.write(key: AppConstants.refreshTokenKey, value: newRefreshToken);
-        
-        return true;
-      }
-    } catch (e) {
-      _logger.e('Token refresh failed: $e');
-    }
-    
+    // Token refresh not implemented with SharedPreferences
     return false;
   }
 

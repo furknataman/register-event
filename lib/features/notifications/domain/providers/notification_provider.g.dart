@@ -90,4 +90,4 @@ final class UnreadCountProvider
   }
 }
 
-String _$unreadCountHash() => r'5cdf3da668d74cb5687883ff1771037f6f29809d';
+String _$unreadCountHash() => r'0aed5ad27ef8f241b98b3768d718e6952c0d91cd';

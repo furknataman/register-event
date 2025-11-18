@@ -157,5 +157,15 @@
     "manualEntryTitle": "Manual Entry",
     "manualEntryDescription": "Enter event ID manually",
     "eventIdLabel": "Event ID or QR Data",
-    "manualEntryProcess": "Send"
+    "manualEntryProcess": "Send",
+    "attendanceSuccess": "Attendance Successful",
+    "generalAttendanceSuccess": "Your general attendance has been recorded successfully!",
+    "presentationAttendanceSuccess": "Your presentation attendance has been recorded successfully!",
+    "attendanceAlreadyTaken": "Attendance Already Taken",
+    "generalAttendanceAlreadyTaken": "Your general attendance has already been recorded.",
+    "presentationAttendanceAlreadyTaken": "Your attendance for this presentation has already been recorded.",
+    "attendanceError": "Attendance Error",
+    "notRegisteredForPresentation": "You are not registered for this presentation.",
+    "invalidQrCode": "Invalid QR code. Please scan the correct code.",
+    "processingAttendance": "Processing attendance..."
 }

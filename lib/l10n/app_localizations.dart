@@ -1045,6 +1045,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Send'**
   String get manualEntryProcess;
+
+  /// No description provided for @attendanceSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Successful'**
+  String get attendanceSuccess;
+
+  /// No description provided for @generalAttendanceSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your general attendance has been recorded successfully!'**
+  String get generalAttendanceSuccess;
+
+  /// No description provided for @presentationAttendanceSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your presentation attendance has been recorded successfully!'**
+  String get presentationAttendanceSuccess;
+
+  /// No description provided for @attendanceAlreadyTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Already Taken'**
+  String get attendanceAlreadyTaken;
+
+  /// No description provided for @generalAttendanceAlreadyTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Your general attendance has already been recorded.'**
+  String get generalAttendanceAlreadyTaken;
+
+  /// No description provided for @presentationAttendanceAlreadyTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Your attendance for this presentation has already been recorded.'**
+  String get presentationAttendanceAlreadyTaken;
+
+  /// No description provided for @attendanceError.
+  ///
+  /// In en, this message translates to:
+  /// **'Attendance Error'**
+  String get attendanceError;
+
+  /// No description provided for @notRegisteredForPresentation.
+  ///
+  /// In en, this message translates to:
+  /// **'You are not registered for this presentation.'**
+  String get notRegisteredForPresentation;
+
+  /// No description provided for @invalidQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR code. Please scan the correct code.'**
+  String get invalidQrCode;
+
+  /// No description provided for @processingAttendance.
+  ///
+  /// In en, this message translates to:
+  /// **'Processing attendance...'**
+  String get processingAttendance;
 }
 
 class _AppLocalizationsDelegate

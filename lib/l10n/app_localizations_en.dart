@@ -500,4 +500,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get manualEntryProcess => 'Send';
+
+  @override
+  String get attendanceSuccess => 'Attendance Successful';
+
+  @override
+  String get generalAttendanceSuccess =>
+      'Your general attendance has been recorded successfully!';
+
+  @override
+  String get presentationAttendanceSuccess =>
+      'Your presentation attendance has been recorded successfully!';
+
+  @override
+  String get attendanceAlreadyTaken => 'Attendance Already Taken';
+
+  @override
+  String get generalAttendanceAlreadyTaken =>
+      'Your general attendance has already been recorded.';
+
+  @override
+  String get presentationAttendanceAlreadyTaken =>
+      'Your attendance for this presentation has already been recorded.';
+
+  @override
+  String get attendanceError => 'Attendance Error';
+
+  @override
+  String get notRegisteredForPresentation =>
+      'You are not registered for this presentation.';
+
+  @override
+  String get invalidQrCode => 'Invalid QR code. Please scan the correct code.';
+
+  @override
+  String get processingAttendance => 'Processing attendance...';
 }
