@@ -167,5 +167,8 @@
     "attendanceError": "Yoklama Hatası",
     "notRegisteredForPresentation": "Bu sunuma kayıtlı değilsiniz.",
     "invalidQrCode": "Geçersiz QR kod. Lütfen doğru kodu tarayın.",
-    "processingAttendance": "Yoklama alınıyor..."
+    "processingAttendance": "Yoklama alınıyor...",
+    "info": "Bilgi",
+    "notRegistered": "Kayıtlı Değilsiniz",
+    "invalidQr": "Geçersiz QR Kod"
 }

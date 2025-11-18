@@ -30,6 +30,7 @@ class ApiClient {
 
           _logger.d('REQUEST[${options.method}] => PATH: ${options.path}');
           _logger.d('Headers: ${options.headers}');
+          _logger.d('Request data: ${options.data}');
 
           handler.next(options);
         },
@@ -40,6 +41,7 @@ class ApiClient {
         onError: (error, handler) async {
           _logger.e('ERROR[${error.response?.statusCode}] => PATH: ${error.requestOptions.path}');
           _logger.e('Error message: ${error.message}');
+          _logger.e('Response body: ${error.response?.data}');
           
           // Handle token refresh on 401
           if (error.response?.statusCode == 401) {
@@ -47,9 +49,9 @@ class ApiClient {
             if (refreshed) {
               // Retry the request
               final options = error.requestOptions;
-              final token = await _secureStorage.read(key: AppConstants.tokenKey);
+              final token = await token_storage.getToken();
               options.headers['Authorization'] = 'Bearer $token';
-              
+
               try {
                 final response = await _dio.fetch(options);
                 return handler.resolve(response);

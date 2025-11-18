@@ -85,11 +85,9 @@ class _ScanPageState extends ConsumerState<ScanPage> {
 
       // Show result based on status
       _showAttendanceResult(response);
-    } catch (e, stackTrace) {
-      print('QR Processing Error: $e');
-      print('StackTrace: $stackTrace');
+    } catch (e) {
       if (mounted) {
-        _showErrorDialog('${AppLocalizations.of(context)!.qrCodeProcessFailed}\n\nError: $e');
+        _showErrorDialog(AppLocalizations.of(context)!.qrCodeProcessFailed);
       }
     }
   }
@@ -116,12 +114,16 @@ class _ScanPageState extends ConsumerState<ScanPage> {
         message,
       );
     } else if (response.isError) {
-      // Error - red dialog
+      // Info dialog with specific titles
+      final title = response.status == AttendanceStatus.notRegisteredForPresentation
+          ? AppLocalizations.of(context)!.notRegistered
+          : AppLocalizations.of(context)!.invalidQr;
+
       final message = response.status == AttendanceStatus.notRegisteredForPresentation
           ? AppLocalizations.of(context)!.notRegisteredForPresentation
           : AppLocalizations.of(context)!.invalidQrCode;
 
-      _showErrorDialog(message);
+      _showErrorDialogWithTitle(title, message);
     }
   }
 
@@ -224,6 +226,10 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   }
 
   void _showErrorDialog(String message) {
+    _showErrorDialogWithTitle(AppLocalizations.of(context)!.info, message);
+  }
+
+  void _showErrorDialogWithTitle(String title, String message) {
     showDialog(
       context: context,
       barrierColor: Colors.black.withValues(alpha: 0.5),
@@ -238,9 +244,18 @@ class _ScanPageState extends ConsumerState<ScanPage> {
               width: 1,
             ),
           ),
-          title: const Text(
-            'Error',
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          title: Row(
+            children: [
+              const Icon(Icons.info_outline, color: Colors.blue, size: 28),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ],
           ),
           content: Text(
             message,

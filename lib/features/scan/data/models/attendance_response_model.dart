@@ -27,9 +27,14 @@ class AttendanceResponseModel {
   });
 
   factory AttendanceResponseModel.fromJson(Map<String, dynamic> json) {
+    final statusValue = json['status'];
+    final statusInt = statusValue is int
+        ? statusValue
+        : int.tryParse(statusValue.toString()) ?? 5;
+
     return AttendanceResponseModel(
       success: json['basarili'] ?? false,
-      status: AttendanceStatus.fromValue(json['status'] ?? 5),
+      status: AttendanceStatus.fromValue(statusInt),
     );
   }
 

@@ -535,4 +535,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get processingAttendance => 'Processing attendance...';
+
+  @override
+  String get info => 'Info';
+
+  @override
+  String get notRegistered => 'Not Registered';
+
+  @override
+  String get invalidQr => 'Invalid QR Code';
 }

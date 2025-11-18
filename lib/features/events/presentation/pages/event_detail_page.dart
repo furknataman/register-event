@@ -634,32 +634,22 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
               fontSize: 16,
             ),
           ),
-          subtitle: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (position != null) ...[
-                const SizedBox(height: 4),
-                Text(
-                  position,
-                  style: TextStyle(
-                    color: AppTextStyles.getTextColor(context, opacity: 0.85),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-              if (email != null) ...[
-                const SizedBox(height: 3),
-                Text(
-                  email,
-                  style: TextStyle(
-                    color: AppTextStyles.getSecondaryTextColor(context),
-                    fontSize: 12,
-                  ),
-                ),
-              ],
-            ],
-          ),
+          subtitle: position != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 4),
+                    Text(
+                      position,
+                      style: TextStyle(
+                        color: AppTextStyles.getTextColor(context, opacity: 0.85),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                )
+              : null,
         ),
       ),
     );

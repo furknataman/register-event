@@ -1105,6 +1105,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Processing attendance...'**
   String get processingAttendance;
+
+  /// No description provided for @info.
+  ///
+  /// In en, this message translates to:
+  /// **'Info'**
+  String get info;
+
+  /// No description provided for @notRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'Not Registered'**
+  String get notRegistered;
+
+  /// No description provided for @invalidQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR Code'**
+  String get invalidQr;
 }
 
 class _AppLocalizationsDelegate

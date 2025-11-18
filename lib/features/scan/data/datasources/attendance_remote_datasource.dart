@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_client.dart';
@@ -17,7 +19,10 @@ class AttendanceRemoteDatasourceImpl implements AttendanceRemoteDatasource {
     try {
       final response = await apiClient.post(
         '/Yoklama/YoklamaAl',
-        data: {'QrKod': qrCode},
+        data: jsonEncode({'QrKod': qrCode}),
+        options: Options(
+          contentType: Headers.jsonContentType,
+        ),
       );
 
       return AttendanceResponseModel.fromJson(response.data);

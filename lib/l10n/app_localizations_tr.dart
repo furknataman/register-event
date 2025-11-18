@@ -533,4 +533,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get processingAttendance => 'Yoklama alınıyor...';
+
+  @override
+  String get info => 'Bilgi';
+
+  @override
+  String get notRegistered => 'Kayıtlı Değilsiniz';
+
+  @override
+  String get invalidQr => 'Geçersiz QR Kod';
 }

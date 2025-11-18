@@ -135,16 +135,15 @@ final routerProvider = Provider<GoRouter>((ref) {
         ],
       ),
 
-      // Event Routes - Fade + Scale transition for detail page
+      // Event Routes - Material transition for iOS swipe-back
       GoRoute(
         path: '/event/:id',
         name: 'eventDetail',
         pageBuilder: (context, state) {
           final eventId = state.pathParameters['id']!;
-          return CustomPageTransitions.sharedAxisTransition(
+          return MaterialPage(
+            key: state.pageKey,
             child: EventDetailPage(eventId: eventId),
-            state: state,
-            transitionType: SharedAxisTransitionType.scaled,
           );
         },
       ),
