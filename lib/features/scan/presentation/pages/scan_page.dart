@@ -350,7 +350,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
 
                     // Instructions
                     Positioned(
-                      bottom: 60,
+                      bottom: 40,
                       left: 0,
                       right: 0,
                       child: ClipRRect(
@@ -360,6 +360,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                           child: Container(
                             margin: const EdgeInsets.symmetric(horizontal: 24),
                             padding: const EdgeInsets.all(16),
+                            constraints: const BoxConstraints(maxHeight: 140),
                             decoration: BoxDecoration(
                               color: Colors.white.withValues(alpha: 0.15),
                               borderRadius: BorderRadius.circular(12),
@@ -385,6 +386,8 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
@@ -394,6 +397,8 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                     fontSize: 14,
                                   ),
                                   textAlign: TextAlign.center,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -439,7 +444,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
             bottom: 0,
             left: 0,
             right: 0,
-            height: 150,
+            height: 100,
             child: Container(
               color: Colors.black,
             ),
