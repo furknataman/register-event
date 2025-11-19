@@ -2,21 +2,21 @@ import 'dart:io';
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter/services.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/utils/localization_helper.dart';
-import '../../../../core/utils/image_helper.dart';
 import '../../../../core/data/models/presentation_model.dart';
 import '../../../../core/data/models/presentation_status.dart';
-import '../../../../l10n/app_localizations.dart';
-import '../../../../core/services/api/service.dart';
-import '../../../../core/theme/theme_mode.dart';
 import '../../../../core/notifications/toast/toast_message.dart';
+import '../../../../core/services/api/service.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/theme_mode.dart';
+import '../../../../core/utils/image_helper.dart';
+import '../../../../core/utils/localization_helper.dart';
 import '../../../../core/widgets/gradient_button.dart';
+import '../../../../l10n/app_localizations.dart';
 
 // Platform-specific glass effect wrapper
 // Android'de LiquidGlass performans sorunu yaratıyor, basit Container kullan
@@ -68,8 +68,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
     final themeModeAsync = ref.watch(themeModeProvider);
     final themeMode = themeModeAsync.value ?? ThemeMode.system;
     final isDark = themeMode == ThemeMode.dark ||
-        (themeMode == ThemeMode.system &&
-            MediaQuery.of(context).platformBrightness == Brightness.dark);
+        (themeMode == ThemeMode.system && MediaQuery.of(context).platformBrightness == Brightness.dark);
 
     return Scaffold(
       extendBodyBehindAppBar: true,
@@ -88,16 +87,13 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
           return sessionDataAsync.when(
             data: (sessionData) {
               // Check if user is registered for this presentation
-              final isRegistered = sessionData.kayitliSunum
-                  .any((r) => r.sunumId == presentation.id);
+              final isRegistered = sessionData.kayitliSunum.any((r) => r.sunumId == presentation.id);
 
               return Stack(
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                      gradient: isDark
-                          ? AppColors.backgroundGradientDark
-                          : AppColors.backgroundGradient,
+                      gradient: isDark ? AppColors.backgroundGradientDark : AppColors.backgroundGradient,
                     ),
                     child: CustomScrollView(
                       physics: const ClampingScrollPhysics(),
@@ -106,9 +102,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                         SliverAppBar(
                           expandedHeight: 180,
                           pinned: true,
-                          backgroundColor: isDark
-                              ? const Color(0xFF1a1a2e)
-                              : const Color(0xFF004B8D),
+                          backgroundColor: isDark ? const Color(0xFF1a1a2e) : const Color(0xFF004B8D),
                           leading: IconButton(
                             icon: const Icon(Icons.arrow_back_ios, color: Colors.white),
                             onPressed: () => Navigator.of(context).pop(),
@@ -119,9 +113,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                               children: [
                                 // Background color
                                 Container(
-                                  color: isDark
-                                      ? const Color(0xFF1a1a2e)
-                                      : const Color(0xFF004B8D),
+                                  color: isDark ? const Color(0xFF1a1a2e) : const Color(0xFF004B8D),
                                 ),
                                 // Image
                                 RepaintBoundary(
@@ -187,12 +179,9 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                 children: [
                                   // Title
                                   Text(
-                                    presentation.title ??
-                                        AppLocalizations.of(context)!
-                                            .noTitleInfo,
+                                    presentation.title ?? AppLocalizations.of(context)!.noTitleInfo,
                                     style: TextStyle(
-                                      color:
-                                          AppTextStyles.getTextColor(context),
+                                      color: AppTextStyles.getTextColor(context),
                                       fontSize: 24,
                                       fontWeight: FontWeight.bold,
                                       height: 1.3,
@@ -206,46 +195,31 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                       spacing: 12,
                                       runSpacing: 12,
                                       children: [
-                                        if (presentation.presentationPlace !=
-                                            null)
+                                        if (presentation.presentationPlace != null)
                                           SizedBox(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    56) /
-                                                2,
+                                            width: (MediaQuery.of(context).size.width - 56) / 2,
                                             child: _buildInfoCard(
                                               context,
                                               'assets/svg/location-dot.svg',
-                                              AppLocalizations.of(context)!
-                                                  .presentationPlace,
+                                              AppLocalizations.of(context)!.presentationPlace,
                                               presentation.presentationPlace!,
                                               isDark,
                                             ),
                                           ),
                                         if (presentation.time != null)
                                           SizedBox(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    56) /
-                                                2,
+                                            width: (MediaQuery.of(context).size.width - 56) / 2,
                                             child: _buildInfoCard(
                                               context,
                                               'assets/svg/clock.svg',
-                                              AppLocalizations.of(context)!
-                                                  .presentationTime,
+                                              AppLocalizations.of(context)!.presentationTime,
                                               presentation.time!,
                                               isDark,
                                             ),
                                           ),
                                         if (presentation.session != null)
                                           SizedBox(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    56) /
-                                                2,
+                                            width: (MediaQuery.of(context).size.width - 56) / 2,
                                             child: _buildInfoCard(
                                               context,
                                               'assets/svg/calendar.svg',
@@ -254,56 +228,38 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                               isDark,
                                             ),
                                           ),
-                                        if (presentation.quota != null &&
-                                            presentation.registrationCount !=
-                                                null)
+                                        if (presentation.quota != null && presentation.registrationCount != null)
                                           SizedBox(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    56) /
-                                                2,
+                                            width: (MediaQuery.of(context).size.width - 56) / 2,
                                             child: _buildInfoCard(
                                               context,
                                               'assets/svg/users.svg',
-                                              AppLocalizations.of(context)!
-                                                  .quota,
+                                              AppLocalizations.of(context)!.quota,
                                               '${presentation.registrationCount}/${presentation.quota}',
                                               isDark,
                                             ),
                                           ),
                                         if (presentation.duration != null)
                                           SizedBox(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    56) /
-                                                2,
+                                            width: (MediaQuery.of(context).size.width - 56) / 2,
                                             child: _buildInfoCard(
                                               context,
                                               'assets/svg/hourglass.svg',
-                                              AppLocalizations.of(context)!
-                                                  .duration,
+                                              AppLocalizations.of(context)!.duration,
                                               '${presentation.duration} ${AppLocalizations.of(context)!.minutes}',
                                               isDark,
                                             ),
                                           ),
                                         if (presentation.language != null)
                                           SizedBox(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    56) /
-                                                2,
+                                            width: (MediaQuery.of(context).size.width - 56) / 2,
                                             child: _buildInfoCard(
                                               context,
                                               'assets/svg/globe.svg',
-                                              AppLocalizations.of(context)!
-                                                  .language,
+                                              AppLocalizations.of(context)!.language,
                                               getLocalizedText(
                                                 presentation.language,
-                                                Localizations.localeOf(context)
-                                                    .languageCode,
+                                                Localizations.localeOf(context).languageCode,
                                               ),
                                               isDark,
                                             ),
@@ -318,8 +274,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                     Text(
                                       AppLocalizations.of(context)!.speakers,
                                       style: TextStyle(
-                                        color:
-                                            AppTextStyles.getTextColor(context),
+                                        color: AppTextStyles.getTextColor(context),
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                       ),
@@ -332,8 +287,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                       presentation.position,
                                       isDark,
                                     ),
-                                    if (presentation.presenter2Name !=
-                                        null) ...[
+                                    if (presentation.presenter2Name != null) ...[
                                       const SizedBox(height: 12),
                                       _buildPresenterCard(
                                         context,
@@ -354,26 +308,19 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                         padding: const EdgeInsets.all(18),
                                         decoration: BoxDecoration(
                                           color: isDark
-                                              ? Colors.white
-                                                  .withValues(alpha: 0.15)
-                                              : Colors.white
-                                                  .withValues(alpha: 0.25),
-                                          borderRadius:
-                                              BorderRadius.circular(16),
+                                              ? Colors.white.withValues(alpha: 0.15)
+                                              : Colors.white.withValues(alpha: 0.25),
+                                          borderRadius: BorderRadius.circular(16),
                                           border: Border.all(
                                             color: isDark
-                                                ? Colors.white
-                                                    .withValues(alpha: 0.3)
-                                                : Colors.white
-                                                    .withValues(alpha: 0.4),
+                                                ? Colors.white.withValues(alpha: 0.3)
+                                                : Colors.white.withValues(alpha: 0.4),
                                           ),
                                         ),
                                         child: Text(
                                           presentation.description!,
                                           style: TextStyle(
-                                            color: AppTextStyles.getTextColor(
-                                                context,
-                                                opacity: 0.95),
+                                            color: AppTextStyles.getTextColor(context, opacity: 0.95),
                                             height: 1.6,
                                             fontSize: 15,
                                           ),
@@ -416,9 +363,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
             },
             loading: () => Container(
               decoration: BoxDecoration(
-                gradient: isDark
-                    ? AppColors.backgroundGradientDark
-                    : AppColors.backgroundGradient,
+                gradient: isDark ? AppColors.backgroundGradientDark : AppColors.backgroundGradient,
               ),
               child: const Center(
                 child: CircularProgressIndicator(color: Colors.white),
@@ -426,9 +371,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
             ),
             error: (error, stack) => Container(
               decoration: BoxDecoration(
-                gradient: isDark
-                    ? AppColors.backgroundGradientDark
-                    : AppColors.backgroundGradient,
+                gradient: isDark ? AppColors.backgroundGradientDark : AppColors.backgroundGradient,
               ),
               child: Center(
                 child: Text(
@@ -443,14 +386,11 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
           final themeModeAsync = ref.watch(themeModeProvider);
           final themeMode = themeModeAsync.value ?? ThemeMode.system;
           final isDarkLoading = themeMode == ThemeMode.dark ||
-              (themeMode == ThemeMode.system &&
-                  MediaQuery.of(context).platformBrightness == Brightness.dark);
+              (themeMode == ThemeMode.system && MediaQuery.of(context).platformBrightness == Brightness.dark);
 
           return Container(
             decoration: BoxDecoration(
-              gradient: isDarkLoading
-                  ? AppColors.backgroundGradientDark
-                  : AppColors.backgroundGradient,
+              gradient: isDarkLoading ? AppColors.backgroundGradientDark : AppColors.backgroundGradient,
             ),
             child: Center(
               child: Column(
@@ -473,14 +413,11 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
           final themeModeAsync = ref.watch(themeModeProvider);
           final themeMode = themeModeAsync.value ?? ThemeMode.system;
           final isDarkError = themeMode == ThemeMode.dark ||
-              (themeMode == ThemeMode.system &&
-                  MediaQuery.of(context).platformBrightness == Brightness.dark);
+              (themeMode == ThemeMode.system && MediaQuery.of(context).platformBrightness == Brightness.dark);
 
           return Container(
             decoration: BoxDecoration(
-              gradient: isDarkError
-                  ? AppColors.backgroundGradientDark
-                  : AppColors.backgroundGradient,
+              gradient: isDarkError ? AppColors.backgroundGradientDark : AppColors.backgroundGradient,
             ),
             child: Center(
               child: Column(
@@ -510,8 +447,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () => ref
-                        .invalidate(eventDetailsProvider(int.parse(widget.eventId))),
+                    onPressed: () => ref.invalidate(eventDetailsProvider(int.parse(widget.eventId))),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white.withValues(alpha: 0.15),
                       foregroundColor: Colors.white,
@@ -546,14 +482,10 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
       child: Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.15)
-              : Colors.white.withValues(alpha: 0.25),
+          color: isDark ? Colors.white.withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.25),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.3)
-                : Colors.white.withValues(alpha: 0.4),
+            color: isDark ? Colors.white.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.4),
             width: 1,
           ),
         ),
@@ -562,9 +494,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
             Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Colors.white.withValues(alpha: 0.15),
+                color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.15),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: SvgPicture.asset(
@@ -605,20 +535,15 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
       isDark: isDark,
       child: Container(
         decoration: BoxDecoration(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.15)
-              : Colors.white.withValues(alpha: 0.25),
+          color: isDark ? Colors.white.withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.25),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.3)
-                : Colors.white.withValues(alpha: 0.4),
+            color: isDark ? Colors.white.withValues(alpha: 0.3) : Colors.white.withValues(alpha: 0.4),
             width: 1,
           ),
         ),
         child: ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           leading: CircleAvatar(
             radius: 24,
             backgroundColor: const Color(0xFF667eea),
@@ -696,12 +621,10 @@ class _RegisterActionButton extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<_RegisterActionButton> createState() =>
-      _RegisterActionButtonState();
+  ConsumerState<_RegisterActionButton> createState() => _RegisterActionButtonState();
 }
 
-class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
-    with SingleTickerProviderStateMixin {
+class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton> with SingleTickerProviderStateMixin {
   late final AnimationController _pressController;
   late final Animation<double> _scaleAnimation;
   bool _isProcessing = false;
@@ -743,9 +666,7 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
     final confirmed = await _showConfirmationBottomSheet(
       context,
       localizations.areYouSure,
-      widget.isRegistered
-          ? localizations.confirmUnregistration
-          : localizations.confirmRegistration,
+      widget.isRegistered ? localizations.confirmUnregistration : localizations.confirmRegistration,
       widget.isDark,
     );
 
@@ -771,14 +692,10 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
 
           try {
             if (widget.isRegistered) {
-              await ref
-                  .read(webServiceProvider)
-                  .removeEvent(user.id!, widget.presentation.id!);
+              await ref.read(webServiceProvider).removeEvent(user.id!, widget.presentation.id!);
               toastMessage(localizations.unregistrationSuccess);
             } else {
-              await ref
-                  .read(webServiceProvider)
-                  .registerEvent(user.id!, widget.presentation.id!);
+              await ref.read(webServiceProvider).registerEvent(user.id!, widget.presentation.id!);
               toastMessage(localizations.registrationSuccess);
             }
 
@@ -856,82 +773,81 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton>
       gradientColors: buttonColors.cast<Color>(),
       onHighlightChanged: _onHighlightChanged,
       child: AnimatedSwitcher(
-          duration: const Duration(milliseconds: 220),
-          switchInCurve: Curves.easeOutCubic,
-          switchOutCurve: Curves.easeInCubic,
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: ScaleTransition(
-                scale: Tween<double>(begin: 0.92, end: 1.0).animate(animation),
-                child: child,
+        duration: const Duration(milliseconds: 220),
+        switchInCurve: Curves.easeOutCubic,
+        switchOutCurve: Curves.easeInCubic,
+        transitionBuilder: (child, animation) {
+          return FadeTransition(
+            opacity: animation,
+            child: ScaleTransition(
+              scale: Tween<double>(begin: 0.92, end: 1.0).animate(animation),
+              child: child,
+            ),
+          );
+        },
+        child: _isProcessing
+            ? Row(
+                key: const ValueKey('processing'),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    localizations.processing,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 2),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              )
+            : Row(
+                key: ValueKey(buttonText),
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SvgPicture.asset(
+                    buttonIcon,
+                    width: 20,
+                    height: 20,
+                    colorFilter: const ColorFilter.mode(
+                      Colors.white,
+                      BlendMode.srcIn,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Text(
+                    buttonText,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      shadows: [
+                        Shadow(
+                          color: Colors.black26,
+                          offset: Offset(0, 2),
+                          blurRadius: 4,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            );
-          },
-          child: _isProcessing
-              ? Row(
-                  key: const ValueKey('processing'),
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      width: 20,
-                      height: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                        valueColor:
-                            AlwaysStoppedAnimation<Color>(Colors.white),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      localizations.processing,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              : Row(
-                  key: ValueKey(buttonText),
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SvgPicture.asset(
-                      buttonIcon,
-                      width: 20,
-                      height: 20,
-                      colorFilter: const ColorFilter.mode(
-                        Colors.white,
-                        BlendMode.srcIn,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Text(
-                      buttonText,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            color: Colors.black26,
-                            offset: Offset(0, 2),
-                            blurRadius: 4,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-        ),
+      ),
     );
 
     return _buildGlassEffect(
@@ -976,9 +892,7 @@ Future<bool?> _showConfirmationBottomSheet(
               ),
         borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
         border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.1)
-              : Colors.white.withValues(alpha: 0.5),
+          color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.white.withValues(alpha: 0.5),
           width: 1.5,
         ),
       ),
@@ -993,9 +907,7 @@ Future<bool?> _showConfirmationBottomSheet(
               height: 4,
               margin: const EdgeInsets.only(bottom: 24),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.2)
-                    : Colors.black.withValues(alpha: 0.1),
+                color: isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -1004,9 +916,7 @@ Future<bool?> _showConfirmationBottomSheet(
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: isDark
-                    ? Colors.orange.withValues(alpha: 0.15)
-                    : Colors.orange.withValues(alpha: 0.1),
+                color: isDark ? Colors.orange.withValues(alpha: 0.15) : Colors.orange.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: Icon(
@@ -1035,9 +945,7 @@ Future<bool?> _showConfirmationBottomSheet(
             Text(
               message,
               style: TextStyle(
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.7)
-                    : Colors.black.withValues(alpha: 0.6),
+                color: isDark ? Colors.white.withValues(alpha: 0.7) : Colors.black.withValues(alpha: 0.6),
                 fontSize: 15,
                 height: 1.5,
               ),
@@ -1058,15 +966,12 @@ Future<bool?> _showConfirmationBottomSheet(
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      backgroundColor: isDark
-                          ? Colors.white.withValues(alpha: 0.1)
-                          : Colors.black.withValues(alpha: 0.05),
+                      backgroundColor:
+                          isDark ? Colors.white.withValues(alpha: 0.1) : Colors.black.withValues(alpha: 0.05),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                         side: BorderSide(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.2)
-                              : Colors.black.withValues(alpha: 0.1),
+                          color: isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.1),
                         ),
                       ),
                     ),

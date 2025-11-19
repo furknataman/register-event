@@ -47,14 +47,12 @@ void main() async {
 
   // Setup notifications
   FlutterLocalNotificationsPlugin()
-      .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+      .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.requestNotificationsPermission();
 
   // Initialize logger
   final logger = getIt<AppLogger>();
-  logger.logAppEvent(
-      'App Started', {'timestamp': DateTime.now().toIso8601String()});
+  logger.logAppEvent('App Started', {'timestamp': DateTime.now().toIso8601String()});
 
   // Create global provider container for FCM handlers
   globalContainer = ProviderContainer();

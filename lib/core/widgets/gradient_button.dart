@@ -42,7 +42,7 @@ class GradientButton extends StatelessWidget {
       width: width,
       height: height,
       child: Opacity(
-        opacity: enabled ? 1.0 : 0.7,
+        opacity: enabled ? 1.0 : 0.9,
         child: Material(
           color: Colors.transparent,
           child: InkWell(

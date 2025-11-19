@@ -62,9 +62,6 @@ class _ScanPageState extends ConsumerState<ScanPage> {
     } catch (e) {
       if (mounted) {
         _showErrorDialog(AppLocalizations.of(context)!.qrCodeProcessFailed);
-      }
-    } finally {
-      if (mounted) {
         ref.read(scanProcessingProvider.notifier).setProcessing(false);
       }
     }
@@ -80,6 +77,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
 
       if (response == null) {
         _showErrorDialog(AppLocalizations.of(context)!.qrCodeProcessFailed);
+        ref.read(scanProcessingProvider.notifier).setProcessing(false);
         return;
       }
 
@@ -88,6 +86,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
     } catch (e) {
       if (mounted) {
         _showErrorDialog(AppLocalizations.of(context)!.qrCodeProcessFailed);
+        ref.read(scanProcessingProvider.notifier).setProcessing(false);
       }
     }
   }
@@ -130,6 +129,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   void _showSuccessDialog(String title, String message) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -167,7 +167,10 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref.read(scanProcessingProvider.notifier).setProcessing(false);
+              },
               child: const Text('OK'),
             ),
           ],
@@ -179,6 +182,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   void _showWarningDialog(String title, String message) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -216,7 +220,10 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref.read(scanProcessingProvider.notifier).setProcessing(false);
+              },
               child: const Text('OK'),
             ),
           ],
@@ -232,6 +239,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   void _showErrorDialogWithTitle(String title, String message) {
     showDialog(
       context: context,
+      barrierDismissible: false,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -269,7 +277,10 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
               ),
-              onPressed: () => Navigator.of(context).pop(),
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref.read(scanProcessingProvider.notifier).setProcessing(false);
+              },
               child: const Text('OK'),
             ),
           ],
@@ -318,16 +329,23 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                     ),
 
                     // Overlay with scanning frame
-                    Container(
-                      decoration: ShapeDecoration(
-                        shape: QrScannerOverlayShape(
-                          borderColor: Colors.white,
-                          borderRadius: 10,
-                          borderLength: 30,
-                          borderWidth: 10,
-                          cutOutSize: 350,
-                        ),
-                      ),
+                    Builder(
+                      builder: (context) {
+                        final screenWidth = MediaQuery.of(context).size.width;
+                        final cutOutSize = (screenWidth * 0.75).clamp(250.0, 400.0);
+
+                        return Container(
+                          decoration: ShapeDecoration(
+                            shape: QrScannerOverlayShape(
+                              borderColor: Colors.white,
+                              borderRadius: 10,
+                              borderLength: 30,
+                              borderWidth: 10,
+                              cutOutSize: cutOutSize,
+                            ),
+                          ),
+                        );
+                      },
                     ),
 
                     // Instructions
@@ -436,6 +454,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
 
     showDialog(
       context: context,
+      barrierDismissible: false,
       barrierColor: Colors.black.withValues(alpha: 0.5),
       builder: (context) => BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
@@ -497,6 +516,7 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                 final value = textController.text.trim();
                 if (value.isNotEmpty) {
                   Navigator.of(context).pop();
+                  ref.read(scanProcessingProvider.notifier).setProcessing(true);
                   _processQRCode(value);
                 }
               },
