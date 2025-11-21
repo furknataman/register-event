@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../../core/errors/exceptions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 
@@ -81,11 +82,13 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
         type: _resetType.value,
       );
 
-      if (mounted) {
-        HapticFeedback.lightImpact();
-        _logger.info('Reset code sent successfully');
+      if (!mounted) return;
 
-        // Show success message
+      HapticFeedback.lightImpact();
+      _logger.info('Reset code sent successfully');
+
+      // Show success message
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(AppLocalizations.of(context)!.resetCodeSent),
@@ -104,10 +107,41 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
         );
       }
     } catch (e) {
+      if (!mounted) return;
+
+      HapticFeedback.mediumImpact();
+      _logger.error('Failed to send reset code: $e');
+
+      final localizations = AppLocalizations.of(context)!;
+      String errorMessage;
+
+      if (e is AuthException) {
+        final localizationKey = e.message;
+
+        switch (localizationKey) {
+          case 'forgot_password_participant_not_found':
+            errorMessage = localizations.forgot_password_participant_not_found;
+            break;
+          case 'forgot_password_email_not_found':
+            errorMessage = localizations.forgot_password_email_not_found;
+            break;
+          case 'forgot_password_phone_not_found':
+            errorMessage = localizations.forgot_password_phone_not_found;
+            break;
+          case 'forgot_password_invalid_type':
+            errorMessage = localizations.forgot_password_invalid_type;
+            break;
+          default:
+            errorMessage = localizationKey;
+        }
+      } else if (e is NetworkException) {
+        errorMessage = localizations.networkError;
+      } else {
+        errorMessage = localizations.anErrorOccurred;
+      }
+
       if (mounted) {
-        HapticFeedback.mediumImpact();
-        _logger.error('Failed to send reset code: $e');
-        _showErrorMessage(context, 'Sıfırlama kodu gönderilemedi. Lütfen tekrar deneyiniz.');
+        _showErrorMessage(context, errorMessage);
       }
     } finally {
       if (mounted) {

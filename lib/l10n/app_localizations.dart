@@ -878,6 +878,30 @@ abstract class AppLocalizations {
   /// **'Passwords must match'**
   String get passwordsMustMatch;
 
+  /// No description provided for @forgot_password_participant_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'User not found'**
+  String get forgot_password_participant_not_found;
+
+  /// No description provided for @forgot_password_email_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No registered email found'**
+  String get forgot_password_email_not_found;
+
+  /// No description provided for @forgot_password_phone_not_found.
+  ///
+  /// In en, this message translates to:
+  /// **'No registered phone number found'**
+  String get forgot_password_phone_not_found;
+
+  /// No description provided for @forgot_password_invalid_type.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid reset method'**
+  String get forgot_password_invalid_type;
+
   /// No description provided for @enterCode.
   ///
   /// In en, this message translates to:

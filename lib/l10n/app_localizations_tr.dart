@@ -413,6 +413,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get passwordsMustMatch => 'Şifreler eşleşmiyor';
 
   @override
+  String get forgot_password_participant_not_found => 'Kullanıcı bulunamadı';
+
+  @override
+  String get forgot_password_email_not_found => 'Kayıtlı e-posta bulunamadı';
+
+  @override
+  String get forgot_password_phone_not_found =>
+      'Kayıtlı telefon numarası bulunamadı';
+
+  @override
+  String get forgot_password_invalid_type => 'Geçersiz sıfırlama yöntemi';
+
+  @override
   String get enterCode => 'Kodu Girin';
 
   @override

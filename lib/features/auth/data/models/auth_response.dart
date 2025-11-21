@@ -208,16 +208,19 @@ extension UserDomainExtension on User {
 class ForgotPasswordResponse {
   final bool basarili;
   final String? mesaj;
+  final int? status;
 
   const ForgotPasswordResponse({
     required this.basarili,
     this.mesaj,
+    this.status,
   });
 
   factory ForgotPasswordResponse.fromJson(Map<String, dynamic> json) {
     return ForgotPasswordResponse(
-      basarili: json['basarili'] as bool? ?? false,
+      basarili: json['basarili'] as bool? ?? json['sonuc'] as bool? ?? false,
       mesaj: json['mesaj'] as String?,
+      status: json['status'] as int?,
     );
   }
 }

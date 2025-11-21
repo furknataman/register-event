@@ -205,8 +205,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       final response = await _apiClient.post(
         AppConstants.forgotPasswordEndpoint,
         data: {
-          'eposta': type == 1 ? emailOrPhone : '',
-          'telefon': type == 2 ? emailOrPhone : '',
+          'eposta': emailOrPhone,
           'tur': type,
         },
       );
@@ -214,16 +213,30 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         final apiResponse = ForgotPasswordResponse.fromJson(response.data);
 
-        if (!apiResponse.basarili) {
-          // Backend sometimes returns basarili: false but message says "gönderildi" (sent)
-          // Check if message indicates success
-          final mesaj = apiResponse.mesaj?.toLowerCase() ?? '';
-          if (!mesaj.contains('gönderildi') && !mesaj.contains('sent')) {
+        // Handle status codes
+        switch (apiResponse.status) {
+          case 0: // Basarili
+          case 2: // EpostaGonderildi
+          case 4: // SmsGonderildi
+            _logger.info('Password reset code sent successfully');
+            return;
+          case 1: // KatilimciBulunamadi
+            throw const AuthException('forgot_password_participant_not_found');
+          case 3: // EpostaYok
+            throw const AuthException('forgot_password_email_not_found');
+          case 5: // TelefonYok
+            throw const AuthException('forgot_password_phone_not_found');
+          case 6: // GecersizTur
+            throw const AuthException('forgot_password_invalid_type');
+          default:
+            // Fallback to message check for backwards compatibility
+            final mesaj = apiResponse.mesaj?.toLowerCase() ?? '';
+            if (mesaj.contains('gönderildi') || mesaj.contains('sent')) {
+              _logger.info('Password reset code sent successfully');
+              return;
+            }
             throw AuthException(apiResponse.mesaj ?? 'Failed to send reset code');
-          }
         }
-
-        _logger.info('Password reset code sent successfully');
       } else {
         throw AuthException('Failed to send reset code: ${response.statusMessage}');
       }
@@ -231,7 +244,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       _logger.error('Error sending password reset code: ${e.message}');
 
       if (e.response?.statusCode == 404) {
-        throw AuthException('Email or phone not found');
+        throw const AuthException('forgot_password_participant_not_found');
       } else if (e.type == DioExceptionType.connectionTimeout ||
                  e.type == DioExceptionType.receiveTimeout ||
                  e.type == DioExceptionType.sendTimeout) {

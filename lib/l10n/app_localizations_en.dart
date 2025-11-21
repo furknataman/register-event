@@ -414,6 +414,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordsMustMatch => 'Passwords must match';
 
   @override
+  String get forgot_password_participant_not_found => 'User not found';
+
+  @override
+  String get forgot_password_email_not_found => 'No registered email found';
+
+  @override
+  String get forgot_password_phone_not_found =>
+      'No registered phone number found';
+
+  @override
+  String get forgot_password_invalid_type => 'Invalid reset method';
+
+  @override
   String get enterCode => 'Enter Code';
 
   @override
