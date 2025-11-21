@@ -550,4 +550,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get invalidQr => 'Invalid QR Code';
+
+  @override
+  String get networkError => 'Please check your internet connection';
+
+  @override
+  String get serverError => 'Unable to reach server, please try again';
+
+  @override
+  String get timeoutError => 'Request timed out';
+
+  @override
+  String get unknownError => 'An unexpected error occurred';
+
+  @override
+  String get retryingConnection => 'Establishing connection...';
+
+  @override
+  String get noInternetConnection => 'No internet connection';
+
+  @override
+  String get requestCancelled => 'Request cancelled';
+
+  @override
+  String get authenticationError => 'Authentication error, please log in again';
+
+  @override
+  String get validationError => 'Please check your input';
+
+  @override
+  String get dataParseError => 'Error processing data';
 }

@@ -13,7 +13,8 @@ part 'attendance_provider.g.dart';
 final attendanceRemoteDataSourceProvider =
     Provider<AttendanceRemoteDatasource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
-  return AttendanceRemoteDatasourceImpl(apiClient);
+  final logger = ref.watch(loggerProvider);
+  return AttendanceRemoteDatasourceImpl(apiClient, logger);
 });
 
 // Attendance repository provider

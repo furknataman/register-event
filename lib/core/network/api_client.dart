@@ -4,6 +4,8 @@ import 'package:logger/logger.dart';
 import '../constants/app_constants.dart';
 import '../data/local/token_stroge.dart' as token_storage;
 import '../errors/exceptions.dart';
+import 'interceptors/connectivity_interceptor.dart';
+import 'interceptors/retry_interceptor.dart';
 
 class ApiClient {
   final Dio _dio;
@@ -18,7 +20,13 @@ class ApiClient {
     _dio.options.connectTimeout = const Duration(milliseconds: AppConstants.connectTimeout);
     _dio.options.receiveTimeout = const Duration(milliseconds: AppConstants.receiveTimeout);
 
-    // Request interceptor
+    // Add connectivity interceptor (checks internet connection)
+    _dio.interceptors.add(ConnectivityInterceptor());
+
+    // Add retry interceptor (retries failed requests)
+    _dio.interceptors.add(RetryInterceptor(maxRetries: 3));
+
+    // Request interceptor (token and logging)
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options, handler) async {

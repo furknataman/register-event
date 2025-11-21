@@ -107,6 +107,8 @@ class ErrorHandler {
 
   // Get user-friendly error message
   String getUserFriendlyMessage(Failure failure) {
+    // This returns English messages for backward compatibility
+    // Use getLocalizedMessageKey() for localized messages
     switch (failure.runtimeType) {
       case const (NetworkFailure):
         return 'Please check your internet connection and try again.';
@@ -119,6 +121,37 @@ class ErrorHandler {
       case const (ServerFailure):
       default:
         return 'Something went wrong. Please try again later.';
+    }
+  }
+
+  // Get localization key for the failure
+  // Use this with AppLocalizations for localized error messages
+  String getLocalizedMessageKey(Failure failure) {
+    final message = failure.message.toLowerCase();
+
+    // Check specific error messages first
+    if (message.contains('timeout')) {
+      return 'timeoutError';
+    } else if (message.contains('connection') || message.contains('internet')) {
+      return 'networkError';
+    } else if (message.contains('cancelled') || message.contains('cancel')) {
+      return 'requestCancelled';
+    }
+
+    // Then check failure types
+    switch (failure.runtimeType) {
+      case const (NetworkFailure):
+        return 'networkError';
+      case const (AuthFailure):
+        return 'authenticationError';
+      case const (ValidationFailure):
+        return 'validationError';
+      case const (CacheFailure):
+        return 'dataParseError';
+      case const (ServerFailure):
+        return 'serverError';
+      default:
+        return 'unknownError';
     }
   }
 

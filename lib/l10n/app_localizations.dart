@@ -1135,6 +1135,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid QR Code'**
   String get invalidQr;
+
+  /// No description provided for @networkError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your internet connection'**
+  String get networkError;
+
+  /// No description provided for @serverError.
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to reach server, please try again'**
+  String get serverError;
+
+  /// No description provided for @timeoutError.
+  ///
+  /// In en, this message translates to:
+  /// **'Request timed out'**
+  String get timeoutError;
+
+  /// No description provided for @unknownError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred'**
+  String get unknownError;
+
+  /// No description provided for @retryingConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Establishing connection...'**
+  String get retryingConnection;
+
+  /// No description provided for @noInternetConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet connection'**
+  String get noInternetConnection;
+
+  /// No description provided for @requestCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Request cancelled'**
+  String get requestCancelled;
+
+  /// No description provided for @authenticationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Authentication error, please log in again'**
+  String get authenticationError;
+
+  /// No description provided for @validationError.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your input'**
+  String get validationError;
+
+  /// No description provided for @dataParseError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error processing data'**
+  String get dataParseError;
 }
 
 class _AppLocalizationsDelegate

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import '../../../../core/network/api_client.dart';
 import '../../../../core/errors/exceptions.dart';
 import '../../../../core/storage/secure_storage.dart';
+import '../../../../core/utils/logger.dart';
 import '../models/event_model.dart';
 
 abstract class EventRemoteDataSource {
@@ -18,8 +19,13 @@ abstract class EventRemoteDataSource {
 class EventRemoteDataSourceImpl implements EventRemoteDataSource {
   final ApiClient _apiClient;
   final SecureStorage _secureStorage;
+  final AppLogger _logger;
 
-  EventRemoteDataSourceImpl(this._apiClient, this._secureStorage);
+  EventRemoteDataSourceImpl(
+    this._apiClient,
+    this._secureStorage,
+    this._logger,
+  );
 
   @override
   Future<List<EventModel>> getAllEvents() async {
@@ -34,20 +40,22 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
 
       if (response.statusCode == 200) {
         final List<dynamic> responseData = response.data;
-        
+
         // Convert legacy response to new models
         return responseData.map((data) {
           final legacyModel = LegacyEventModel.fromJson(data);
           return legacyModel.toDomain().toModel();
         }).toList();
       } else {
-        throw ServerException('Failed to load events: ${response.statusMessage}');
+        throw ServerException('Failed to load events');
       }
-    } on DioException catch (e) {
-      _handleDioException(e);
+    } on NetworkException {
       rethrow;
-    } catch (e) {
-      throw ServerException('Unexpected error occurred: $e');
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error loading events', e, stackTrace);
+      throw ServerException('Failed to load events');
     }
   }
 
@@ -68,11 +76,13 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
       } else {
         throw ServerException('Failed to load event details: ${response.statusMessage}');
       }
-    } on DioException catch (e) {
-      _handleDioException(e);
+    } on NetworkException {
       rethrow;
-    } catch (e) {
-      throw ServerException('Unexpected error occurred: $e');
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error in datasource', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 
@@ -96,11 +106,13 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
       } else {
         throw ServerException('Failed to register for event: ${response.statusMessage}');
       }
-    } on DioException catch (e) {
-      _handleDioException(e);
+    } on NetworkException {
       rethrow;
-    } catch (e) {
-      throw ServerException('Unexpected error occurred: $e');
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error in datasource', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 
@@ -120,11 +132,13 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
       } else {
         throw ServerException('Failed to unregister from event: ${response.statusMessage}');
       }
-    } on DioException catch (e) {
-      _handleDioException(e);
+    } on NetworkException {
       rethrow;
-    } catch (e) {
-      throw ServerException('Unexpected error occurred: $e');
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error in datasource', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 
@@ -144,11 +158,13 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
       } else {
         throw ServerException('Failed to mark attendance: ${response.statusMessage}');
       }
-    } on DioException catch (e) {
-      _handleDioException(e);
+    } on NetworkException {
       rethrow;
-    } catch (e) {
-      throw ServerException('Unexpected error occurred: $e');
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error in datasource', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 
@@ -173,11 +189,13 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
       } else {
         throw ServerException('Failed to load registered events: ${response.statusMessage}');
       }
-    } on DioException catch (e) {
-      _handleDioException(e);
+    } on NetworkException {
       rethrow;
-    } catch (e) {
-      throw ServerException('Unexpected error occurred: $e');
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error in datasource', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 
@@ -202,27 +220,16 @@ class EventRemoteDataSourceImpl implements EventRemoteDataSource {
       } else {
         throw ServerException('Failed to load attended events: ${response.statusMessage}');
       }
-    } on DioException catch (e) {
-      _handleDioException(e);
+    } on NetworkException {
       rethrow;
-    } catch (e) {
-      throw ServerException('Unexpected error occurred: $e');
+    } on ServerException {
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error in datasource', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 
-  void _handleDioException(DioException e) {
-    if (e.response?.statusCode == 401) {
-      throw AuthException('Authentication token expired');
-    } else if (e.response?.statusCode == 400) {
-      throw AuthException('Bad request: ${e.response?.data['mesaj'] ?? 'Unknown error'}');
-    } else if (e.type == DioExceptionType.connectionTimeout ||
-               e.type == DioExceptionType.receiveTimeout ||
-               e.type == DioExceptionType.sendTimeout) {
-      throw NetworkException('Connection timeout. Please check your internet connection.');
-    } else if (e.type == DioExceptionType.connectionError) {
-      throw NetworkException('No internet connection available.');
-    } else {
-      throw ServerException('Server error: ${e.message}');
-    }
-  }
+  // No longer needed - API client handles DioException automatically
+  // with retry and connectivity interceptors
 }

@@ -172,5 +172,15 @@
     "processingAttendance": "Processing attendance...",
     "info": "Info",
     "notRegistered": "Not Registered",
-    "invalidQr": "Invalid QR Code"
+    "invalidQr": "Invalid QR Code",
+    "networkError": "Please check your internet connection",
+    "serverError": "Unable to reach server, please try again",
+    "timeoutError": "Request timed out",
+    "unknownError": "An unexpected error occurred",
+    "retryingConnection": "Establishing connection...",
+    "noInternetConnection": "No internet connection",
+    "requestCancelled": "Request cancelled",
+    "authenticationError": "Authentication error, please log in again",
+    "validationError": "Please check your input",
+    "dataParseError": "Error processing data"
 }

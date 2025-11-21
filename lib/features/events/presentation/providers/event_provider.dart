@@ -20,7 +20,8 @@ final secureStorageProvider = Provider<SecureStorage>((ref) {
 final eventRemoteDataSourceProvider = Provider<EventRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
   final secureStorage = ref.watch(secureStorageProvider);
-  return EventRemoteDataSourceImpl(apiClient, secureStorage);
+  final logger = ref.watch(loggerProvider);
+  return EventRemoteDataSourceImpl(apiClient, secureStorage, logger);
 });
 
 final eventLocalDataSourceProvider = Provider<EventLocalDataSource>((ref) {

@@ -172,5 +172,15 @@
     "processingAttendance": "Yoklama alınıyor...",
     "info": "Bilgi",
     "notRegistered": "Kayıtlı Değilsiniz",
-    "invalidQr": "Geçersiz QR Kod"
+    "invalidQr": "Geçersiz QR Kod",
+    "networkError": "İnternet bağlantınızı kontrol edin",
+    "serverError": "Sunucuya ulaşılamıyor, lütfen tekrar deneyin",
+    "timeoutError": "İstek zaman aşımına uğradı",
+    "unknownError": "Beklenmeyen bir hata oluştu",
+    "retryingConnection": "Bağlantı kuruluyor...",
+    "noInternetConnection": "İnternet bağlantısı yok",
+    "requestCancelled": "İstek iptal edildi",
+    "authenticationError": "Kimlik doğrulama hatası, lütfen tekrar giriş yapın",
+    "validationError": "Girdiğiniz bilgileri kontrol edin",
+    "dataParseError": "Veri işlenirken hata oluştu"
 }

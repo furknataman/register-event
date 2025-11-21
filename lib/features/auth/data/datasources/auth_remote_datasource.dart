@@ -55,35 +55,27 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
         // Check if login was successful
         if (!apiResponse.basarili) {
-          throw AuthException('Login failed');
+          _logger.warning('Login failed for user: $email');
+          throw const AuthException('Login failed');
         }
 
-        // Convert to AuthResponse
+        _logger.info('Login successful for user: $email');
         return apiResponse.toAuthResponse();
       } else {
-        throw AuthException('Login failed: ${response.statusMessage}');
+        _logger.error('Unexpected status code: ${response.statusCode}');
+        throw const AuthException('Login failed');
       }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 401) {
-        throw AuthException('Invalid email or password');
-      } else if (e.response?.statusCode == 422) {
-        final errors = e.response?.data['errors'] as Map<String, dynamic>?;
-        final errorMessage = errors?.values.first?.first ?? 'Validation failed';
-        throw AuthException(errorMessage);
-      } else if (e.type == DioExceptionType.connectionTimeout ||
-                 e.type == DioExceptionType.receiveTimeout ||
-                 e.type == DioExceptionType.sendTimeout) {
-        throw NetworkException('Connection timeout. Please check your internet connection.');
-      } else if (e.type == DioExceptionType.connectionError) {
-        throw NetworkException('No internet connection available.');
-      } else {
-        throw ServerException('Server error: ${e.message}');
-      }
-    } catch (e) {
-      if (e is AuthException || e is NetworkException || e is ServerException) {
-        rethrow;
-      }
-      throw ServerException('Unexpected error occurred: $e');
+    } on AuthException {
+      rethrow;
+    } on NetworkException {
+      _logger.error('Network error during login');
+      rethrow;
+    } on ServerException {
+      _logger.error('Server error during login');
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error during login', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 
@@ -113,31 +105,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
 
       if (response.statusCode == 201 || response.statusCode == 200) {
+        _logger.info('Registration successful for user: $email');
         return AuthResponse.fromJson(response.data);
       } else {
-        throw AuthException('Registration failed: ${response.statusMessage}');
+        _logger.error('Unexpected status code: ${response.statusCode}');
+        throw const AuthException('Registration failed');
       }
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 422) {
-        final errors = e.response?.data['errors'] as Map<String, dynamic>?;
-        final errorMessage = errors?.values.first?.first ?? 'Validation failed';
-        throw AuthException(errorMessage);
-      } else if (e.response?.statusCode == 409) {
-        throw AuthException('An account with this email already exists');
-      } else if (e.type == DioExceptionType.connectionTimeout ||
-                 e.type == DioExceptionType.receiveTimeout ||
-                 e.type == DioExceptionType.sendTimeout) {
-        throw NetworkException('Connection timeout. Please check your internet connection.');
-      } else if (e.type == DioExceptionType.connectionError) {
-        throw NetworkException('No internet connection available.');
-      } else {
-        throw ServerException('Server error: ${e.message}');
-      }
-    } catch (e) {
-      if (e is AuthException || e is NetworkException || e is ServerException) {
-        rethrow;
-      }
-      throw ServerException('Unexpected error occurred: $e');
+    } on AuthException {
+      rethrow;
+    } on NetworkException {
+      _logger.error('Network error during registration');
+      rethrow;
+    } on ServerException {
+      _logger.error('Server error during registration');
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error during registration', e, stackTrace);
+      throw ServerException('Unexpected error occurred');
     }
   }
 

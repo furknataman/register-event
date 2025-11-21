@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:dio/dio.dart';
 
 import '../../../../core/network/api_client.dart';
+import '../../../../core/errors/exceptions.dart';
+import '../../../../core/utils/logger.dart';
 import '../models/attendance_response_model.dart';
 
 abstract class AttendanceRemoteDatasource {
@@ -11,8 +13,9 @@ abstract class AttendanceRemoteDatasource {
 
 class AttendanceRemoteDatasourceImpl implements AttendanceRemoteDatasource {
   final ApiClient apiClient;
+  final AppLogger _logger;
 
-  AttendanceRemoteDatasourceImpl(this.apiClient);
+  AttendanceRemoteDatasourceImpl(this.apiClient, this._logger);
 
   @override
   Future<AttendanceResponseModel> takeAttendance(String qrCode) async {
@@ -25,12 +28,17 @@ class AttendanceRemoteDatasourceImpl implements AttendanceRemoteDatasource {
         ),
       );
 
+      _logger.info('Attendance taken successfully for QR: ${qrCode.substring(0, 10)}...');
       return AttendanceResponseModel.fromJson(response.data);
-    } on DioException catch (e) {
-      if (e.response?.statusCode == 400) {
-        throw Exception('Invalid QR code format');
-      }
+    } on NetworkException {
+      _logger.error('Network error during attendance');
       rethrow;
+    } on ServerException {
+      _logger.error('Server error during attendance');
+      rethrow;
+    } catch (e, stackTrace) {
+      _logger.error('Unexpected error taking attendance', e, stackTrace);
+      throw ServerException('Failed to take attendance');
     }
   }
 }

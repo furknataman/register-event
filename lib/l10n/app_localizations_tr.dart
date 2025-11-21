@@ -548,4 +548,35 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get invalidQr => 'Geçersiz QR Kod';
+
+  @override
+  String get networkError => 'İnternet bağlantınızı kontrol edin';
+
+  @override
+  String get serverError => 'Sunucuya ulaşılamıyor, lütfen tekrar deneyin';
+
+  @override
+  String get timeoutError => 'İstek zaman aşımına uğradı';
+
+  @override
+  String get unknownError => 'Beklenmeyen bir hata oluştu';
+
+  @override
+  String get retryingConnection => 'Bağlantı kuruluyor...';
+
+  @override
+  String get noInternetConnection => 'İnternet bağlantısı yok';
+
+  @override
+  String get requestCancelled => 'İstek iptal edildi';
+
+  @override
+  String get authenticationError =>
+      'Kimlik doğrulama hatası, lütfen tekrar giriş yapın';
+
+  @override
+  String get validationError => 'Girdiğiniz bilgileri kontrol edin';
+
+  @override
+  String get dataParseError => 'Veri işlenirken hata oluştu';
 }
