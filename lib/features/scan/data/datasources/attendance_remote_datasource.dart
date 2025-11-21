@@ -28,7 +28,7 @@ class AttendanceRemoteDatasourceImpl implements AttendanceRemoteDatasource {
         ),
       );
 
-      _logger.info('Attendance taken successfully for QR: ${qrCode.substring(0, 10)}...');
+      _logger.info('Attendance taken successfully for QR: $qrCode');
       return AttendanceResponseModel.fromJson(response.data);
     } on NetworkException {
       _logger.error('Network error during attendance');
