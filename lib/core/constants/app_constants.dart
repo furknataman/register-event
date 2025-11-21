@@ -8,7 +8,6 @@ class AppConstants {
   static const String sunumListeleEndpoint = '/Sunum/SunumListele';
   static const String loginEndpoint = '/Login/GirisYap';
   static const String registerEndpoint = '/auth/register';
-  static const String logoutEndpoint = '/auth/logout';
   static const String refreshTokenEndpoint = '/auth/refresh';
   static const String userEndpoint = '/user';
   static const String forgotPasswordEndpoint = '/Login/SifreUnuttum';

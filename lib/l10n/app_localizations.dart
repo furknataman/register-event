@@ -794,6 +794,12 @@ abstract class AppLocalizations {
   /// **'Attendance Taken'**
   String get attendanceTaken;
 
+  /// No description provided for @generalAttendanceTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'General Attendance Taken'**
+  String get generalAttendanceTaken;
+
   /// No description provided for @forgotPassword.
   ///
   /// In en, this message translates to:

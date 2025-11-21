@@ -115,6 +115,7 @@
     "presentationNotFound": "Presentation Not Found",
     "registeredTimePassed": "Registered (Time Passed)",
     "attendanceTaken": "Attendance Taken",
+    "generalAttendanceTaken": "General Attendance Taken",
     "forgotPassword": "Forgot Password?",
     "sendResetCode": "Send Code",
     "enterEmailOrPhone": "Email or Phone",

@@ -143,15 +143,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> logout() async {
-    try {
-      await _apiClient.post(AppConstants.logoutEndpoint);
-    } on DioException catch (e) {
-      // Don't throw error for logout, just log it
-      // The user should still be logged out locally even if server logout fails
-      _logger.logAuthError('logout_failed', e);
-    } catch (e) {
-      _logger.logAuthError('unexpected_logout_error', e);
-    }
+    // No server-side logout endpoint available
+    // Token cleanup is handled in the repository layer
   }
 
   @override

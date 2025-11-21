@@ -371,6 +371,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get attendanceTaken => 'Yoklama Alındı';
 
   @override
+  String get generalAttendanceTaken => 'Genel Yoklama Alındı';
+
+  @override
   String get forgotPassword => 'Şifremi Unuttum?';
 
   @override

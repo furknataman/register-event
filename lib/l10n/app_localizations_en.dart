@@ -372,6 +372,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get attendanceTaken => 'Attendance Taken';
 
   @override
+  String get generalAttendanceTaken => 'General Attendance Taken';
+
+  @override
   String get forgotPassword => 'Forgot Password?';
 
   @override

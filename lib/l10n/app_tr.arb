@@ -115,6 +115,7 @@
     "presentationNotFound": "Sunum Bulunamadı",
     "registeredTimePassed": "Kayıtlısınız (Saat Geçti)",
     "attendanceTaken": "Yoklama Alındı",
+    "generalAttendanceTaken": "Genel Yoklama Alındı",
     "forgotPassword": "Şifremi Unuttum?",
     "sendResetCode": "Kod Gönder",
     "enterEmailOrPhone": "E-posta veya Telefon",
