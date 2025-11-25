@@ -7,28 +7,30 @@ class SplashLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Colors.white;
+
     return SizedBox(
       child: Column(children: [
-        const Text(
+        Text(
           "Welcome To",
           style: TextStyle(
               fontWeight: FontWeight.w400,
-              color: Colors.white,
+              color: textColor,
               fontSize: 45),
         ),
         const SizedBox(
           height: 20,
         ),
-        const Text(
+        Text(
           "18. IB Day",
-          style: TextStyle(color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
+          style: TextStyle(color: textColor, fontSize: 32, fontWeight: FontWeight.bold),
         ),
         const SizedBox(
           height: 8,
         ),
-        const Text(
+        Text(
           "Better Together",
-          style: TextStyle(color: Colors.white, fontSize: 20),
+          style: TextStyle(color: textColor, fontSize: 20),
         )
       ]),
     );

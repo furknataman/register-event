@@ -426,6 +426,19 @@ class AppLocalizationsTr extends AppLocalizations {
   String get forgot_password_invalid_type => 'Geçersiz sıfırlama yöntemi';
 
   @override
+  String get resetPassword_invalid_code =>
+      'Sıfırlama kodu geçersiz veya süresi dolmuş';
+
+  @override
+  String get resetPassword_code_expired => 'Sıfırlama kodunun süresi dolmuş';
+
+  @override
+  String get resetPassword_passwords_mismatch => 'Şifreler eşleşmiyor';
+
+  @override
+  String get resetPassword_update_failed => 'Şifre güncellemesi başarısız oldu';
+
+  @override
   String get enterCode => 'Kodu Girin';
 
   @override
@@ -592,4 +605,8 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get dataParseError => 'Veri işlenirken hata oluştu';
+
+  @override
+  String get surveyFormLink =>
+      'Sunum degerlendirme formuna ulasmak icin tiklayin';
 }

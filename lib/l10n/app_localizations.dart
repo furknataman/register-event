@@ -902,6 +902,30 @@ abstract class AppLocalizations {
   /// **'Invalid reset method'**
   String get forgot_password_invalid_type;
 
+  /// No description provided for @resetPassword_invalid_code.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset code is invalid or expired'**
+  String get resetPassword_invalid_code;
+
+  /// No description provided for @resetPassword_code_expired.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset code has expired'**
+  String get resetPassword_code_expired;
+
+  /// No description provided for @resetPassword_passwords_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'Passwords do not match'**
+  String get resetPassword_passwords_mismatch;
+
+  /// No description provided for @resetPassword_update_failed.
+  ///
+  /// In en, this message translates to:
+  /// **'Password update failed'**
+  String get resetPassword_update_failed;
+
   /// No description provided for @enterCode.
   ///
   /// In en, this message translates to:
@@ -1219,6 +1243,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error processing data'**
   String get dataParseError;
+
+  /// No description provided for @surveyFormLink.
+  ///
+  /// In en, this message translates to:
+  /// **'Click to access the presentation evaluation form'**
+  String get surveyFormLink;
 }
 
 class _AppLocalizationsDelegate

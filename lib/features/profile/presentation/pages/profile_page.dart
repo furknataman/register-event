@@ -33,7 +33,7 @@ class ProfilePage extends ConsumerWidget {
           gradient: AppColors.getBackgroundGradient(context),
         ),
         child: authState.when(
-          data: (user) => _ProfileContent(user: user),
+          data: (user) => const _ProfileContent(),
           loading: () => const Center(child: CircularProgressIndicator(color: Colors.white)),
           error: (error, stack) => Center(
             child: Column(
@@ -56,17 +56,30 @@ class ProfilePage extends ConsumerWidget {
   }
 }
 
-class _ProfileContent extends ConsumerWidget {
-  final dynamic user; // Using dynamic temporarily until User model is available
-
-  const _ProfileContent({required this.user});
+class _ProfileContent extends ConsumerStatefulWidget {
+  const _ProfileContent();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ProfileContent> createState() => _ProfileContentState();
+}
+
+class _ProfileContentState extends ConsumerState<_ProfileContent> {
+  @override
+  Widget build(BuildContext context) {
+    final user = ref.watch(userProfileProvider).value;
+    if (user == null) return const SizedBox.shrink();
+
     return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
+      child: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(userProfileProvider);
+          await ref.read(userProfileProvider.future);
+        },
+        color: Colors.white,
+        backgroundColor: Colors.white.withValues(alpha: 0.2),
+        child: ListView(
+          padding: const EdgeInsets.all(16),
+          children: [
           // Statistics
           Text(
             AppLocalizations.of(context)!.statistics,
@@ -334,7 +347,8 @@ class _ProfileContent extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 80),
-        ],
+          ],
+        ),
       ),
     );
   }

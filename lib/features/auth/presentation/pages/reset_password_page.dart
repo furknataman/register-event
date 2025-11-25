@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/utils/logger.dart';
+import '../../../../core/errors/exceptions.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 
@@ -29,7 +30,7 @@ final resetPasswordLoadingProvider =
 
 class ResetPasswordPage extends ConsumerStatefulWidget {
   final String emailOrPhone;
-  final int type;
+  final int type; // 1: email, 2: sms (for display only, not used in API)
 
   const ResetPasswordPage({
     super.key,
@@ -78,8 +79,9 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
     final confirmPassword = _confirmPasswordController.text;
 
     _isFormValid.value = code.isNotEmpty &&
-        password.isNotEmpty &&
-        confirmPassword.isNotEmpty;
+        password.length >= 6 &&
+        confirmPassword.isNotEmpty &&
+        password == confirmPassword;
   }
 
   Future<void> _handleResetPassword(BuildContext context) async {
@@ -91,13 +93,13 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
 
     if (code.isEmpty || code.length < 4) {
       HapticFeedback.mediumImpact();
-      _showErrorMessage(context, 'Lütfen geçerli bir sıfırlama kodu giriniz');
+      _showErrorMessage(context, AppLocalizations.of(context)!.enterCode);
       return;
     }
 
     if (password.length < 6) {
       HapticFeedback.mediumImpact();
-      _showErrorMessage(context, 'Şifre en az 6 karakter olmalıdır');
+      _showErrorMessage(context, AppLocalizations.of(context)!.newPassword);
       return;
     }
 
@@ -113,8 +115,7 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
     try {
       final remoteDataSource = ref.read(authRemoteDataSourceProvider);
       await remoteDataSource.resetPassword(
-        code: int.parse(code),
-        type: widget.type,
+        code: code,
         emailOrPhone: widget.emailOrPhone,
         password: password,
         passwordConfirm: confirmPassword,
@@ -142,10 +143,41 @@ class _ResetPasswordPageState extends ConsumerState<ResetPasswordPage> {
         }
       }
     } catch (e) {
+      if (!mounted) return;
+
+      HapticFeedback.mediumImpact();
+      _logger.error('Failed to reset password: $e');
+
+      final localizations = AppLocalizations.of(context)!;
+      String errorMessage;
+
+      if (e is AuthException) {
+        final localizationKey = e.message;
+
+        switch (localizationKey) {
+          case 'resetPassword_invalid_code':
+            errorMessage = localizations.resetPassword_invalid_code;
+            break;
+          case 'resetPassword_code_expired':
+            errorMessage = localizations.resetPassword_code_expired;
+            break;
+          case 'resetPassword_passwords_mismatch':
+            errorMessage = localizations.resetPassword_passwords_mismatch;
+            break;
+          case 'resetPassword_update_failed':
+            errorMessage = localizations.resetPassword_update_failed;
+            break;
+          default:
+            errorMessage = localizationKey;
+        }
+      } else if (e is NetworkException) {
+        errorMessage = localizations.networkError;
+      } else {
+        errorMessage = localizations.anErrorOccurred;
+      }
+
       if (mounted) {
-        HapticFeedback.mediumImpact();
-        _logger.error('Failed to reset password: $e');
-        _showErrorMessage(context, 'Şifre sıfırlanamadı. Lütfen tekrar deneyiniz.');
+        _showErrorMessage(context, errorMessage);
       }
     } finally {
       if (mounted) {

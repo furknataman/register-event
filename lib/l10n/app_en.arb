@@ -133,6 +133,10 @@
     "forgot_password_email_not_found": "No registered email found",
     "forgot_password_phone_not_found": "No registered phone number found",
     "forgot_password_invalid_type": "Invalid reset method",
+    "resetPassword_invalid_code": "Reset code is invalid or expired",
+    "resetPassword_code_expired": "Reset code has expired",
+    "resetPassword_passwords_mismatch": "Passwords do not match",
+    "resetPassword_update_failed": "Password update failed",
     "enterCode": "Enter Code",
     "code": "Code",
     "resetPasswordTitle": "Password Reset",
@@ -186,5 +190,6 @@
     "requestCancelled": "Request cancelled",
     "authenticationError": "Authentication error, please log in again",
     "validationError": "Please check your input",
-    "dataParseError": "Error processing data"
+    "dataParseError": "Error processing data",
+    "surveyFormLink": "Click to access the presentation evaluation form"
 }

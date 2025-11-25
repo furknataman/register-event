@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/data/models/presentation_model.dart';
 import '../../../../core/data/models/presentation_status.dart';
@@ -118,7 +119,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                 // Image
                                 RepaintBoundary(
                                   child: Image.asset(
-                                    ImageHelper.getImageForBranch(presentation.branch),
+                                    ImageHelper.getDetailImageForBranch(presentation.branch),
                                     fit: BoxFit.fitWidth,
                                     alignment: Alignment.center,
                                     width: double.infinity,
@@ -189,6 +190,12 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                   ),
                                   const SizedBox(height: 20),
 
+                                  // Survey banner
+                                  if (presentation.surveyUrl != null &&
+                                      presentation.surveyUrl!.trim().isNotEmpty &&
+                                      presentation.status == 7)
+                                    _buildSurveyBanner(context, presentation.surveyUrl!, isDark),
+
                                   // Info cards - Grid layout
                                   RepaintBoundary(
                                     child: Wrap(
@@ -197,7 +204,7 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                       children: [
                                         if (presentation.presentationPlace != null)
                                           SizedBox(
-                                            width: (MediaQuery.of(context).size.width - 56) / 2,
+                                            width: MediaQuery.of(context).size.width - 44,
                                             child: _buildInfoCard(
                                               context,
                                               'assets/svg/location-dot.svg',
@@ -470,6 +477,53 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
     );
   }
 
+  Widget _buildSurveyBanner(BuildContext context, String surveyUrl, bool isDark) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: GestureDetector(
+        onTap: () async {
+          final uri = Uri.parse(surveyUrl.trim());
+          if (await canLaunchUrl(uri)) {
+            await launchUrl(uri, mode: LaunchMode.externalApplication);
+          }
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.green.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.green.withValues(alpha: 0.5),
+              width: 2,
+            ),
+          ),
+          child: Row(
+            children: [
+              SvgPicture.asset(
+                'assets/svg/clipboard-list-check.svg',
+                width: 24,
+                height: 24,
+                colorFilter: const ColorFilter.mode(Colors.green, BlendMode.srcIn),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  AppLocalizations.of(context)!.surveyFormLink,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.green),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildInfoCard(
     BuildContext context,
     String iconPath,
@@ -516,6 +570,9 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
                 ),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                softWrap: true,
               ),
             ),
           ],

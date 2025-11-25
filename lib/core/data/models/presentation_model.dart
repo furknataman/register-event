@@ -33,6 +33,7 @@ class ClassModelPresentation {
   final String? presentationQuota;
   final String? ratingForm;
   final int? remainingQuota;
+  final String? surveyUrl; // anket
 
   ClassModelPresentation({
     this.id,
@@ -67,6 +68,7 @@ class ClassModelPresentation {
     this.presentationQuota,
     this.ratingForm,
     this.remainingQuota,
+    this.surveyUrl,
   });
 
   factory ClassModelPresentation.fromJson(Map<String, dynamic> json) {
@@ -105,6 +107,7 @@ class ClassModelPresentation {
       presentationQuota: json['katilimciSayisi'] ?? '30',
       ratingForm: '',
       remainingQuota: json['kontenjan'] ?? 30,
+      surveyUrl: json['anket'],
     );
   }
 }

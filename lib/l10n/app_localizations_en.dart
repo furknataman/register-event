@@ -427,6 +427,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get forgot_password_invalid_type => 'Invalid reset method';
 
   @override
+  String get resetPassword_invalid_code => 'Reset code is invalid or expired';
+
+  @override
+  String get resetPassword_code_expired => 'Reset code has expired';
+
+  @override
+  String get resetPassword_passwords_mismatch => 'Passwords do not match';
+
+  @override
+  String get resetPassword_update_failed => 'Password update failed';
+
+  @override
   String get enterCode => 'Enter Code';
 
   @override
@@ -593,4 +605,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dataParseError => 'Error processing data';
+
+  @override
+  String get surveyFormLink =>
+      'Click to access the presentation evaluation form';
 }

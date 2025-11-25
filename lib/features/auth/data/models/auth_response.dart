@@ -228,16 +228,19 @@ class ForgotPasswordResponse {
 class ResetPasswordResponse {
   final bool basarili;
   final String? mesaj;
+  final int? status;
 
   const ResetPasswordResponse({
     required this.basarili,
     this.mesaj,
+    this.status,
   });
 
   factory ResetPasswordResponse.fromJson(Map<String, dynamic> json) {
     return ResetPasswordResponse(
-      basarili: json['basarili'] as bool? ?? false,
+      basarili: json['basarili'] as bool? ?? json['sonuc'] as bool? ?? false,
       mesaj: json['mesaj'] as String?,
+      status: json['status'] as int?,
     );
   }
 }

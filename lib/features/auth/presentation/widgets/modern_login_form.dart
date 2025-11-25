@@ -158,7 +158,9 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
               context.push('/forgot-password');
             },
             style: TextButton.styleFrom(
-              foregroundColor: Colors.white,
+              foregroundColor: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.white
+                  : Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             ),
             child: Text(
@@ -207,16 +209,21 @@ class _LiquidGlassTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = isDark ? Colors.white : Colors.white;
+    final borderColor = isDark ? const Color(0xFF415A77) : const Color(0xFF004B8D);
+    final bgOpacity = isDark ? 0.2 : 0.15;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
           decoration: BoxDecoration(
-            color: const Color.fromRGBO(255, 255, 255, 0.15),
+            color: Color.fromRGBO(255, 255, 255, bgOpacity),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: const Color(0xFF004B8D),
+              color: borderColor,
               width: 2.0,
             ),
           ),
@@ -227,15 +234,15 @@ class _LiquidGlassTextField extends StatelessWidget {
                 ? TextInputType.visiblePassword
                 : TextInputType.emailAddress,
             obscureText: isPassword && isObscured,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: textColor,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle: const TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 0.9),
+              labelStyle: TextStyle(
+                color: textColor.withOpacity(0.9),
                 fontSize: 14,
               ),
               border: InputBorder.none,
@@ -247,8 +254,8 @@ class _LiquidGlassTextField extends StatelessWidget {
                             : 'assets/svg/eye.svg',
                         width: 20,
                         height: 20,
-                        colorFilter: const ColorFilter.mode(
-                          Color.fromRGBO(255, 255, 255, 0.9),
+                        colorFilter: ColorFilter.mode(
+                          textColor.withOpacity(0.9),
                           BlendMode.srcIn,
                         ),
                       ),
@@ -261,8 +268,8 @@ class _LiquidGlassTextField extends StatelessWidget {
                             iconPath!,
                             width: 20,
                             height: 20,
-                            colorFilter: const ColorFilter.mode(
-                              Color.fromRGBO(255, 255, 255, 0.9),
+                            colorFilter: ColorFilter.mode(
+                              textColor.withOpacity(0.9),
                               BlendMode.srcIn,
                             ),
                           ),
@@ -292,6 +299,10 @@ class _LiquidGlassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? const Color(0xFF415A77) : const Color(0xFF004B8D);
+    final textColor = Colors.white;
+
     void handleTap() {
       if (!isEnabled || isLoading) {
         return;
@@ -311,24 +322,24 @@ class _LiquidGlassButton extends StatelessWidget {
             height: 56,
             decoration: BoxDecoration(
               gradient: isEnabled
-                  ? const LinearGradient(
+                  ? LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color.fromRGBO(255, 255, 255, 0.2),
-                        Color.fromRGBO(255, 255, 255, 0.1),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.25 : 0.2),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.15 : 0.1),
                       ],
                     )
-                  : const LinearGradient(
+                  : LinearGradient(
                       colors: [
-                        Color.fromRGBO(255, 255, 255, 0.05),
-                        Color.fromRGBO(255, 255, 255, 0.03),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.08 : 0.05),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.05 : 0.03),
                       ],
                     ),
               borderRadius: BorderRadius.circular(28),
               border: Border.all(
                 color: isEnabled
-                    ? const Color(0xFF004B8D)
+                    ? borderColor
                     : const Color.fromRGBO(255, 255, 255, 0.1),
                 width: 2.0,
               ),
@@ -344,11 +355,11 @@ class _LiquidGlassButton extends StatelessWidget {
             ),
             child: Center(
               child: isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
-                        color: Colors.white,
+                        color: textColor,
                         strokeWidth: 2.5,
                       ),
                     )
@@ -356,8 +367,8 @@ class _LiquidGlassButton extends StatelessWidget {
                       label,
                       style: TextStyle(
                         color: isEnabled
-                            ? Colors.white
-                            : const Color.fromRGBO(255, 255, 255, 0.4),
+                            ? textColor
+                            : textColor.withOpacity(0.4),
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,

@@ -133,6 +133,10 @@
     "forgot_password_email_not_found": "Kayıtlı e-posta bulunamadı",
     "forgot_password_phone_not_found": "Kayıtlı telefon numarası bulunamadı",
     "forgot_password_invalid_type": "Geçersiz sıfırlama yöntemi",
+    "resetPassword_invalid_code": "Sıfırlama kodu geçersiz veya süresi dolmuş",
+    "resetPassword_code_expired": "Sıfırlama kodunun süresi dolmuş",
+    "resetPassword_passwords_mismatch": "Şifreler eşleşmiyor",
+    "resetPassword_update_failed": "Şifre güncellemesi başarısız oldu",
     "enterCode": "Kodu Girin",
     "code": "Kod",
     "resetPasswordTitle": "Şifre Sıfırlama",
@@ -186,5 +190,6 @@
     "requestCancelled": "İstek iptal edildi",
     "authenticationError": "Kimlik doğrulama hatası, lütfen tekrar giriş yapın",
     "validationError": "Girdiğiniz bilgileri kontrol edin",
-    "dataParseError": "Veri işlenirken hata oluştu"
+    "dataParseError": "Veri işlenirken hata oluştu",
+    "surveyFormLink": "Sunum degerlendirme formuna ulasmak icin tiklayin"
 }

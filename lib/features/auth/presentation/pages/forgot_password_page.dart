@@ -9,6 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/utils/logger.dart';
 import '../../../../core/errors/exceptions.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../providers/auth_provider.dart';
 
@@ -39,8 +40,8 @@ class ForgotPasswordPage extends ConsumerStatefulWidget {
 class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   final TextEditingController _emailOrPhoneController =
       TextEditingController();
-  final ValueNotifier<int> _resetType = ValueNotifier<int>(1); // 1: email, 2: sms
   final ValueNotifier<bool> _isFormValid = ValueNotifier<bool>(false);
+  final ValueNotifier<int> _resetType = ValueNotifier<int>(1); // 1: email, 2: sms
   final AppLogger _logger = AppLogger();
 
   @override
@@ -53,8 +54,8 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
   @override
   void dispose() {
     _emailOrPhoneController.dispose();
-    _resetType.dispose();
     _isFormValid.dispose();
+    _resetType.dispose();
     super.dispose();
   }
 
@@ -178,15 +179,8 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF004B8D),
-              Color(0xFF0A1931),
-            ],
-          ),
+        decoration: BoxDecoration(
+          gradient: AppColors.getBackgroundGradient(context),
         ),
         child: SafeArea(
           child: SingleChildScrollView(
@@ -212,52 +206,55 @@ class _ForgotPasswordPageState extends ConsumerState<ForgotPasswordPage> {
                   ),
                 ),
                 const SizedBox(height: 40),
-                _LiquidGlassTextField(
-                  labelText: AppLocalizations.of(context)!.enterEmailOrPhone,
-                  iconPath: 'assets/svg/envelope.svg',
-                  controller: _emailOrPhoneController,
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  AppLocalizations.of(context)!.selectResetMethod,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                const SizedBox(height: 16),
                 ValueListenableBuilder<int>(
                   valueListenable: _resetType,
-                  builder: (context, type, child) {
-                    return Row(
+                  builder: (context, selectedType, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: _ResetMethodOption(
-                            label: AppLocalizations.of(context)!.resetViaEmail,
-                            iconPath: 'assets/svg/envelope.svg',
-                            isSelected: type == 1,
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              _resetType.value = 1;
-                            },
+                        Text(
+                          AppLocalizations.of(context)!.selectResetMethod,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: _ResetMethodOption(
-                            label: AppLocalizations.of(context)!.resetViaSms,
-                            iconPath: 'assets/svg/mobile.svg',
-                            isSelected: type == 2,
-                            onTap: () {
-                              HapticFeedback.selectionClick();
-                              _resetType.value = 2;
-                            },
-                          ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _ResetMethodOption(
+                                label: AppLocalizations.of(context)!.resetViaEmail,
+                                isSelected: selectedType == 1,
+                                onTap: () {
+                                  HapticFeedback.selectionClick();
+                                  _resetType.value = 1;
+                                },
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: _ResetMethodOption(
+                                label: AppLocalizations.of(context)!.resetViaSms,
+                                isSelected: selectedType == 2,
+                                onTap: () {
+                                  HapticFeedback.selectionClick();
+                                  _resetType.value = 2;
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     );
                   },
+                ),
+                const SizedBox(height: 24),
+                _LiquidGlassTextField(
+                  labelText: AppLocalizations.of(context)!.enterEmailOrPhone,
+                  iconPath: 'assets/svg/envelope.svg',
+                  controller: _emailOrPhoneController,
                 ),
                 const SizedBox(height: 40),
                 ValueListenableBuilder<bool>(
@@ -294,16 +291,21 @@ class _LiquidGlassTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final textColor = Colors.white;
+    final borderColor = isDark ? const Color(0xFF415A77) : const Color(0xFF004B8D);
+    final bgOpacity = isDark ? 0.2 : 0.15;
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(24),
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
         child: Container(
           decoration: BoxDecoration(
-            color: const Color.fromRGBO(255, 255, 255, 0.15),
+            color: Color.fromRGBO(255, 255, 255, bgOpacity),
             borderRadius: BorderRadius.circular(24),
             border: Border.all(
-              color: const Color(0xFF004B8D),
+              color: borderColor,
               width: 2.0,
             ),
           ),
@@ -311,15 +313,15 @@ class _LiquidGlassTextField extends StatelessWidget {
           child: TextField(
             controller: controller,
             keyboardType: TextInputType.emailAddress,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: textColor,
               fontSize: 16,
               fontWeight: FontWeight.w500,
             ),
             decoration: InputDecoration(
               labelText: labelText,
-              labelStyle: const TextStyle(
-                color: Color.fromRGBO(255, 255, 255, 0.9),
+              labelStyle: TextStyle(
+                color: textColor.withValues(alpha: 0.9),
                 fontSize: 14,
               ),
               border: InputBorder.none,
@@ -330,82 +332,13 @@ class _LiquidGlassTextField extends StatelessWidget {
                         iconPath!,
                         width: 20,
                         height: 20,
-                        colorFilter: const ColorFilter.mode(
-                          Color.fromRGBO(255, 255, 255, 0.9),
+                        colorFilter: ColorFilter.mode(
+                          textColor.withValues(alpha: 0.9),
                           BlendMode.srcIn,
                         ),
                       ),
                     )
                   : null,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// Reset Method Option Widget
-class _ResetMethodOption extends StatelessWidget {
-  final String label;
-  final String iconPath;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const _ResetMethodOption({
-    required this.label,
-    required this.iconPath,
-    required this.isSelected,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            decoration: BoxDecoration(
-              color: isSelected
-                  ? const Color.fromRGBO(255, 255, 255, 0.25)
-                  : const Color.fromRGBO(255, 255, 255, 0.1),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: isSelected
-                    ? const Color(0xFF004B8D)
-                    : const Color.fromRGBO(255, 255, 255, 0.2),
-                width: 2.0,
-              ),
-            ),
-            child: Column(
-              children: [
-                SvgPicture.asset(
-                  iconPath,
-                  width: 32,
-                  height: 32,
-                  colorFilter: ColorFilter.mode(
-                    isSelected
-                        ? Colors.white
-                        : const Color.fromRGBO(255, 255, 255, 0.6),
-                    BlendMode.srcIn,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: isSelected
-                        ? Colors.white
-                        : const Color.fromRGBO(255, 255, 255, 0.6),
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
             ),
           ),
         ),
@@ -430,6 +363,10 @@ class _LiquidGlassButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? const Color(0xFF415A77) : const Color(0xFF004B8D);
+    final textColor = Colors.white;
+
     void handleTap() {
       if (!isEnabled || isLoading) {
         return;
@@ -449,24 +386,24 @@ class _LiquidGlassButton extends StatelessWidget {
             height: 56,
             decoration: BoxDecoration(
               gradient: isEnabled
-                  ? const LinearGradient(
+                  ? LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
                       colors: [
-                        Color.fromRGBO(255, 255, 255, 0.2),
-                        Color.fromRGBO(255, 255, 255, 0.1),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.25 : 0.2),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.15 : 0.1),
                       ],
                     )
-                  : const LinearGradient(
+                  : LinearGradient(
                       colors: [
-                        Color.fromRGBO(255, 255, 255, 0.05),
-                        Color.fromRGBO(255, 255, 255, 0.03),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.08 : 0.05),
+                        Color.fromRGBO(255, 255, 255, isDark ? 0.05 : 0.03),
                       ],
                     ),
               borderRadius: BorderRadius.circular(28),
               border: Border.all(
                 color: isEnabled
-                    ? const Color(0xFF004B8D)
+                    ? borderColor
                     : const Color.fromRGBO(255, 255, 255, 0.1),
                 width: 2.0,
               ),
@@ -482,11 +419,11 @@ class _LiquidGlassButton extends StatelessWidget {
             ),
             child: Center(
               child: isLoading
-                  ? const SizedBox(
+                  ? SizedBox(
                       width: 24,
                       height: 24,
                       child: CircularProgressIndicator(
-                        color: Colors.white,
+                        color: textColor,
                         strokeWidth: 2.5,
                       ),
                     )
@@ -494,13 +431,67 @@ class _LiquidGlassButton extends StatelessWidget {
                       label,
                       style: TextStyle(
                         color: isEnabled
-                            ? Colors.white
-                            : const Color.fromRGBO(255, 255, 255, 0.4),
+                            ? textColor
+                            : textColor.withValues(alpha: 0.4),
                         fontSize: 17,
                         fontWeight: FontWeight.w600,
                         letterSpacing: 0.5,
                       ),
                     ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// Reset Method Option Widget
+class _ResetMethodOption extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _ResetMethodOption({
+    required this.label,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final borderColor = isDark ? const Color(0xFF415A77) : const Color(0xFF004B8D);
+
+    return GestureDetector(
+      onTap: onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(16),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? Color.fromRGBO(255, 255, 255, isDark ? 0.25 : 0.2)
+                  : Color.fromRGBO(255, 255, 255, isDark ? 0.1 : 0.08),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected
+                    ? borderColor
+                    : Color.fromRGBO(255, 255, 255, isDark ? 0.2 : 0.15),
+                width: isSelected ? 2.0 : 1.5,
+              ),
+            ),
+            child: Center(
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.w500,
+                ),
+              ),
             ),
           ),
         ),

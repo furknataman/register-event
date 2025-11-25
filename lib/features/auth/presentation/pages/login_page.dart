@@ -20,8 +20,8 @@ class LoginPage extends ConsumerWidget {
       body: Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
+        decoration: BoxDecoration(
+          gradient: AppColors.getBackgroundGradient(context),
         ),
         child: Stack(children: [
           Positioned(

@@ -24,8 +24,7 @@ abstract class AuthRemoteDataSource {
     required int type, // 1: email, 2: sms
   });
   Future<void> resetPassword({
-    required int code,
-    required int type,
+    required String code,
     required String emailOrPhone,
     required String password,
     required String passwordConfirm,
@@ -264,8 +263,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<void> resetPassword({
-    required int code,
-    required int type,
+    required String code,
     required String emailOrPhone,
     required String password,
     required String passwordConfirm,
@@ -277,8 +275,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         AppConstants.resetPasswordEndpoint,
         data: {
           'kod': code,
-          'tur': type,
-          'epostaTelefon': emailOrPhone,
+          'eposta': emailOrPhone,
           'sifre': password,
           'sifreDogrula': passwordConfirm,
         },
@@ -287,17 +284,29 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (response.statusCode == 200) {
         final apiResponse = ResetPasswordResponse.fromJson(response.data);
 
-        if (!apiResponse.basarili) {
-          // Backend sometimes returns basarili: false but message indicates success
-          // Check if message indicates success
-          final mesaj = apiResponse.mesaj?.toLowerCase() ?? '';
-          if (!mesaj.contains('başarı') && !mesaj.contains('success') &&
-              !mesaj.contains('sıfırlandı') && !mesaj.contains('reset')) {
+        // Handle status codes
+        switch (apiResponse.status) {
+          case 0: // Basarili
+            _logger.info('Password reset successfully');
+            return;
+          case 1: // KodGecersiz
+            throw const AuthException('resetPassword_invalid_code');
+          case 2: // KodSuresiDolmus
+            throw const AuthException('resetPassword_code_expired');
+          case 3: // SifrelerUyusmuyor
+            throw const AuthException('resetPassword_passwords_mismatch');
+          case 4: // GuncellemeBasarisiz
+            throw const AuthException('resetPassword_update_failed');
+          default:
+            // Fallback to message check for backwards compatibility
+            final mesaj = apiResponse.mesaj?.toLowerCase() ?? '';
+            if (mesaj.contains('başarı') || mesaj.contains('success') ||
+                mesaj.contains('sıfırlandı') || mesaj.contains('reset')) {
+              _logger.info('Password reset successfully');
+              return;
+            }
             throw AuthException(apiResponse.mesaj ?? 'Failed to reset password');
-          }
         }
-
-        _logger.info('Password reset successfully');
       } else {
         throw AuthException('Failed to reset password: ${response.statusMessage}');
       }
@@ -305,7 +314,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       _logger.error('Error resetting password: ${e.message}');
 
       if (e.response?.statusCode == 400) {
-        throw AuthException('Invalid reset code or passwords do not match');
+        throw const AuthException('resetPassword_invalid_code');
       } else if (e.type == DioExceptionType.connectionTimeout ||
                  e.type == DioExceptionType.receiveTimeout ||
                  e.type == DioExceptionType.sendTimeout) {

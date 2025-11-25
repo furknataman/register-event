@@ -16,4 +16,19 @@ class ImageHelper {
     // Fallback: GENERAL görselini döndür
     return branchImageMap['GENERAL']!;
   }
+
+  static String getDetailImageForBranch(String? branch) {
+    const branchDetailImageMap = {
+      'DP': 'assets/lesson_images/EYS-IB-Banner-DP2.jpg',
+      'MYP': 'assets/lesson_images/EYS-IB-Banner-MYP2.jpg',
+      'PYP': 'assets/lesson_images/EYS-IB-Banner-PYP2.jpg',
+      'GENERAL': 'assets/lesson_images/EYS-IB-Banner-General2.jpg',
+    };
+
+    if (branch != null && branchDetailImageMap.containsKey(branch)) {
+      return branchDetailImageMap[branch]!;
+    }
+
+    return branchDetailImageMap['GENERAL']!;
+  }
 }
