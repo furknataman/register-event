@@ -13,6 +13,7 @@ import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/events/presentation/pages/event_detail_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/profile/presentation/pages/profile_page.dart';
+import '../../features/profile/presentation/pages/campus_map_page.dart';
 import '../../features/scan/presentation/pages/scan_page.dart';
 import '../../features/schedule/presentation/pages/schedule_page.dart';
 import '../../features/search/presentation/pages/search_page.dart';
@@ -34,6 +35,7 @@ class AppRoutes {
   static const String event = '/event';
   static const String eventDetail = '/event/:id';
   static const String schedule = '/schedule';
+  static const String campusMap = '/campus-map';
 }
 
 class TabSpacingNotifier extends Notifier<double> {
@@ -156,6 +158,16 @@ final routerProvider = Provider<GoRouter>((ref) {
           child: SchedulePage(),
           state: state,
           transitionType: SharedAxisTransitionType.vertical,
+        ),
+      ),
+
+      // Campus Map Route
+      GoRoute(
+        path: AppRoutes.campusMap,
+        name: 'campusMap',
+        pageBuilder: (context, state) => MaterialPage(
+          key: state.pageKey,
+          child: const CampusMapPage(),
         ),
       ),
     ],

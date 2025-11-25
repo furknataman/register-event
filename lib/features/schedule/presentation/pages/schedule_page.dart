@@ -146,11 +146,12 @@ class _ProgramCard extends StatelessWidget {
     final localizedProgram = program.getLocalizedProgram(languageCode);
     final isColorful = program.renkli ?? false;
 
-    final cardColor = isColorful
+    // Ters mantık: renkli=false olanlar turuncu, renkli=true olanlar beyaz
+    final cardColor = !isColorful
         ? const Color(0xFFFF9800).withValues(alpha: 0.2)
         : Colors.white.withValues(alpha: 0.15);
 
-    final borderColor = isColorful
+    final borderColor = !isColorful
         ? const Color(0xFFFF9800).withValues(alpha: 0.4)
         : Colors.white.withValues(alpha: 0.25);
 
@@ -182,12 +183,12 @@ class _ProgramCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
                 decoration: BoxDecoration(
-                  color: isColorful
+                  color: !isColorful
                       ? const Color(0xFFFF9800).withValues(alpha: 0.3)
                       : Colors.white.withValues(alpha: 0.2),
                   borderRadius: BorderRadius.circular(10),
                   border: Border.all(
-                    color: isColorful
+                    color: !isColorful
                         ? const Color(0xFFFF9800).withValues(alpha: 0.5)
                         : Colors.white.withValues(alpha: 0.3),
                     width: 1,

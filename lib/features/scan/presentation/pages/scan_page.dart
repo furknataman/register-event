@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../../core/services/api/service.dart';
 import '../../data/models/attendance_response_model.dart';
 import '../providers/attendance_provider.dart';
 
@@ -92,6 +93,9 @@ class _ScanPageState extends ConsumerState<ScanPage> {
   }
 
   void _showAttendanceResult(AttendanceResponseModel response) {
+    // Profil verisini yenile
+    ref.invalidate(userProfileProvider);
+
     if (response.isSuccess) {
       // Success - green dialog
       final message = response.status == AttendanceStatus.generalAttendanceSuccess
@@ -386,19 +390,6 @@ class _ScanPageState extends ConsumerState<ScanPage> {
                                     fontWeight: FontWeight.w500,
                                   ),
                                   textAlign: TextAlign.center,
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  AppLocalizations.of(context)!.scanQrAutomatic,
-                                  style: TextStyle(
-                                    color: Colors.white.withValues(alpha: 0.8),
-                                    fontSize: 14,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),

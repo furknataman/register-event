@@ -170,6 +170,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get dailySchedule => 'Programım';
 
   @override
+  String get campusMap => 'Kampüs Haritası';
+
+  @override
   String get eventLocation => 'Etkinlik Yeri';
 
   @override
@@ -515,10 +518,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get scanPageTitle => 'QR';
 
   @override
-  String get scanQrInstruction => 'Etkinlik kapısındaki QR kodu tarayın';
-
-  @override
-  String get scanQrAutomatic => 'QR kod otomatik olarak okunacak';
+  String get scanQrInstruction => 'Etkinlik kapısındaki QR kodu tarayınız';
 
   @override
   String get manualEntryTitle => 'Manuel Giriş';

@@ -404,6 +404,12 @@ abstract class AppLocalizations {
   /// **'My Program'**
   String get dailySchedule;
 
+  /// No description provided for @campusMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Campus Map'**
+  String get campusMap;
+
   /// No description provided for @eventLocation.
   ///
   /// In en, this message translates to:
@@ -1075,12 +1081,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Scan the QR code at the event door'**
   String get scanQrInstruction;
-
-  /// No description provided for @scanQrAutomatic.
-  ///
-  /// In en, this message translates to:
-  /// **'The QR code will be scanned automatically'**
-  String get scanQrAutomatic;
 
   /// No description provided for @manualEntryTitle.
   ///

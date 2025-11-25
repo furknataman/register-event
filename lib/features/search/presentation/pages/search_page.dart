@@ -335,8 +335,8 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         Expanded(
                           child: ListView.builder(
                             controller: _scrollController,
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 10),
+                            padding: const EdgeInsets.only(
+                                left: 16, right: 16, top: 10, bottom: 70),
                             physics: const BouncingScrollPhysics(),
                             itemCount: filteredEvents.length,
                             itemBuilder: (context, index) {

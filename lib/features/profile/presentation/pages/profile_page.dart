@@ -222,6 +222,23 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                   width: 24,
                   child: Center(
                     child: SvgPicture.asset(
+                      'assets/svg/map-location-dot.svg',
+                      width: 20,
+                      height: 20,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    ),
+                  ),
+                ),
+                title: Text(AppLocalizations.of(context)!.campusMap, style: const TextStyle(color: Colors.white)),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
+                onTap: () => context.push(AppRoutes.campusMap),
+              ),
+              Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
+              ListTile(
+                leading: SizedBox(
+                  width: 24,
+                  child: Center(
+                    child: SvgPicture.asset(
                       'assets/svg/moon.svg',
                       width: 20,
                       height: 20,

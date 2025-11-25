@@ -1,7 +1,7 @@
 name: autumn_conference
 description: 18. IB Day - Better Together - Event registration and management app.
 
-version: 1.0.11+11
+version: 1.1.0+12
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
@@ -43,6 +43,7 @@ dependencies:
   device_info_plus: ^11.2.0
   animations: ^2.1.0
   package_info_plus: ^8.1.2
+  photo_view: ^0.15.0
 
 flutter_native_splash:
   color: "#ffffff"

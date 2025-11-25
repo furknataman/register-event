@@ -171,6 +171,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dailySchedule => 'My Program';
 
   @override
+  String get campusMap => 'Campus Map';
+
+  @override
   String get eventLocation => 'Event Location';
 
   @override
@@ -516,9 +519,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanQrInstruction => 'Scan the QR code at the event door';
-
-  @override
-  String get scanQrAutomatic => 'The QR code will be scanned automatically';
 
   @override
   String get manualEntryTitle => 'Manual Entry';
