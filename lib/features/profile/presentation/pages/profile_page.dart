@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../../core/routing/app_router.dart';
@@ -91,26 +92,29 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
           ),
           const SizedBox(height: 12),
 
-          Row(
-            children: [
-              Expanded(
-                child: _StatCard(
-                  icon: Icons.event,
-                  title: AppLocalizations.of(context)!.registeredEvents,
-                  value: '${user.registeredPresentationCount ?? 0}',
-                  color: Colors.blue,
+          IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  child: _StatCard(
+                    icon: Icons.event,
+                    title: AppLocalizations.of(context)!.registeredEvents,
+                    value: '${user.registeredPresentationCount ?? 0}',
+                    color: Colors.blue,
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: _StatCard(
-                  icon: Icons.check_circle,
-                  title: AppLocalizations.of(context)!.attendedEvents,
-                  value: '${user.attendanceCount ?? 0}',
-                  color: Colors.green,
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _StatCard(
+                    icon: Icons.check_circle,
+                    title: AppLocalizations.of(context)!.attendedEvents,
+                    value: '${user.attendanceCount ?? 0}',
+                    color: Colors.green,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
 
           // General Attendance Badge
@@ -150,43 +154,6 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
           ],
 
           const SizedBox(height: 24),
-
-          // Profile Information
-          Text(
-            AppLocalizations.of(context)!.profileInformation,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-          ),
-        const SizedBox(height: 12),
-
-        _ProfileInfoCard(
-          iconPath: 'assets/svg/envelope.svg',
-          title: AppLocalizations.of(context)!.profileEmail,
-          value: user.email ?? AppLocalizations.of(context)!.notProvided,
-        ),
-        if (user.telephone != null && user.telephone != '0' && user.telephone!.isNotEmpty)
-          _ProfileInfoCard(
-            iconPath: 'assets/svg/phone.svg',
-            title: AppLocalizations.of(context)!.profilePhone,
-            value: user.telephone!,
-          ),
-        if (user.school != null && user.school!.isNotEmpty)
-          _ProfileInfoCard(
-            iconPath: 'assets/svg/school.svg',
-            title: AppLocalizations.of(context)!.profileSchool,
-            value: user.school!,
-          ),
-        if (user.job != null && user.job!.isNotEmpty)
-          _ProfileInfoCard(
-            iconPath: 'assets/svg/briefcase.svg',
-            title: AppLocalizations.of(context)!.profileJobTitle,
-            value: user.job!,
-          ),
-
-        const SizedBox(height: 24),
 
         // Actions
         Container(
@@ -233,6 +200,30 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
                 onTap: () => context.push(AppRoutes.campusMap),
               ),
+              if (user.anket != null && user.anket!.isNotEmpty) ...[
+                Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
+                ListTile(
+                  leading: SizedBox(
+                    width: 24,
+                    child: Center(
+                      child: SvgPicture.asset(
+                        'assets/svg/clipboard-list.svg',
+                        width: 20,
+                        height: 20,
+                        colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                      ),
+                    ),
+                  ),
+                  title: Text(AppLocalizations.of(context)!.ibdaySurvey, style: const TextStyle(color: Colors.white)),
+                  trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
+                  onTap: () async {
+                    final uri = Uri.parse(user.anket!);
+                    if (await canLaunchUrl(uri)) {
+                      await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    }
+                  },
+                ),
+              ],
               Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
               ListTile(
                 leading: SizedBox(
@@ -284,6 +275,73 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                 onTap: () => _showLogoutDialog(context, ref),
               ),
             ],
+          ),
+        ),
+
+        // Personal Information Section
+        const SizedBox(height: 16),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.15),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.3),
+              width: 1,
+            ),
+          ),
+          child: Theme(
+            data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+            child: ExpansionTile(
+              leading: SizedBox(
+                width: 24,
+                child: Center(
+                  child: SvgPicture.asset(
+                    'assets/svg/circle-user.svg',
+                    width: 20,
+                    height: 20,
+                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                  ),
+                ),
+              ),
+              title: Text(
+                AppLocalizations.of(context)!.profileInformation,
+                style: const TextStyle(color: Colors.white),
+              ),
+              trailing: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
+              iconColor: Colors.white,
+              collapsedIconColor: Colors.white,
+              children: [
+                Divider(height: 1, color: Colors.white.withValues(alpha: 0.2)),
+                _buildProfileInfoRow(
+                  context,
+                  'assets/svg/envelope.svg',
+                  AppLocalizations.of(context)!.profileEmail,
+                  user.email ?? AppLocalizations.of(context)!.notProvided,
+                ),
+                if (user.telephone != null && user.telephone != '0' && user.telephone!.isNotEmpty)
+                  _buildProfileInfoRow(
+                    context,
+                    'assets/svg/phone.svg',
+                    AppLocalizations.of(context)!.profilePhone,
+                    user.telephone!,
+                  ),
+                if (user.school != null && user.school!.isNotEmpty)
+                  _buildProfileInfoRow(
+                    context,
+                    'assets/svg/school.svg',
+                    AppLocalizations.of(context)!.profileSchool,
+                    user.school!,
+                  ),
+                if (user.job != null && user.job!.isNotEmpty)
+                  _buildProfileInfoRow(
+                    context,
+                    'assets/svg/briefcase.svg',
+                    AppLocalizations.of(context)!.profileJobTitle,
+                    user.job!,
+                  ),
+                const SizedBox(height: 8),
+              ],
+            ),
           ),
         ),
 
@@ -457,48 +515,50 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
       }
     }
   }
-}
 
-class _ProfileInfoCard extends StatelessWidget {
-  final String iconPath;
-  final String title;
-  final String value;
-
-  const _ProfileInfoCard({
-    required this.iconPath,
-    required this.title,
-    required this.value,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.15),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: Colors.white.withValues(alpha: 0.3),
-          width: 1,
-        ),
-      ),
-      child: ListTile(
-        leading: SizedBox(
-          width: 28,
-          child: Center(
-            child: SvgPicture.asset(
-              iconPath,
-              width: 24,
-              height: 24,
-              colorFilter: ColorFilter.mode(
-                AppTextStyles.getTextColor(context),
-                BlendMode.srcIn,
+  Widget _buildProfileInfoRow(BuildContext context, String iconPath, String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 24,
+            child: Center(
+              child: SvgPicture.asset(
+                iconPath,
+                width: 18,
+                height: 18,
+                colorFilter: ColorFilter.mode(
+                  Colors.white.withValues(alpha: 0.7),
+                  BlendMode.srcIn,
+                ),
               ),
             ),
           ),
-        ),
-        title: Text(title, style: AppTextStyles.profileInfoTitle(context)),
-        subtitle: Text(value, style: AppTextStyles.profileInfoSubtitle(context)),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: TextStyle(
+                    color: Colors.white.withValues(alpha: 0.6),
+                    fontSize: 12,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -550,6 +610,8 @@ class _StatCard extends StatelessWidget {
                 color: Colors.white.withValues(alpha: 0.8),
               ),
               textAlign: TextAlign.center,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),

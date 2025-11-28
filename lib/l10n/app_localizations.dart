@@ -1249,6 +1249,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Click to access the presentation evaluation form'**
   String get surveyFormLink;
+
+  /// No description provided for @ibdaySurvey.
+  ///
+  /// In en, this message translates to:
+  /// **'IBDAY Evaluation Survey'**
+  String get ibdaySurvey;
+
+  /// No description provided for @updateRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Update Required'**
+  String get updateRequired;
+
+  /// No description provided for @updateRequiredMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Please update to continue using the app.'**
+  String get updateRequiredMessage;
+
+  /// No description provided for @currentVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Version'**
+  String get currentVersionLabel;
+
+  /// No description provided for @requiredVersionLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Required Version'**
+  String get requiredVersionLabel;
+
+  /// No description provided for @updateNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Update'**
+  String get updateNow;
 }
 
 class _AppLocalizationsDelegate

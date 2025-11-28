@@ -669,28 +669,29 @@ class HomePage extends ConsumerWidget {
                         ),
                         child: Image.asset(
                           ImageHelper.getImageForBranch(presentation.branch),
-                          height: 220,
                           width: double.infinity,
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fitWidth,
                           errorBuilder: (context, error, stackTrace) {
                             // Fallback gradient if image fails
-                            return Container(
-                              height: 220,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                  colors: [
-                                    Colors.white.withValues(alpha: 0.12),
-                                    Colors.white.withValues(alpha: 0.22),
-                                  ],
+                            return AspectRatio(
+                              aspectRatio: 16 / 9,
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Colors.white.withValues(alpha: 0.12),
+                                      Colors.white.withValues(alpha: 0.22),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              child: Center(
-                                child: Icon(
-                                  Icons.event,
-                                  size: 80,
-                                  color: Colors.white.withValues(alpha: 0.5),
+                                child: Center(
+                                  child: Icon(
+                                    Icons.event,
+                                    size: 80,
+                                    color: Colors.white.withValues(alpha: 0.5),
+                                  ),
                                 ),
                               ),
                             );

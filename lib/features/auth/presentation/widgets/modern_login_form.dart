@@ -113,8 +113,18 @@ class _ModernLoginFormState extends ConsumerState<ModernLoginForm> {
   }
 
   void _showErrorMessage(BuildContext context, String message) {
-    // Log error instead of showing SnackBar
     _logger.error('Login error: $message');
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red.shade700,
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
   }
 
   @override

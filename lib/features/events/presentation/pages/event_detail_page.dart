@@ -209,7 +209,21 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                                               context,
                                               'assets/svg/location-dot.svg',
                                               AppLocalizations.of(context)!.presentationPlace,
-                                              presentation.presentationPlace!,
+                                              getLocalizedText(
+                                                presentation.presentationPlace,
+                                                Localizations.localeOf(context).languageCode,
+                                              ),
+                                              isDark,
+                                            ),
+                                          ),
+                                        if (presentation.school != null && presentation.school!.isNotEmpty)
+                                          SizedBox(
+                                            width: MediaQuery.of(context).size.width - 44,
+                                            child: _buildInfoCard(
+                                              context,
+                                              'assets/svg/school.svg',
+                                              AppLocalizations.of(context)!.profileSchool,
+                                              presentation.school!,
                                               isDark,
                                             ),
                                           ),

@@ -609,4 +609,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get surveyFormLink =>
       'Click to access the presentation evaluation form';
+
+  @override
+  String get ibdaySurvey => 'IBDAY Evaluation Survey';
+
+  @override
+  String get updateRequired => 'Update Required';
+
+  @override
+  String get updateRequiredMessage =>
+      'Please update to continue using the app.';
+
+  @override
+  String get currentVersionLabel => 'Current Version';
+
+  @override
+  String get requiredVersionLabel => 'Required Version';
+
+  @override
+  String get updateNow => 'Update';
 }

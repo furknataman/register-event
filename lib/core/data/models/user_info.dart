@@ -18,6 +18,7 @@ class InfoUser {
   final List<int>? attendedToEventId;
   final int? registeredPresentationCount;
   final int? attendanceCount;
+  final String? anket;
 
   InfoUser(
       {this.id,
@@ -36,7 +37,8 @@ class InfoUser {
       this.registeredEventTime,
       this.attendedToEventId,
       this.registeredPresentationCount,
-      this.attendanceCount});
+      this.attendanceCount,
+      this.anket});
 
   factory InfoUser.fromJson(Map<String, dynamic> json) {
     DateTime dontTrustFool(String time) {
@@ -72,6 +74,7 @@ class InfoUser {
           : null,
       registeredPresentationCount: json['kayitliOlduguSunumSayisi'],
       attendanceCount: json['yoklamaSayisi'],
+      anket: json['anket'],
     );
   }
 

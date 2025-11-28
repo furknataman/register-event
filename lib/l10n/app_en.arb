@@ -191,5 +191,11 @@
     "authenticationError": "Authentication error, please log in again",
     "validationError": "Please check your input",
     "dataParseError": "Error processing data",
-    "surveyFormLink": "Click to access the presentation evaluation form"
+    "surveyFormLink": "Click to access the presentation evaluation form",
+    "ibdaySurvey": "IBDAY Evaluation Survey",
+    "updateRequired": "Update Required",
+    "updateRequiredMessage": "Please update to continue using the app.",
+    "currentVersionLabel": "Current Version",
+    "requiredVersionLabel": "Required Version",
+    "updateNow": "Update"
 }

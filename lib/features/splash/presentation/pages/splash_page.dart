@@ -3,9 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:autumn_conference/core/utils/svg.dart';
 import '../widgets/splash_logo.dart';
+import '../widgets/force_update_dialog.dart';
 import '../../../../core/routing/app_router.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/api/service.dart';
+import '../../../../core/services/remote_config/remote_config_service.dart';
 import '../../../../core/notifications/local/notification.dart';
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../notifications/domain/providers/notification_provider.dart';
@@ -25,8 +27,24 @@ class _SplashPageState extends ConsumerState<SplashPage> {
   }
 
   Future<void> _checkAuthAndNavigate() async {
-    // Wait for auth provider to fully initialize
     try {
+      // Check for updates first
+      final remoteConfigService = ref.read(remoteConfigServiceProvider);
+      await remoteConfigService.initialize();
+      final updateInfo = await remoteConfigService.checkForUpdate();
+
+      if (!mounted) return;
+
+      // Show force update dialog if needed
+      if (updateInfo.forceUpdate) {
+        await ForceUpdateDialog.show(
+          context,
+          storeUrl: updateInfo.storeUrl,
+        );
+        return; // Dialog won't close, app stays here
+      }
+
+      // Wait for auth provider to fully initialize
       final user = await ref.read(authNotifierProvider.future);
       final isAuthenticated = user != null;
 

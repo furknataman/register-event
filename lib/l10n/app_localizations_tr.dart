@@ -609,4 +609,23 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get surveyFormLink =>
       'Sunum degerlendirme formuna ulasmak icin tiklayin';
+
+  @override
+  String get ibdaySurvey => 'IBDAY Değerlendirme Anketi';
+
+  @override
+  String get updateRequired => 'Güncelleme Zorunlu';
+
+  @override
+  String get updateRequiredMessage =>
+      'Uygulamayı kullanmaya devam etmek için güncellemeniz gerekmektedir.';
+
+  @override
+  String get currentVersionLabel => 'Mevcut Sürüm';
+
+  @override
+  String get requiredVersionLabel => 'Gerekli Sürüm';
+
+  @override
+  String get updateNow => 'Güncelle';
 }

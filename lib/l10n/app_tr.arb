@@ -191,5 +191,11 @@
     "authenticationError": "Kimlik doğrulama hatası, lütfen tekrar giriş yapın",
     "validationError": "Girdiğiniz bilgileri kontrol edin",
     "dataParseError": "Veri işlenirken hata oluştu",
-    "surveyFormLink": "Sunum degerlendirme formuna ulasmak icin tiklayin"
+    "surveyFormLink": "Sunum degerlendirme formuna ulasmak icin tiklayin",
+    "ibdaySurvey": "IBDAY Değerlendirme Anketi",
+    "updateRequired": "Güncelleme Zorunlu",
+    "updateRequiredMessage": "Uygulamayı kullanmaya devam etmek için güncellemeniz gerekmektedir.",
+    "currentVersionLabel": "Mevcut Sürüm",
+    "requiredVersionLabel": "Gerekli Sürüm",
+    "updateNow": "Güncelle"
 }
