@@ -217,9 +217,11 @@ class _ProfileContentState extends ConsumerState<_ProfileContent> {
                   title: Text(AppLocalizations.of(context)!.ibdaySurvey, style: const TextStyle(color: Colors.white)),
                   trailing: const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.white),
                   onTap: () async {
-                    final uri = Uri.parse(user.anket!);
-                    if (await canLaunchUrl(uri)) {
+                    try {
+                      final uri = Uri.parse(user.anket!);
                       await launchUrl(uri, mode: LaunchMode.externalApplication);
+                    } catch (e) {
+                      debugPrint('Could not launch survey URL: $e');
                     }
                   },
                 ),

@@ -61,6 +61,16 @@ class EventDetailPage extends ConsumerStatefulWidget {
 
 class _EventDetailPageState extends ConsumerState<EventDetailPage> {
   @override
+  void initState() {
+    super.initState();
+    // Sayfaya her girişte verileri yeniden yükle
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.invalidate(eventDetailsProvider(int.parse(widget.eventId)));
+      ref.invalidate(sessionPresentationDataProvider);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     final eventAsync = ref.watch(eventDetailsProvider(int.parse(widget.eventId)));
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
