@@ -1,7 +1,7 @@
 name: autumn_conference
 description: 18. IB Day - Better Together - Event registration and management app.
 
-version: 1.2.1+16
+version: 1.2.2+17
 
 environment:
   sdk: ">=3.5.0 <4.0.0"

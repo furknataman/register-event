@@ -61,16 +61,6 @@ class EventDetailPage extends ConsumerStatefulWidget {
 
 class _EventDetailPageState extends ConsumerState<EventDetailPage> {
   @override
-  void initState() {
-    super.initState();
-    // Sayfaya her girişte verileri yeniden yükle
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.invalidate(eventDetailsProvider(int.parse(widget.eventId)));
-      ref.invalidate(sessionPresentationDataProvider);
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     final eventAsync = ref.watch(eventDetailsProvider(int.parse(widget.eventId)));
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
@@ -405,9 +395,26 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                 gradient: isDark ? AppColors.backgroundGradientDark : AppColors.backgroundGradient,
               ),
               child: Center(
-                child: Text(
-                  AppLocalizations.of(context)!.anErrorOccurred,
-                  style: const TextStyle(color: Colors.white),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      AppLocalizations.of(context)!.anErrorOccurred,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () {
+                        ref.invalidate(sessionPresentationDataProvider);
+                        ref.invalidate(eventDetailsProvider(int.parse(widget.eventId)));
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white.withValues(alpha: 0.15),
+                        foregroundColor: Colors.white,
+                      ),
+                      child: Text(AppLocalizations.of(context)!.retry),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -478,7 +485,10 @@ class _EventDetailPageState extends ConsumerState<EventDetailPage> {
                   ),
                   const SizedBox(height: 24),
                   ElevatedButton(
-                    onPressed: () => ref.invalidate(eventDetailsProvider(int.parse(widget.eventId))),
+                    onPressed: () {
+                      ref.invalidate(eventDetailsProvider(int.parse(widget.eventId)));
+                      ref.invalidate(sessionPresentationDataProvider);
+                    },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white.withValues(alpha: 0.15),
                       foregroundColor: Colors.white,
@@ -798,14 +808,13 @@ class _RegisterActionButtonState extends ConsumerState<_RegisterActionButton> wi
         },
       );
     } finally {
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _isProcessing = false;
-      });
-      if (success) {
-        HapticFeedback.lightImpact();
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+        if (success) {
+          HapticFeedback.lightImpact();
+        }
       }
     }
   }

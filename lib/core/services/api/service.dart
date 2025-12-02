@@ -500,7 +500,7 @@ final userDataProvider = FutureProvider<InfoUser>((ref) async {
   return ref.watch(webServiceProvider).fetchUser();
 });
 
-final userProfileProvider = FutureProvider<InfoUser>((ref) async {
+final userProfileProvider = FutureProvider.autoDispose<InfoUser>((ref) async {
   return ref.watch(webServiceProvider).fetchUserProfile();
 });
 

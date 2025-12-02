@@ -108,17 +108,17 @@ class AuthRepositoryImpl implements AuthRepository {
       if (token == null) {
         return const Right(null);
       }
-      
+
       // Try to get user from local storage first
       final localUser = await _localDataSource.getUser();
       if (localUser != null) {
         return Right(localUser);
       }
-      
+
       // If no local user, try to fetch from server
       final result = await _remoteDataSource.getCurrentUser();
       await _localDataSource.saveUser(result);
-      
+
       return Right(result.user.toDomain());
     } on AuthException {
       // Token might be expired, clear local data

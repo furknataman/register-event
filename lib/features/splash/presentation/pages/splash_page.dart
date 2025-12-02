@@ -9,6 +9,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/services/api/service.dart';
 import '../../../../core/services/remote_config/remote_config_service.dart';
 import '../../../../core/notifications/local/notification.dart';
+import '../../../../core/data/local/token_stroge.dart' as token_storage;
 import '../../../auth/presentation/providers/auth_provider.dart';
 import '../../../notifications/domain/providers/notification_provider.dart';
 
@@ -20,6 +21,10 @@ class SplashPage extends ConsumerStatefulWidget {
 }
 
 class _SplashPageState extends ConsumerState<SplashPage> {
+  int _retryCount = 0;
+  static const int _maxRetries = 3;
+  bool _showError = false;
+
   @override
   void initState() {
     super.initState();
@@ -53,18 +58,22 @@ class _SplashPageState extends ConsumerState<SplashPage> {
 
       if (!mounted) return;
 
-      // Refresh badge count if user is authenticated
+      // Refresh badge count and user profile if authenticated
       if (isAuthenticated) {
+        // User profile'i yukle
         try {
-          // Fetch unread count from API
+          ref.invalidate(userProfileProvider);
+          await ref.read(userProfileProvider.future);
+        } catch (e) {
+          debugPrint('Failed to load user profile: $e');
+        }
+
+        // Badge count
+        try {
           final webService = ref.read(webServiceProvider);
           final response = await webService.getUnreadCount();
           final count = response.unreadCount;
-
-          // Update app badge
           await LocalNoticeService().updateAppBadge(count);
-
-          // Invalidate provider to refresh bell icon badge
           ref.invalidate(unreadCountProvider);
         } catch (e) {
           debugPrint('Failed to update badge on splash: $e');
@@ -74,11 +83,38 @@ class _SplashPageState extends ConsumerState<SplashPage> {
       final route = isAuthenticated ? AppRoutes.home : AppRoutes.login;
       context.go(route);
     } catch (e) {
-      // If there's an error, go to login
-      await Future.delayed(const Duration(seconds: 2));
+      debugPrint('Splash error (attempt ${_retryCount + 1}/$_maxRetries): $e');
+
+      if (_retryCount < _maxRetries) {
+        _retryCount++;
+        // Exponential backoff: 1s, 2s, 3s
+        await Future.delayed(Duration(seconds: _retryCount));
+        if (!mounted) return;
+        return _checkAuthAndNavigate();
+      }
+
+      // Max retry asildi
+      final token = await token_storage.getToken();
       if (!mounted) return;
-      context.go(AppRoutes.login);
+
+      if (token != null) {
+        // Token var, hata ekrani goster
+        setState(() => _showError = true);
+      } else {
+        // Token yok, login'e git
+        context.go(AppRoutes.login);
+      }
     }
+  }
+
+  void _retry() {
+    setState(() {
+      _showError = false;
+      _retryCount = 0;
+    });
+    ref.invalidate(authNotifierProvider);
+    ref.invalidate(userProfileProvider);
+    _checkAuthAndNavigate();
   }
 
   @override
@@ -98,16 +134,57 @@ class _SplashPageState extends ConsumerState<SplashPage> {
               right: 0,
               child: elipse(MediaQuery.of(context).size.width),
             ),
-            const Center(
+            Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  SplashLogo(),
-                  SizedBox(height: 24),
-                  CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 3,
-                  ),
+                  const SplashLogo(),
+                  const SizedBox(height: 24),
+                  if (_showError) ...[
+                    const Icon(
+                      Icons.wifi_off_rounded,
+                      color: Colors.white,
+                      size: 48,
+                    ),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Baglanti hatasi',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Internet baglantinizi kontrol edin',
+                      style: TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    ElevatedButton.icon(
+                      onPressed: _retry,
+                      icon: const Icon(Icons.refresh),
+                      label: const Text('Tekrar Dene'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.white,
+                        foregroundColor: AppColors.primaryBlue,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 12,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                    ),
+                  ] else
+                    const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
                 ],
               ),
             ),

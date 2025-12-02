@@ -372,8 +372,10 @@ class HomePage extends ConsumerWidget {
                                 ),
                                 const SizedBox(height: 24),
                                 ElevatedButton(
-                                  onPressed: () => ref.invalidate(
-                                      sessionPresentationDataProvider),
+                                  onPressed: () {
+                                    ref.invalidate(sessionPresentationDataProvider);
+                                    ref.invalidate(userProfileProvider);
+                                  },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor:
                                         Colors.white.withValues(alpha: 0.15),
@@ -576,8 +578,9 @@ class HomePage extends ConsumerWidget {
                     userDataAsync.when(
                       data: (user) {
                         final userName = user.name?.trim() ?? '';
+                        if (userName.isEmpty) return const SizedBox.shrink();
                         return Text(
-                          userName.isEmpty ? AppLocalizations.of(context)!.user : userName,
+                          userName,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 17,
@@ -593,14 +596,7 @@ class HomePage extends ConsumerWidget {
                           strokeWidth: 2,
                         ),
                       ),
-                      error: (_, __) => Text(
-                        AppLocalizations.of(context)!.user,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                      error: (_, __) => const SizedBox.shrink(),
                     ),
                     const Spacer(),
                     // Notification Icon with Badge - EN SAĞDA
