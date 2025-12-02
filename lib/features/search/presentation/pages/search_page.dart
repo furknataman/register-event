@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:autumn_conference/core/data/models/presentation_model.dart';
+import 'package:autumn_conference/core/providers/navigation_state.dart';
 import 'package:autumn_conference/core/services/api/service.dart';
 import 'package:autumn_conference/core/theme/app_colors.dart';
 import 'package:autumn_conference/core/utils/localization_helper.dart';

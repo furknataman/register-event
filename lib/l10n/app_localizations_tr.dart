@@ -56,6 +56,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get filters => 'Filtrele';
 
   @override
+  String get filter => 'Filtre';
+
+  @override
+  String get filterProgram => 'Program';
+
+  @override
+  String get filterPresentationType => 'Sunum Tipi';
+
+  @override
+  String get apply => 'Uygula';
+
+  @override
   String get reset => 'Sıfırla';
 
   @override

@@ -188,6 +188,30 @@ abstract class AppLocalizations {
   /// **'Filters'**
   String get filters;
 
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @filterProgram.
+  ///
+  /// In en, this message translates to:
+  /// **'Program'**
+  String get filterProgram;
+
+  /// No description provided for @filterPresentationType.
+  ///
+  /// In en, this message translates to:
+  /// **'Presentation Type'**
+  String get filterPresentationType;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
   /// No description provided for @reset.
   ///
   /// In en, this message translates to:

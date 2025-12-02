@@ -56,6 +56,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filters => 'Filters';
 
   @override
+  String get filter => 'Filter';
+
+  @override
+  String get filterProgram => 'Program';
+
+  @override
+  String get filterPresentationType => 'Presentation Type';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
   String get reset => 'Reset';
 
   @override

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'service.dart';
+part of 'navigation_state.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -8,53 +8,6 @@ part of 'service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-
-@ProviderFor(SelectedCategory)
-const selectedCategoryProvider = SelectedCategoryProvider._();
-
-final class SelectedCategoryProvider
-    extends $NotifierProvider<SelectedCategory, int> {
-  const SelectedCategoryProvider._()
-      : super(
-          from: null,
-          argument: null,
-          retry: null,
-          name: r'selectedCategoryProvider',
-          isAutoDispose: true,
-          dependencies: null,
-          $allTransitiveDependencies: null,
-        );
-
-  @override
-  String debugGetCreateSourceHash() => _$selectedCategoryHash();
-
-  @$internal
-  @override
-  SelectedCategory create() => SelectedCategory();
-
-  /// {@macro riverpod.override_with_value}
-  Override overrideWithValue(int value) {
-    return $ProviderOverride(
-      origin: this,
-      providerOverride: $SyncValueProvider<int>(value),
-    );
-  }
-}
-
-String _$selectedCategoryHash() => r'8105439d906407e17589f63990015f0c661930a1';
-
-abstract class _$SelectedCategory extends $Notifier<int> {
-  int build();
-  @$mustCallSuper
-  @override
-  void runBuild() {
-    final created = build();
-    final ref = this.ref as $Ref<int, int>;
-    final element = ref.element
-        as $ClassProviderElement<AnyNotifier<int, int>, int, Object?, Object?>;
-    element.handleValue(ref, created);
-  }
-}
 
 @ProviderFor(ResetBottomBar)
 const resetBottomBarProvider = ResetBottomBarProvider._();
@@ -99,6 +52,53 @@ abstract class _$ResetBottomBar extends $Notifier<int> {
     final ref = this.ref as $Ref<int, int>;
     final element = ref.element
         as $ClassProviderElement<AnyNotifier<int, int>, int, Object?, Object?>;
+    element.handleValue(ref, created);
+  }
+}
+
+@ProviderFor(HideBottomBar)
+const hideBottomBarProvider = HideBottomBarProvider._();
+
+final class HideBottomBarProvider
+    extends $NotifierProvider<HideBottomBar, bool> {
+  const HideBottomBarProvider._()
+      : super(
+          from: null,
+          argument: null,
+          retry: null,
+          name: r'hideBottomBarProvider',
+          isAutoDispose: true,
+          dependencies: null,
+          $allTransitiveDependencies: null,
+        );
+
+  @override
+  String debugGetCreateSourceHash() => _$hideBottomBarHash();
+
+  @$internal
+  @override
+  HideBottomBar create() => HideBottomBar();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$hideBottomBarHash() => r'233adb9a930e8580485825abce18e6329e18f52a';
+
+abstract class _$HideBottomBar extends $Notifier<bool> {
+  bool build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final created = build();
+    final ref = this.ref as $Ref<bool, bool>;
+    final element = ref.element as $ClassProviderElement<
+        AnyNotifier<bool, bool>, bool, Object?, Object?>;
     element.handleValue(ref, created);
   }
 }

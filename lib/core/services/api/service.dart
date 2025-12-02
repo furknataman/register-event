@@ -1,19 +1,15 @@
-import 'package:dio/dio.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:logger/logger.dart';
+import 'package:autumn_conference/core/data/local/token_stroge.dart';
 import 'package:autumn_conference/core/data/models/presentation_model.dart';
 import 'package:autumn_conference/core/data/models/session_response_model.dart';
 import 'package:autumn_conference/core/data/models/token_response_model.dart';
 import 'package:autumn_conference/core/data/models/user_info.dart';
-import 'package:autumn_conference/core/data/local/token_stroge.dart';
-import 'package:autumn_conference/main.dart';
 import 'package:autumn_conference/core/notifications/toast/toast_message.dart';
-import 'package:autumn_conference/features/schedule/data/models/program_model.dart';
 import 'package:autumn_conference/features/notifications/data/models/notification_model.dart';
-
-part 'service.g.dart';
+import 'package:autumn_conference/features/schedule/data/models/program_model.dart';
+import 'package:autumn_conference/main.dart';
+import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 
 class UnauthorizedException extends Interceptor {
   @override
@@ -31,7 +27,7 @@ class UnauthorizedException extends Interceptor {
       await logout();
 
       await navigatorKey.currentState?.pushReplacementNamed('/start');
-    } 
+    }
     super.onError(err, handler);
   }
 }
@@ -56,16 +52,16 @@ class WebService {
 
     try {
       final response = method == 'GET'
-        ? await _dio.get(
-            url,
-            queryParameters: data,
-            options: token != null ? _commonHeaders(token) : null,
-          )
-        : await _dio.post(
-            url,
-            data: data,
-            options: token != null ? _commonHeaders(token) : null,
-          );
+          ? await _dio.get(
+              url,
+              queryParameters: data,
+              options: token != null ? _commonHeaders(token) : null,
+            )
+          : await _dio.post(
+              url,
+              data: data,
+              options: token != null ? _commonHeaders(token) : null,
+            );
 
       return response;
     } catch (e) {
@@ -116,8 +112,7 @@ class WebService {
 
   Future<String?> login(String email, String password) async {
     await logout();
-    final response = await _makeRequest("AtcYonetim/MobilTokenUret",
-        data: {'email': email, 'password': password});
+    final response = await _makeRequest("AtcYonetim/MobilTokenUret", data: {'email': email, 'password': password});
 
     if (response.statusCode == 200 && response.data["basarili"]) {
       TokenResponse tokenResponse = TokenResponse.fromJson(response.data);
@@ -129,8 +124,8 @@ class WebService {
 
   Future<InfoUser> fetchUser() async {
     final myToken = await getToken();
-    final response = await _makeRequest("AtcYonetim/MobilKullaniciBilgileriGetir",
-        data: {'token': myToken}, token: myToken);
+    final response =
+        await _makeRequest("AtcYonetim/MobilKullaniciBilgileriGetir", data: {'token': myToken}, token: myToken);
 
     if (response.statusCode == 200) {
       return InfoUser.fromJson(response.data);
@@ -198,8 +193,7 @@ class WebService {
       final myToken = await getToken();
       _logger.i('🔵 Token retrieved: ${myToken != null ? "✓" : "✗"}');
 
-      final response = await _makeRequest("Sunum/SunumKayitEkle",
-          data: {"sunumId": presentationId}, token: myToken);
+      final response = await _makeRequest("Sunum/SunumKayitEkle", data: {"sunumId": presentationId}, token: myToken);
 
       _logger.i('🔵 Response status: ${response.statusCode}');
       _logger.i('🔵 Response data: ${response.data}');
@@ -228,8 +222,7 @@ class WebService {
       final myToken = await getToken();
       _logger.i('🔴 Token retrieved: ${myToken != null ? "✓" : "✗"}');
 
-      final response = await _makeRequest("Sunum/SunumKayitSil",
-          data: {"sunumId": presentationId}, token: myToken);
+      final response = await _makeRequest("Sunum/SunumKayitSil", data: {"sunumId": presentationId}, token: myToken);
 
       _logger.i('🔴 Response status: ${response.statusCode}');
       _logger.i('🔴 Response data: ${response.data}');
@@ -253,11 +246,9 @@ class WebService {
     }
   }
 
-  Future<bool> attendanceEvent(
-      int userId, int presentationId, String successMessage) async {
+  Future<bool> attendanceEvent(int userId, int presentationId, String successMessage) async {
     final myToken = await getToken();
-    final response = await _makeRequest("AtcYonetim/SunumYoklamaAl",
-        data: {"sunumId": presentationId}, token: myToken);
+    final response = await _makeRequest("AtcYonetim/SunumYoklamaAl", data: {"sunumId": presentationId}, token: myToken);
     if (response.statusCode == 200) {
       if (response.data['sonuc'] == 1) {
         toastMessage(successMessage);
@@ -517,40 +508,6 @@ final programFlowProvider = FutureProvider<List<ProgramModel>>((ref) async {
 });
 
 // Event detail provider - Detay endpoint'inden zengin bilgi alıyoruz
-final eventDetailsProvider =
-    FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
+final eventDetailsProvider = FutureProvider.family<ClassModelPresentation?, int>((ref, id) async {
   return ref.watch(webServiceProvider).fetchEventDetails(id);
 });
-
-// Seçili kategori için Notifier
-// 0 = Tümü, 1 = Oturum 1, 2 = Oturum 2, 3 = Oturum 3, 4 = Oturum 4, 5 = Kayıt Olduklarım
-@riverpod
-class SelectedCategory extends _$SelectedCategory {
-  @override
-  int build() => 0;
-
-  void set(int value) => state = value;
-}
-
-// PageController için Provider - Event cards sayfaları için
-final categoryPageControllerProvider = Provider<PageController>((ref) {
-  final controller = PageController(initialPage: 0);
-  ref.onDispose(() => controller.dispose());
-  return controller;
-});
-
-// ScrollController için Provider - Kategori chips listesi için
-final chipScrollControllerProvider = Provider<ScrollController>((ref) {
-  final controller = ScrollController();
-  ref.onDispose(() => controller.dispose());
-  return controller;
-});
-
-// Bottom bar reset için Notifier
-@riverpod
-class ResetBottomBar extends _$ResetBottomBar {
-  @override
-  int build() => 0;
-
-  void increment() => state++;
-}

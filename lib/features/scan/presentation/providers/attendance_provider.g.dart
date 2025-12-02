@@ -34,7 +34,7 @@ final class AttendanceNotifierProvider extends $AsyncNotifierProvider<
 }
 
 String _$attendanceNotifierHash() =>
-    r'816760d40bf8f514700e7a61ea8d4b28a849c01b';
+    r'4299d6eed33dca80aec56e7770d160f28e166957';
 
 abstract class _$AttendanceNotifier
     extends $AsyncNotifier<AttendanceResponseModel?> {

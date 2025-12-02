@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 // Import services
-import '../../core/services/api/service.dart';
+import '../providers/navigation_state.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
 // Import feature pages
 import '../../features/auth/presentation/pages/login_page.dart';
@@ -220,6 +220,7 @@ class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
     );
     final tabSpacing = ref.watch(tabSpacingProvider);
     final currentIndex = _getCurrentIndex(context);
+    final hideBottomBar = ref.watch(hideBottomBarProvider);
 
     return WillPopScope(
       onWillPop: () async {
@@ -251,14 +252,15 @@ class _AppNavigationShellState extends ConsumerState<AppNavigationShell> {
               // Main content
               Positioned.fill(child: widget.child),
               // Floating liquid bar like the demo
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: LiquidBottomNav(
-                  onTap: (i) => _onTap(context, i),
-                  tabSpacing: tabSpacing,
-                  currentIndex: currentIndex,
+              if (!hideBottomBar)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: LiquidBottomNav(
+                    onTap: (i) => _onTap(context, i),
+                    tabSpacing: tabSpacing,
+                    currentIndex: currentIndex,
+                  ),
                 ),
-              ),
             ],
           ),
         ),

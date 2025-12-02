@@ -9,8 +9,11 @@ import 'package:go_router/go_router.dart';
 import 'package:liquid_glass_renderer/liquid_glass_renderer.dart';
 
 import '../../../../core/animations/spring_animations.dart';
+import '../../../../core/providers/navigation_state.dart';
 import '../../../../core/services/api/service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../providers/home_state.dart';
+import '../../../../core/theme/theme_mode.dart';
 import '../../../../core/utils/image_helper.dart';
 import '../../../../core/utils/localization_helper.dart';
 import '../../../../core/widgets/adaptive_glass.dart';
@@ -113,11 +116,54 @@ class HomePage extends ConsumerWidget {
   static const double _headerHeight = 76.0;
   static const double _chipsHeight = 66.0;
 
+  // Helper function to filter and sort presentations
+  List<dynamic> _filterPresentations(List<dynamic> presentations, String? programFilter, String? typeFilter) {
+    var filtered = presentations.toList();
+
+    // Apply filters
+    if (programFilter != null || typeFilter != null) {
+      filtered = filtered.where((p) {
+        bool matchesProgram = true;
+        bool matchesType = true;
+
+        // Program filter (PYP, MYP, DP) - branch field
+        if (programFilter != null) {
+          matchesProgram = p.branch?.toString().toUpperCase().contains(programFilter.toUpperCase()) ?? false;
+        }
+
+        // Type filter (Sunum, Atölye) - type field
+        if (typeFilter != null) {
+          matchesType = p.type?.toString().toLowerCase().contains(typeFilter.toLowerCase()) ?? false;
+        }
+
+        return matchesProgram && matchesType;
+      }).toList();
+    }
+
+    // Sort by session first, then by title A-Z
+    filtered.sort((a, b) {
+      // First compare by session
+      final sessionA = a.session ?? 999;
+      final sessionB = b.session ?? 999;
+      if (sessionA != sessionB) {
+        return sessionA.compareTo(sessionB);
+      }
+      // Then compare by title A-Z
+      final titleA = (a.title ?? '').toString().toLowerCase();
+      final titleB = (b.title ?? '').toString().toLowerCase();
+      return titleA.compareTo(titleB);
+    });
+
+    return filtered;
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final sessionDataAsync = ref.watch(sessionPresentationDataProvider);
     final userDataAsync = ref.watch(userProfileProvider);
     final selectedCategory = ref.watch(selectedCategoryProvider);
+    final selectedProgram = ref.watch(selectedProgramFilterProvider);
+    final selectedType = ref.watch(selectedTypeFilterProvider);
     final localeAsync = ref.watch(localeProvider);
     final languageCode = localeAsync.value?.languageCode ?? 'tr';
     final scrollState = ref.watch(homeScrollProvider);
@@ -148,14 +194,14 @@ class HomePage extends ConsumerWidget {
                         final pageController =
                             ref.watch(categoryPageControllerProvider);
 
-                        // Tüm kategorilerin sunumlarını liste olarak hazırla
+                        // Tüm kategorilerin sunumlarını liste olarak hazırla ve filtreyi uygula
                         final allCategories = [
-                          sessionData.getAllPresentations(),
-                          sessionData.getRegisteredPresentations(),
-                          sessionData.oturum1,
-                          sessionData.oturum2,
-                          sessionData.oturum3,
-                          sessionData.oturum4,
+                          _filterPresentations(sessionData.getAllPresentations(), selectedProgram, selectedType),
+                          _filterPresentations(sessionData.getRegisteredPresentations(), selectedProgram, selectedType),
+                          _filterPresentations(sessionData.oturum1, selectedProgram, selectedType),
+                          _filterPresentations(sessionData.oturum2, selectedProgram, selectedType),
+                          _filterPresentations(sessionData.oturum3, selectedProgram, selectedType),
+                          _filterPresentations(sessionData.oturum4, selectedProgram, selectedType),
                         ];
 
                         return PageView.builder(
@@ -549,66 +595,337 @@ class HomePage extends ConsumerWidget {
 
   Widget _buildHeaderBar(
       BuildContext context, WidgetRef ref, AsyncValue<dynamic> userDataAsync) {
+    final selectedProgram = ref.watch(selectedProgramFilterProvider);
+    final selectedType = ref.watch(selectedTypeFilterProvider);
+    final hasActiveFilter = selectedProgram != null || selectedType != null;
+
+    // Aktif filtre sayısı
+    int activeFilterCount = 0;
+    if (selectedProgram != null) activeFilterCount++;
+    if (selectedType != null) activeFilterCount++;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.25),
-                width: 1.5,
-              ),
-            ),
-            child: InkWell(
-              onTap: () {
-                showNotificationModal(context);
-              },
-              borderRadius: BorderRadius.circular(20),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    // User Name - EN SOLDA
-                    userDataAsync.when(
-                      data: (user) {
-                        final userName = user.name?.trim() ?? '';
-                        if (userName.isEmpty) return const SizedBox.shrink();
-                        return Text(
-                          userName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        );
-                      },
-                      loading: () => const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 2,
-                        ),
-                      ),
-                      error: (_, __) => const SizedBox.shrink(),
+      child: Row(
+        children: [
+          // Notification Icon with Badge - EN SOLDA
+          GestureDetector(
+            onTap: () {
+              showNotificationModal(context);
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: Colors.white.withValues(alpha: 0.25),
+                      width: 1,
                     ),
-                    const Spacer(),
-                    // Notification Icon with Badge - EN SAĞDA
-                    _buildBellIconWithBadge(ref),
-                  ],
+                  ),
+                  child: _buildBellIconWithBadge(ref),
                 ),
               ),
             ),
           ),
-        ),
+          const Spacer(),
+          // Filter Icon - EN SAGDA
+          GestureDetector(
+            onTap: () {
+              _showFilterBottomSheet(context, ref);
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(14),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    gradient: hasActiveFilter
+                        ? const LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              Color(0xFF667eea),
+                              Color(0xFF764ba2),
+                            ],
+                          )
+                        : null,
+                    color: hasActiveFilter ? null : Colors.white.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(14),
+                    border: Border.all(
+                      color: hasActiveFilter
+                          ? Colors.white.withValues(alpha: 0.4)
+                          : Colors.white.withValues(alpha: 0.25),
+                      width: hasActiveFilter ? 1.5 : 1,
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      SvgPicture.asset(
+                        'assets/svg/filter.svg',
+                        width: 24,
+                        height: 24,
+                        colorFilter: const ColorFilter.mode(
+                          Colors.white,
+                          BlendMode.srcIn,
+                        ),
+                      ),
+                      if (hasActiveFilter) ...[
+                        const SizedBox(width: 6),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            '$activeFilterCount',
+                            style: const TextStyle(
+                              color: Color(0xFF667eea),
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
+  }
+
+  void _showFilterBottomSheet(BuildContext context, WidgetRef ref) {
+    final programFilters = [
+      {'key': null, 'label': AppLocalizations.of(context)!.categoryAll},
+      {'key': 'PYP', 'label': 'PYP'},
+      {'key': 'MYP', 'label': 'MYP'},
+      {'key': 'DP', 'label': 'DP'},
+    ];
+
+    final typeFilters = [
+      {'key': null, 'label': AppLocalizations.of(context)!.categoryAll},
+      {'key': 'Sunum', 'label': 'Sunum'},
+      {'key': 'Atölye', 'label': 'Atölye'},
+    ];
+
+    // Bottom bar'ı gizle
+    ref.read(hideBottomBarProvider.notifier).set(true);
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      builder: (context) => Consumer(
+        builder: (context, ref, child) {
+          final currentProgram = ref.watch(selectedProgramFilterProvider);
+          final currentType = ref.watch(selectedTypeFilterProvider);
+
+          // Theme kontrolü
+          final themeModeAsync = ref.watch(themeModeProvider);
+          final themeMode = themeModeAsync.value ?? ThemeMode.system;
+          final isDark = themeMode == ThemeMode.dark ||
+              (themeMode == ThemeMode.system && MediaQuery.of(context).platformBrightness == Brightness.dark);
+
+          final bgColor = isDark ? const Color(0xFF1a1a2e) : Colors.white;
+          final textColor = isDark ? Colors.white : Colors.black87;
+          final subtitleColor = isDark ? Colors.white70 : Colors.black54;
+          final chipBgColor = isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1);
+          final chipBorderColor = isDark ? Colors.white.withValues(alpha: 0.15) : Colors.grey.withValues(alpha: 0.2);
+
+          return Container(
+            decoration: BoxDecoration(
+              color: bgColor,
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+              border: Border.all(
+                color: isDark ? Colors.white.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.2),
+                width: 1,
+              ),
+            ),
+            padding: const EdgeInsets.all(24),
+            child: SafeArea(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Handle bar
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      margin: const EdgeInsets.only(bottom: 24),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.white.withValues(alpha: 0.2) : Colors.grey.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(2),
+                      ),
+                    ),
+                  ),
+                  // Title
+                  Center(
+                    child: Text(
+                      AppLocalizations.of(context)!.filter,
+                      style: TextStyle(
+                        color: textColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Program Filter Section (PYP, MYP, DP)
+                  Text(
+                    AppLocalizations.of(context)!.filterProgram,
+                    style: TextStyle(
+                      color: subtitleColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: programFilters.map((filter) {
+                      final isSelected = currentProgram == filter['key'];
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(selectedProgramFilterProvider.notifier).set(filter['key']);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                          decoration: BoxDecoration(
+                            gradient: isSelected
+                                ? const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color(0xFF667eea),
+                                      Color(0xFF764ba2),
+                                    ],
+                                  )
+                                : null,
+                            color: isSelected ? null : chipBgColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isSelected
+                                  ? Colors.white.withValues(alpha: 0.3)
+                                  : chipBorderColor,
+                            ),
+                          ),
+                          child: Text(
+                            filter['label'] as String,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : textColor,
+                              fontSize: 14,
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Type Filter Section (Sunum, Atölye)
+                  Text(
+                    AppLocalizations.of(context)!.filterPresentationType,
+                    style: TextStyle(
+                      color: subtitleColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: typeFilters.map((filter) {
+                      final isSelected = currentType == filter['key'];
+                      return GestureDetector(
+                        onTap: () {
+                          ref.read(selectedTypeFilterProvider.notifier).set(filter['key']);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                          decoration: BoxDecoration(
+                            gradient: isSelected
+                                ? const LinearGradient(
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                    colors: [
+                                      Color(0xFF667eea),
+                                      Color(0xFF764ba2),
+                                    ],
+                                  )
+                                : null,
+                            color: isSelected ? null : chipBgColor,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isSelected
+                                  ? Colors.white.withValues(alpha: 0.3)
+                                  : chipBorderColor,
+                            ),
+                          ),
+                          child: Text(
+                            filter['label'] as String,
+                            style: TextStyle(
+                              color: isSelected ? Colors.white : textColor,
+                              fontSize: 14,
+                              fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Apply Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF667eea),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.apply,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    ).then((_) {
+      // Bottom sheet kapandığında bottom bar'ı tekrar göster
+      ref.read(hideBottomBarProvider.notifier).set(false);
+    });
   }
 
   Widget _buildEventCard(
